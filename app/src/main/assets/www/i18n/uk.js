@@ -1,6 +1,6 @@
 window.L10N=window.L10N||{};
 L10N.uk={
-'nav.home':'Головна','nav.projects':'Проєкти','nav.code':'Код','nav.term':'Термінал','nav.langs':'Мови',
+'nav.back':'Назад','nav.home':'Головна','nav.projects':'Проєкти','nav.code':'Код','nav.term':'Термінал','nav.langs':'Мови',
 'common.back':'Назад','common.cancel':'Скасувати','common.change':'Змінити','common.close':'Закрити','common.delete':'Видалити','common.error':'Помилка: {msg}','common.loading':'Завантаження…','common.notFound':'Нічого не знайдено','common.save':'Зберегти',
 'unit.mb':'{n} МБ',
 'time.now':'щойно','time.min':'{n} хв тому','time.h':'{n} год тому','time.d':'{n} дн тому','time.hm':'{h} год {m} хв','time.m':'{m} хв',

@@ -169,7 +169,7 @@ main{flex:1;position:relative;overflow:hidden}
 .kw{color:var(--kw)}.str{color:var(--str)}.num{color:var(--num)}.com{color:var(--com);font-style:italic}.fn{color:var(--fn)}.ty{color:var(--ty)}
 .status{display:flex;gap:12px;align-items:center;padding:7px 16px;font:500 11px 'JetBrains Mono';color:var(--muted);white-space:nowrap;overflow:hidden}
 .status .dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);display:inline-block;margin-right:5px}
-.keys{display:flex;gap:6px;padding:6px 10px 8px;overflow-x:auto;scrollbar-width:none;background:color-mix(in srgb,var(--panel) 70%,transparent);border-top:1px solid var(--line)}
+.keys{display:flex;gap:6px;touch-action:pan-x;padding:6px 10px 8px;overflow-x:auto;scrollbar-width:none;background:color-mix(in srgb,var(--panel) 70%,transparent);border-top:1px solid var(--line)}
 .keys button{flex:0 0 auto;min-width:40px;height:40px;padding:0 10px;border-radius:10px;background:var(--card);border:1px solid var(--line);font:600 15px 'JetBrains Mono';color:var(--text);box-shadow:0 2px 0 var(--line)}
 .keys button.acc{color:var(--accent)}
 .keys button:active{transform:translateY(2px);box-shadow:none;background:var(--line)}
@@ -353,11 +353,9 @@ input[type=range]{width:130px;accent-color:var(--accent)}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 
 /* иконки языков */
-.tile.ltile{background:#f6f7fb;border:1px solid rgba(15,20,35,.08);box-shadow:none;padding:6px}
-.tile.ltile img{width:100%;height:100%;object-fit:contain;display:block}
-.tile.sm.ltile{padding:3px}
-.tile.lg.ltile{padding:9px}
-.stack .tile.ltile{padding:4px}
+.tile.ltile{background:#000;box-shadow:none;padding:0;overflow:hidden}
+.tile.ltile img{width:100%;height:100%;object-fit:cover;display:block}
+.stack .tile.ltile{border-color:var(--panel)}
 
 /* флаги */
 .flag{width:28px;height:21px;border-radius:4px;object-fit:cover;box-shadow:0 0 0 1px rgba(255,255,255,.12);flex:0 0 auto;display:block}
@@ -373,7 +371,7 @@ input[type=range]{width:130px;accent-color:var(--accent)}
 .grab{cursor:grab}
 
 /* автодополнение в редакторе */
-.acbar{display:flex;gap:6px;padding:6px 10px 0;overflow-x:auto;scrollbar-width:none;min-height:0}
+.acbar{display:flex;gap:6px;touch-action:pan-x;padding:6px 10px 0;overflow-x:auto;scrollbar-width:none;min-height:0}
 .acbar::-webkit-scrollbar{display:none}
 .acbar:empty{display:none}
 .acbar button{flex:0 0 auto;height:32px;padding:0 12px;border-radius:9px;background:color-mix(in srgb,var(--accent) 14%,var(--card));border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line));font:600 13px 'JetBrains Mono';color:var(--text)}

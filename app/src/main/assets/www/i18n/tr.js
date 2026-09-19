@@ -1,6 +1,6 @@
 window.L10N=window.L10N||{};
 L10N.tr={
-'nav.home':'Ana sayfa','nav.projects':'Projeler','nav.code':'Kod','nav.term':'Terminal','nav.langs':'Diller',
+'nav.back':'Geri','nav.home':'Ana sayfa','nav.projects':'Projeler','nav.code':'Kod','nav.term':'Terminal','nav.langs':'Diller',
 'common.back':'Geri','common.cancel':'İptal','common.change':'Değiştir','common.close':'Kapat','common.delete':'Sil','common.error':'Hata: {msg}','common.loading':'Yükleniyor…','common.notFound':'Hiçbir şey bulunamadı','common.save':'Kaydet',
 'unit.mb':'{n} MB',
 'time.now':'az önce','time.min':'{n} dk önce','time.h':'{n} sa önce','time.d':'{n} gün önce','time.hm':'{h} sa {m} dk','time.m':'{m} dk',

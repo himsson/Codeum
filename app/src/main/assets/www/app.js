@@ -79,7 +79,7 @@ function applyI18n(){
 const ago=ts=>{const s=(Date.now()-ts)/1000;return s<60?t('time.now'):s<3600?t('time.min',{n:Math.floor(s/60)}):s<86400?t('time.h',{n:Math.floor(s/3600)}):t('time.d',{n:Math.floor(s/86400)})};
 
 /* ============ версия и обновления ============ */
-const APP_VERSION='1.0.1';                // версия веб-превью; в приложении версия берётся из APK
+const APP_VERSION='1.0.2';                // версия веб-превью; в приложении версия берётся из APK
 const UPDATE_REPO='himsson/codeum';       // репозиторий с релизами
 
 /* ============ языки программирования ============ */
@@ -368,9 +368,11 @@ const P=()=>S.projects.find(p=>p.id===S.cur.p)||S.projects[0];
 
 /* ============ навигация ============ */
 const VIEWS=[['home','nav.home','home'],['projects','nav.projects','folder'],['editor','nav.code','code'],['term','nav.term','term'],['store','nav.langs','box']];
-let view='home';
-function show(v){
-  view=v;$$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));
+let view='home';const viewHist=[];
+function show(v,back){
+  if(!back&&v!==view){viewHist.push(view);if(viewHist.length>20)viewHist.shift()}
+  if(v==='home')viewHist.length=0;
+  view=v;$('#backBtn').hidden=v==='home';$('#hLogo').hidden=v!=='home';$$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));
   $$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
   const p=P();
   const T={home:['Codeum',''],
@@ -384,6 +386,12 @@ function show(v){
   if(v==='editor')renderEditor();if(v==='term')termShow();
   $('#app').classList.remove('drawer-on');
   renderUpd();
+}
+
+/* кнопка «назад» в шапке и системная «назад»: прячет клавиатуру и возвращает на прошлый экран */
+function goBack(){
+  const a=document.activeElement;if(a&&a.blur)a.blur();document.body.classList.remove('kb');
+  let v=viewHist.pop();while(v===view)v=viewHist.pop();show(v||'home',true);
 }
 
 /* ============ главная ============ */
@@ -445,7 +453,7 @@ function newProjSheet(){
 const ta=$('#ta'),hl=$('#hl'),gl=$('#gl');let lineCount=0;const collapsed=new Set();
 function ensureCur(p){
   if(!p)return;
-  if(!p.files[S.cur.f])S.cur.f=(p.open||[]).find(f=>p.files[f]!=null)||Object.keys(p.files)[0]||'';
+  if(p.files[S.cur.f]==null)S.cur.f=(p.open||[]).find(f=>p.files[f]!=null)||Object.keys(p.files)[0]||'';
   p.open=(p.open||[]).filter(f=>p.files[f]!=null);
   if(S.cur.f&&!p.open.includes(S.cur.f))p.open.push(S.cur.f);
 }
@@ -514,8 +522,16 @@ function renderKeys(){
     ...syms.split(' ').map(s=>s.length===2&&'(){}[]""\'\''.includes(s)&&s[0]!==s[1]||s==='""'||s==="''"?[s[0]+' '+s[1],s,'']:[s,'txt',''])];
   $('#keys').innerHTML=KEYS.map((k,i)=>`<button data-k="${i}" class="${k[2]}">${esc(k[0])}</button>`).join('');
 }
-$('#keys').addEventListener('pointerdown',e=>{
-  const b=e.target.closest('button');if(!b)return;e.preventDefault();const[l,a]=KEYS[b.dataset.k];
+/* нажатие на кнопку панели: срабатывает при отпускании и только если палец не листал полоску */
+function onTap(bar,fn){
+  let st=null;
+  bar.addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(!b)return;e.preventDefault();st={b,x:e.clientX,y:e.clientY,id:e.pointerId}});
+  bar.addEventListener('pointermove',e=>{if(st&&e.pointerId===st.id&&Math.hypot(e.clientX-st.x,e.clientY-st.y)>8)st=null});
+  bar.addEventListener('pointercancel',()=>{st=null});
+  bar.addEventListener('pointerup',e=>{if(!st||e.pointerId!==st.id)return;const b=st.b;st=null;e.preventDefault();fn(b)});
+}
+onTap($('#keys'),b=>{
+  const[l,a]=KEYS[b.dataset.k];
   if(a==='txt')return ins(l);if(a==='tab')return ins(TAB());
   if(a.length===2){const s=ta.selectionStart,en=ta.selectionEnd,sel=ta.value.slice(s,en);return sel?ins(a[0]+sel+a[1]):ins(a,1)}
   ta.focus();let s=ta.selectionStart;const v=ta.value;
@@ -539,8 +555,7 @@ function acUpdate(){
   out.sort((a,b)=>(a[0].startsWith(pre)?0:1)-(b[0].startsWith(pre)?0:1)||a[0].length-b[0].length);
   $('#acBar').innerHTML=out.slice(0,10).map(([w,src])=>`<button data-w="${esc(w)}"><b>${esc(w.slice(0,pre.length))}</b>${esc(w.slice(pre.length))}${src?`<small>${src==='kw'?'kw':'ƒ'}</small>`:''}</button>`).join('');
 }
-$('#acBar').addEventListener('pointerdown',e=>{
-  const b=e.target.closest('button');if(!b)return;e.preventDefault();
+onTap($('#acBar'),b=>{
   const m=ta.value.slice(0,ta.selectionStart).match(/[A-Za-z_][\w]*$/);if(!m)return;
   ta.focus();ta.setSelectionRange(ta.selectionStart-m[0].length,ta.selectionStart);ins(b.dataset.w);acClear();
 });
@@ -964,8 +979,8 @@ function renderTKeys(){
   }
   $('#tkeys').innerHTML=TKEYS.map((k,i)=>`<button data-k="${i}" class="${k[2]}">${esc(k[0])}</button>`).join('');
 }
-$('#tkeys').addEventListener('pointerdown',e=>{
-  const b=e.target.closest('button');if(!b)return;e.preventDefault();const[l,a]=TKEYS[b.dataset.k];
+onTap($('#tkeys'),b=>{
+  const[l,a]=TKEYS[b.dataset.k];
   if(NATIVE){
     if(a==='CTRL'){ctrlOn=!ctrlOn;renderTKeys();xt&&xt.focus();return}
     ptyInput(a);xt&&xt.focus();return;
@@ -997,7 +1012,7 @@ async function installLang(id){
 /* установленные языки проверяются по факту — есть ли в Linux нужная программа */
 function syncInstalled(){
   if(!NATIVE)return;
-  try{const nat=JSON.parse(NV.installed());const next=[...new Set([...S.installed.filter(id=>id==='js'),...nat])];
+  try{const nat=JSON.parse(NV.installed());const next=[...new Set(['js',...nat])]; // JavaScript встроен в приложение и есть всегда
     if(next.join()!==S.installed.join()){S.installed=next;save()}}catch{}
 }
 const STORE_CATS=[['all','store.cat.all'],['inst','store.cat.inst'],['web','store.cat.web'],['system','store.cat.system'],['mobile','store.cat.mobile'],['general','store.cat.general']];
@@ -1031,7 +1046,7 @@ function langInfo(id){
   openSheet(`<div style="display:flex;gap:14px;align-items:center;margin-bottom:10px">${tile(L,'lg')}<div><h3>${L.name}</h3><div class="muted" style="font-size:13px">${L.ver} · ${sizeOf(L)?'~'+mb(sizeOf(L)):t('store.builtin')}</div></div></div>
    <p class="muted">${esc(langDesc(L))}</p>
    ${note?`<div class="note">${ic('info')}<div>${note}</div></div>`:''}
-   ${inst?`<button class="bigbtn" data-act="lang-new" data-id="${id}">${t('store.newProjectIn',{lang:L.name})}</button><button class="bigbtn sec" data-act="uninstall" data-id="${id}">${t('common.delete')}</button>`:''}`);
+   ${inst?`<button class="bigbtn" data-act="lang-new" data-id="${id}">${t('store.newProjectIn',{lang:L.name})}</button>${id==='js'?'':`<button class="bigbtn sec" data-act="uninstall" data-id="${id}">${t('common.delete')}</button>`}`:''}`);
 }
 
 /* ============ GitHub ============ */
@@ -1250,6 +1265,7 @@ function applySettings(){
 
 /* ============ действия ============ */
 const ACT={
+  back:()=>goBack(),
   go:d=>{closeSheet();show(d.v)},
   'go-store':()=>{closeSheet();show('store')},
   'close-sheet':closeSheet,
@@ -1326,11 +1342,19 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-act]');if(
 
 /* ============ экран и клавиатура ============ */
 const vv=window.visualViewport;
-function fit(){document.documentElement.style.setProperty('--vh',(vv?vv.height:innerHeight)+'px');if(vv)window.scrollTo(0,0)}
-if(vv){vv.addEventListener('resize',fit)}window.addEventListener('resize',fit);fit();
 const isTyping=el=>el===ta||el===tin||!!(el&&el.closest&&el.closest('#xterm'));
-document.addEventListener('focusin',e=>{if(isTyping(e.target))document.body.classList.add('kb')});
-document.addEventListener('focusout',()=>setTimeout(()=>{if(!isTyping(document.activeElement))document.body.classList.remove('kb')},50));
+/* нижнее меню прячется, только пока клавиатура реально открыта: если её убрали жестом «назад»,
+   поле остаётся в фокусе, но меню должно вернуться */
+let baseH=0,baseW=0;
+function kbCheck(){
+  const h=vv?vv.height:innerHeight;
+  if(innerWidth!==baseW){baseW=innerWidth;baseH=h}if(h>baseH)baseH=h;
+  document.body.classList.toggle('kb',h<baseH-120&&isTyping(document.activeElement));
+}
+function fit(){document.documentElement.style.setProperty('--vh',(vv?vv.height:innerHeight)+'px');if(vv)window.scrollTo(0,0);kbCheck()}
+if(vv){vv.addEventListener('resize',fit)}window.addEventListener('resize',fit);fit();
+document.addEventListener('focusin',kbCheck);
+document.addEventListener('focusout',()=>setTimeout(kbCheck,50));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
 setInterval(()=>{if(view==='home'&&!$('#sheet').classList.contains('on'))renderHome()},60000);
 
@@ -1483,7 +1507,7 @@ window.__native={
     if($('#sheet').classList.contains('on')){closeSheet();return true}
     if($('#app').classList.contains('drawer-on')){$('#app').classList.remove('drawer-on');return true}
     if(!$('#findbar').hidden){$('#findbar').hidden=true;return true}
-    if(view!=='home'){show('home');return true}
+    if(view!=='home'){goBack();return true}
     return false;
   }
 };

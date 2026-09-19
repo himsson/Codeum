@@ -1,6 +1,6 @@
 window.L10N=window.L10N||{};
 L10N.es={
-'nav.home':'Inicio','nav.projects':'Proyectos','nav.code':'Código','nav.term':'Terminal','nav.langs':'Lenguajes',
+'nav.back':'Atrás','nav.home':'Inicio','nav.projects':'Proyectos','nav.code':'Código','nav.term':'Terminal','nav.langs':'Lenguajes',
 'common.back':'Atrás','common.cancel':'Cancelar','common.change':'Cambiar','common.close':'Cerrar','common.delete':'Eliminar','common.error':'Error: {msg}','common.loading':'Cargando…','common.notFound':'No se encontró nada','common.save':'Guardar',
 'unit.mb':'{n} MB',
 'time.now':'ahora mismo','time.min':'hace {n} min','time.h':'hace {n} h','time.d':'hace {n} d','time.hm':'{h} h {m} min','time.m':'{m} min',

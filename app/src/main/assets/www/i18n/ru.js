@@ -1,6 +1,6 @@
 window.L10N=window.L10N||{};
 L10N.ru={
-'nav.home':'Главная','nav.projects':'Проекты','nav.code':'Код','nav.term':'Терминал','nav.langs':'Языки',
+'nav.back':'Назад','nav.home':'Главная','nav.projects':'Проекты','nav.code':'Код','nav.term':'Терминал','nav.langs':'Языки',
 'common.back':'Назад','common.cancel':'Отмена','common.change':'Изменить','common.close':'Закрыть','common.delete':'Удалить','common.error':'Ошибка: {msg}','common.loading':'Загрузка…','common.notFound':'Ничего не найдено','common.save':'Сохранить',
 'unit.mb':'{n} МБ',
 'time.now':'только что','time.min':'{n} мин назад','time.h':'{n} ч назад','time.d':'{n} дн назад','time.hm':'{h} ч {m} мин','time.m':'{m} мин',
