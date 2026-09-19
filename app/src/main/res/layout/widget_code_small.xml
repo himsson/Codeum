@@ -25,7 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:letterSpacing="0.12"
-            android:text="@string/widget_k"
+            android:id="@+id/w_k"
+                android:text="@string/widget_k"
             android:textColor="#8B93A8"
             android:textSize="10sp"
             android:textStyle="bold" />
@@ -42,7 +43,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="filter и map"
+        android:text="filter and map"
         android:textColor="#E7EAF3"
         android:textSize="14sp"
         android:textStyle="bold" />

@@ -37,7 +37,8 @@ Copyright (c) 2026 himsson. Все права защищены.
 4. Сторонние компоненты
 
    Программа использует компоненты других авторов (Android SDK и библиотеки AndroidX,
-   Apache Commons Compress, XZ for Java, Gradle Wrapper и др.). Они распространяются
+   Apache Commons Compress, XZ for Java, Gradle Wrapper, xterm.js, иконки devicon,
+   флаги flag-icons и др.). Они распространяются
    на условиях своих собственных лицензий, и эта лицензия на них не распространяется.
    Языки программирования и Linux-окружение, которые Программа скачивает по запросу
    пользователя, также распространяются на условиях лицензий их авторов.
@@ -84,8 +85,10 @@ PROHIBITED without the Author's prior written permission:
   - Removing or altering copyright notices.
   - Using the source code to train machine learning or AI models.
 
-Anything not expressly permitted is prohibited. Third-party components are
-licensed under their own terms and are not covered by this license.
+Anything not expressly permitted is prohibited. Third-party components (AndroidX,
+Apache Commons Compress, XZ for Java, Gradle Wrapper, xterm.js, devicon icons,
+flag-icons and others) are licensed under their own terms and are not covered
+by this license.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. IN NO EVENT SHALL
 THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM THE

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Codeum</string>
-    <string name="widget_large">Код дня</string>
-    <string name="widget_small">Код дня · мини</string>
-    <string name="widget_desc">Каждый день новый кусочек кода с объяснением</string>
-    <string name="widget_k">КОД ДНЯ</string>
+    <string name="widget_large">Code of the day</string>
+    <string name="widget_small">Code of the day · mini</string>
+    <string name="widget_desc">A new piece of code with an explanation every day</string>
+    <string name="widget_k">CODE OF THE DAY</string>
 </resources>

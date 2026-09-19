@@ -41,7 +41,7 @@ class BootReceiver : BroadcastReceiver() {
 }
 
 object Widgets {
-    private class Snip(val lang: String, val title: String, val code: String, val expl: String)
+    private class Snip(val lang: String, val code: String, val title: Map<String, String>, val expl: Map<String, String>)
     private class Lang(val name: String, val color: Int, val mono: String, val com: String, val kw: List<String>)
 
     // цвета темы Midnight — как в приложении
@@ -54,6 +54,9 @@ object Widgets {
 
     private var snips: List<Snip>? = null
     private var langs: Map<String, Lang> = emptyMap()
+    private var labels: Map<String, String> = emptyMap()
+
+    private fun strMap(o: JSONObject): Map<String, String> = o.keys().asSequence().associateWith { o.getString(it) }
 
     private fun load(ctx: Context) {
         if (snips != null) return
@@ -65,10 +68,11 @@ object Widgets {
             Lang(l.getString("name"), Color.parseColor(l.getString("c")), l.getString("m"), l.getString("com"),
                 List(kw.length()) { kw.getString(it) })
         }
+        labels = strMap(o.getJSONObject("labels"))
         val arr = o.getJSONArray("snippets")
         snips = List(arr.length()) {
             val s = arr.getJSONObject(it)
-            Snip(s.getString("l"), s.getString("t"), s.getString("c"), s.getString("x"))
+            Snip(s.getString("l"), s.getString("c"), strMap(s.getJSONObject("t")), strMap(s.getJSONObject("x")))
         }
     }
 
@@ -76,6 +80,9 @@ object Widgets {
 
     private fun prefs(ctx: Context) = ctx.getSharedPreferences("widget", Context.MODE_PRIVATE)
     fun setInterval(ctx: Context, v: String) = prefs(ctx).edit().putString("int", if (v == "5h") "5h" else "day").apply()
+    fun setLanguage(ctx: Context, code: String) = prefs(ctx).edit().putString("lang", code).apply()
+    private fun lang(ctx: Context) = prefs(ctx).getString("lang", null) ?: java.util.Locale.getDefault().language
+    private fun Map<String, String>.forLang(code: String) = this[code] ?: this["en"] ?: values.firstOrNull() ?: ""
 
     /** Номер текущего «окна» и время начала следующего. */
     private fun bucket(ctx: Context): Pair<Long, Long> {
@@ -107,8 +114,10 @@ object Widgets {
     fun build(ctx: Context, small: Boolean): RemoteViews {
         val s = current(ctx)
         val l = langs[s.lang]
+        val code = lang(ctx)
         val v = RemoteViews(ctx.packageName, if (small) R.layout.widget_code_small else R.layout.widget_code)
-        v.setTextViewText(R.id.w_title, s.title)
+        v.setTextViewText(R.id.w_k, labels.forLang(code).uppercase(java.util.Locale(code)))
+        v.setTextViewText(R.id.w_title, s.title.forLang(code))
         v.setTextViewText(R.id.w_lang, l?.name ?: s.lang)
         v.setTextViewText(R.id.w_tile_m, l?.mono ?: "")
         if (l != null) {
@@ -117,7 +126,7 @@ object Widgets {
         }
         if (!small) {
             v.setTextViewText(R.id.w_code, highlight(s.code, l))
-            v.setTextViewText(R.id.w_expl, s.expl)
+            v.setTextViewText(R.id.w_expl, s.expl.forLang(code))
         }
         val open = PendingIntent.getActivity(
             ctx, 0, Intent(ctx, MainActivity::class.java),

@@ -156,6 +156,13 @@ object LinuxEnv {
     private fun needsForkShim() = abi == "x86_64"
     private fun ensureForkShim() {
         if (!needsForkShim() || !rootfs.isDirectory) return
+        // apk 3 по умолчанию запускает скрипты пакетов с чистым окружением — без прослойки они падают.
+        // preserve-env передаёт им LD_PRELOAD.
+        val apkConf = File(rootfs, "etc/apk/config")
+        if (!apkConf.exists() || !apkConf.readText().contains("preserve-env")) {
+            apkConf.parentFile?.mkdirs()
+            apkConf.appendText("preserve-env\n")
+        }
         val f = File(rootfs, FORKSHIM.removePrefix("/"))
         if (f.exists() && f.length() > 0) return
         f.parentFile?.mkdirs()
@@ -164,6 +171,26 @@ object LinuxEnv {
     }
 
     fun prootCmd(cwd: String, vararg cmd: String): ProcessBuilder {
+        val (args, env) = prootSpec(cwd, false, *cmd)
+        val pb = ProcessBuilder(args)
+        pb.environment().putAll(env)
+        return pb
+    }
+
+    /** Интерактивная оболочка для PTY: цвета, $ENV с настройками Codeum, Tab-дополнение. */
+    fun shellSpec(cwd: String): Pair<List<String>, Map<String, String>> {
+        val (args, env) = prootSpec(cwd, true, "/bin/sh", "-i")
+        val full = HashMap(env)
+        full["PATH"] = "/system/bin:/system/xbin"
+        full["ANDROID_ROOT"] = "/system"
+        full["ANDROID_DATA"] = "/data"
+        full["HOME"] = files.path
+        full["TMPDIR"] = tmp.path
+        return args to full
+    }
+
+    /** Аргументы proot и окружение хоста. tty=true — для интерактивного терминала. */
+    private fun prootSpec(cwd: String, tty: Boolean, vararg cmd: String): Pair<List<String>, Map<String, String>> {
         ensureForkShim()
         val args = mutableListOf(
             File(usr, "bin/proot").path,
@@ -185,20 +212,28 @@ object LinuxEnv {
         args += listOf(
             "-w", cwd,
             "/usr/bin/env", "-i",
-            "HOME=/root", "USER=root", "LANG=C.UTF-8", "TERM=dumb", "TMPDIR=/tmp",
+            "HOME=/root", "USER=root", "LANG=C.UTF-8", "TMPDIR=/tmp",
             "PYTHONUNBUFFERED=1", "DOTNET_CLI_TELEMETRY_OPTOUT=1", "DOTNET_NOLOGO=1",
             "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/kotlinc/bin:/root/.cargo/bin",
         )
+        args += if (tty) listOf("TERM=xterm-256color", "COLORTERM=truecolor", "ENV=$SHELL_RC") else listOf("TERM=dumb")
         if (needsForkShim()) args += "LD_PRELOAD=$FORKSHIM"
         args += cmd
-        val pb = ProcessBuilder(args)
-        pb.environment().apply {
-            put("PROOT_TMP_DIR", tmp.path)
-            put("PROOT_LOADER", File(usr, "libexec/proot/loader").path)
-            File(usr, "libexec/proot/loader32").let { if (it.exists()) put("PROOT_LOADER_32", it.path) }
-            put("LD_LIBRARY_PATH", File(usr, "lib").path)
-        }
-        return pb
+        val env = HashMap<String, String>()
+        env["PROOT_TMP_DIR"] = tmp.path
+        env["PROOT_LOADER"] = File(usr, "libexec/proot/loader").path
+        File(usr, "libexec/proot/loader32").let { if (it.exists()) env["PROOT_LOADER_32"] = it.path }
+        env["LD_LIBRARY_PATH"] = File(usr, "lib").path
+        return args to env
+    }
+
+    const val SHELL_RC = "/etc/codeum/shrc"
+
+    /** Настройки оболочки генерирует интерфейс: приглашение, команды выбранной ОС, help на языке пользователя. */
+    fun writeShellRc(text: String) {
+        val f = File(rootfs, SHELL_RC.removePrefix("/"))
+        f.parentFile?.mkdirs()
+        f.writeText(text)
     }
 
     /** Выполняет команду sh -c в Linux и построчно отдаёт вывод. Возвращает код выхода. */
@@ -234,8 +269,41 @@ object LinuxEnv {
     )
 
     private val prefs get() = ctx.getSharedPreferences("langs", Context.MODE_PRIVATE)
-    fun installed(): Set<String> = prefs.getStringSet("installed", emptySet())!!
     private fun setInstalled(s: Set<String>) = prefs.edit().putStringSet("installed", HashSet(s)).apply()
+
+    /** Программы, по которым видно, что язык действительно установлен (в том числе вручную через apk). */
+    private val MARKERS = mapOf(
+        "py" to listOf("usr/bin/python3"),
+        "ts" to listOf("usr/local/bin/tsx", "usr/bin/tsx"),
+        "c" to listOf("usr/bin/gcc"),
+        "cpp" to listOf("usr/bin/g++"),
+        "cs" to listOf("usr/bin/dotnet", "usr/lib/dotnet/dotnet"),
+        "java" to listOf("usr/bin/javac", "usr/lib/jvm/default-jvm/bin/javac"),
+        "kt" to listOf("opt/kotlinc/bin/kotlinc"),
+        "go" to listOf("usr/bin/go", "usr/lib/go/bin/go"),
+        "rs" to listOf("usr/bin/rustc"),
+        "php" to listOf("usr/bin/php83", "usr/bin/php"),
+        "rb" to listOf("usr/bin/ruby"),
+        "lua" to listOf("usr/bin/lua5.4"),
+        "sh" to listOf("bin/bash", "usr/bin/bash"),
+    )
+
+    /** lstat, а не exists(): многие файлы в rootfs — симлинки с абсолютными путями внутри Linux. */
+    private fun present(rel: String) = try { Os.lstat(File(rootfs, rel).path); true } catch (_: Exception) { false }
+
+    fun installed(): Set<String> {
+        if (!isReady()) return emptySet()
+        val found = MARKERS.filter { (_, paths) -> paths.any { present(it) } }.keys
+        setInstalled(found)
+        return found
+    }
+
+    /** Пакеты для установки языков из терминала (pkg install / apt install / brew install…). */
+    fun pkgMapJson(): String {
+        val o = org.json.JSONObject()
+        for ((id, p) in PKGS) o.put(id, org.json.JSONObject().put("apk", p.apk).put("post", p.post))
+        return o.toString()
+    }
 
     fun install(id: String, progress: (String, Int) -> Unit) {
         val pkg = PKGS[id] ?: throw IOException("язык $id пока недоступен в Linux-окружении")
@@ -265,7 +333,7 @@ object LinuxEnv {
     }
 
     fun uninstall(id: String) {
-        val left = installed() - id
+        val left = prefs.getStringSet("installed", emptySet())!! - id
         setInstalled(left)
         val pkg = PKGS[id] ?: return
         // не удаляем пакеты, которые нужны другим установленным языкам (например, C и C++)

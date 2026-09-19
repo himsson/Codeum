@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Codeum</string>
+    <string name="widget_large">Código do dia</string>
+    <string name="widget_small">Código do dia · mini</string>
+    <string name="widget_desc">Todos os dias um novo pedaço de código com explicação</string>
+    <string name="widget_k">CÓDIGO DO DIA</string>
+</resources>

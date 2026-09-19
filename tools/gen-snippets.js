@@ -1,19 +1,26 @@
-// Генерирует app/src/main/assets/snippets.json из index.html,
-// чтобы нативный виджет показывал те же «Коды дня», что и приложение.
+// Генерирует app/src/main/assets/snippets.json для нативного виджета «Код дня»:
+// код берётся из app.js, заголовки и объяснения — из словарей i18n/*.js.
 // Запуск: node tools/gen-snippets.js
 const fs = require('fs'), path = require('path'), vm = require('vm');
-const root = path.join(__dirname, '..');
-const html = fs.readFileSync(path.join(root, 'app/src/main/assets/www/index.html'), 'utf8');
+const www = path.join(__dirname, '..', 'app/src/main/assets/www');
+const app = fs.readFileSync(path.join(www, 'app.js'), 'utf8');
 const cut = (start) => {
-  const i = html.indexOf(start);
+  const i = app.indexOf(start);
   if (i < 0) throw new Error('not found: ' + start);
-  const j = html.indexOf('\n];', i);
-  return html.slice(i, j + 3);
+  return app.slice(i, app.indexOf('\n];', i) + 3);
 };
-const code = 'const R=String.raw;' + cut('const LANGS=[') + cut('const SNIPS=[') + ';({LANGS,SNIPS})';
-const { LANGS, SNIPS } = vm.runInNewContext(code);
-const langs = {};
-for (const l of LANGS) langs[l.id] = { name: l.name, c: l.c, m: l.m, com: l.com, kw: l.kw.split(' ') };
-const out = { langs, snippets: SNIPS.map(s => ({ l: s.l, t: s.t, c: s.c, x: s.x })) };
-fs.writeFileSync(path.join(root, 'app/src/main/assets/snippets.json'), JSON.stringify(out, null, 1));
-console.log('snippets:', out.snippets.length, 'langs:', Object.keys(langs).length);
+const { LANGS, SNIPS } = vm.runInNewContext('const R=String.raw;' + cut('const LANGS=[') + cut('const SNIPS=[') + ';({LANGS,SNIPS})');
+
+const ctx = {}; ctx.window = ctx; vm.createContext(ctx);
+const codes = fs.readdirSync(path.join(www, 'i18n')).filter(f => f.endsWith('.js')).map(f => f.slice(0, -3));
+for (const c of codes) vm.runInContext(fs.readFileSync(path.join(www, 'i18n', c + '.js'), 'utf8'), ctx);
+const D = ctx.window.L10N;
+const pick = (key) => Object.fromEntries(codes.map(c => [c, D[c][key] ?? D.en[key]]));
+
+const out = {
+  langs: Object.fromEntries(LANGS.map(l => [l.id, { name: l.name, c: l.c, m: l.m, com: l.com, kw: l.kw.split(' ') }])),
+  labels: pick('widget.label'),
+  snippets: SNIPS.map((s, i) => ({ l: s.l, c: s.c, t: pick(`snip.${i}.t`), x: pick(`snip.${i}.x`) })),
+};
+fs.writeFileSync(path.join(www, '..', 'snippets.json'), JSON.stringify(out));
+console.log('snippets:', out.snippets.length, 'languages:', codes.join(', '));

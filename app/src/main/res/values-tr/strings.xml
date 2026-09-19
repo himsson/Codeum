@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Codeum</string>
+    <string name="widget_large">Günün kodu</string>
+    <string name="widget_small">Günün kodu · mini</string>
+    <string name="widget_desc">Her gün açıklamalı yeni bir kod parçası</string>
+    <string name="widget_k">GÜNÜN KODU</string>
+</resources>

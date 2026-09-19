@@ -8,7 +8,6 @@ import android.os.Looper
 import android.webkit.JavascriptInterface
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.InputStreamReader
 import kotlin.concurrent.thread
 
 /**
@@ -31,21 +30,19 @@ class NativeBridge(private val act: MainActivity) {
         ui.post { act.web.evaluateJavascript("window.__native&&__native.$fn($a)", null) }
     }
 
-    // вывод терминала копится и отправляется пачками, чтобы не заваливать WebView
-    private val outBuf = StringBuilder()
-    private val errBuf = StringBuilder()
+    // вывод терминала копится и уходит в WebView пачками (~60 раз в секунду)
+    private val ptyBuf = StringBuilder()
     private var flushQueued = false
-    private fun queueOut(s: String, err: Boolean) {
-        synchronized(outBuf) {
-            (if (err) errBuf else outBuf).append(s)
-            if (!flushQueued) { flushQueued = true; ui.postDelayed({ flush() }, 40) }
+    private fun queuePty(s: String) {
+        synchronized(ptyBuf) {
+            ptyBuf.append(s)
+            if (!flushQueued) { flushQueued = true; ui.postDelayed({ flushPty() }, 16) }
         }
     }
-    private fun flush() {
-        val o: String; val e: String
-        synchronized(outBuf) { o = outBuf.toString(); e = errBuf.toString(); outBuf.setLength(0); errBuf.setLength(0); flushQueued = false }
-        if (e.isNotEmpty()) emit("onShell", e, true)
-        if (o.isNotEmpty()) emit("onShell", o, false)
+    private fun flushPty() {
+        val s: String
+        synchronized(ptyBuf) { s = ptyBuf.toString(); ptyBuf.setLength(0); flushQueued = false }
+        if (s.isNotEmpty()) emit("onPty", s)
     }
 
     // ------------ окружение и языки ------------
@@ -53,6 +50,7 @@ class NativeBridge(private val act: MainActivity) {
     @JavascriptInterface fun ready(): Boolean = LinuxEnv.isReady()
     @JavascriptInterface fun abi(): String = LinuxEnv.abiName()
     @JavascriptInterface fun installed(): String = JSONArray(LinuxEnv.installed().toList()).toString()
+    @JavascriptInterface fun pkgMap(): String = LinuxEnv.pkgMapJson()
     @JavascriptInterface fun version(): String = act.packageManager.getPackageInfo(act.packageName, 0).versionName ?: ""
 
     @JavascriptInterface
@@ -87,47 +85,37 @@ class NativeBridge(private val act: MainActivity) {
 
     @JavascriptInterface fun projectPath(name: String): String = "/root/projects/" + LinuxEnv.safe(name)
 
-    // ------------ терминал: постоянная сессия sh ------------
+    // ------------ терминал: настоящий PTY ------------
 
-    private var shell: Process? = null
+    @Volatile private var session: PtySession? = null
 
     @JavascriptInterface
-    fun shellStart(cwd: String): Boolean {
-        shellKill()
+    fun writeShellRc(text: String) = LinuxEnv.writeShellRc(text)
+
+    @JavascriptInterface
+    fun ptyStart(cwd: String, rows: Int, cols: Int): Boolean {
+        ptyKill()
         if (!LinuxEnv.isReady()) return false
         val dir = if (cwd.startsWith("/root/projects/")) {
             LinuxEnv.projectDir(cwd.removePrefix("/root/projects/")).mkdirs(); cwd
         } else "/root"
-        val p = LinuxEnv.prootCmd(dir, "/bin/sh").start()
-        shell = p
-        fun pump(input: java.io.InputStream, err: Boolean) = thread(isDaemon = true) {
-            val r = InputStreamReader(input, Charsets.UTF_8)
-            val buf = CharArray(4096)
-            try {
-                while (true) { val n = r.read(buf); if (n < 0) break; queueOut(String(buf, 0, n), err) }
-            } catch (_: Exception) { }
+        return try {
+            val (args, env) = LinuxEnv.shellSpec(dir)
+            var s: PtySession? = null
+            s = PtySession(args, env, act.filesDir.path, rows.coerceAtLeast(5), cols.coerceAtLeast(20),
+                onOutput = { queuePty(it) },
+                onExit = { code -> ui.postDelayed({ if (session === s) { session = null; flushPty(); emit("onPtyExit", code) } }, 60) })
+            session = s
+            true
+        } catch (e: Throwable) {
+            emit("onPty", "\r\n[31m${e.message}[0m\r\n")
+            false
         }
-        pump(p.inputStream, false)
-        pump(p.errorStream, true)
-        thread(isDaemon = true) {
-            val code = try { p.waitFor() } catch (_: Exception) { -1 }
-            ui.postDelayed({ if (shell === p) { shell = null; emit("onShellExit", code) } }, 80)
-        }
-        return true
     }
 
-    @JavascriptInterface
-    fun shellWrite(text: String) {
-        val p = shell ?: return
-        thread { try { p.outputStream.write(text.toByteArray()); p.outputStream.flush() } catch (_: Exception) { } }
-    }
-
-    @JavascriptInterface
-    fun shellKill() {
-        val p = shell ?: return
-        shell = null
-        p.destroy()
-    }
+    @JavascriptInterface fun ptyWrite(text: String) { session?.write(text) }
+    @JavascriptInterface fun ptyResize(rows: Int, cols: Int) { session?.resize(rows, cols) }
+    @JavascriptInterface fun ptyKill() { val s = session ?: return; session = null; s.kill() }
 
     // ------------ файлы, виджет, система ------------
 
@@ -136,6 +124,12 @@ class NativeBridge(private val act: MainActivity) {
     @JavascriptInterface
     fun setWidgetInterval(v: String) {
         Widgets.setInterval(act, v)
+        Widgets.updateAll(act)
+    }
+
+    @JavascriptInterface
+    fun setLanguage(code: String) {
+        Widgets.setLanguage(act, code)
         Widgets.updateAll(act)
     }
 

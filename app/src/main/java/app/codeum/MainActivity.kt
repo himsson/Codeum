@@ -168,7 +168,7 @@ class MainActivity : Activity() {
     }
 
     override fun onDestroy() {
-        bridge.shellKill()
+        bridge.ptyKill()
         web.destroy()
         super.onDestroy()
     }
