@@ -1,0 +1,95 @@
+Codeum — Проприетарная лицензия
+Copyright (c) 2026 himsson. Все права защищены.
+
+1. Правообладатель
+
+   Программа Codeum, включая исходный код, скомпилированные файлы (APK), интерфейс,
+   дизайн, логотип, название, тексты и иные материалы в этом репозитории
+   (далее — «Программа»), является собственностью himsson (далее — «Автор»).
+
+2. Что разрешено
+
+   a) Просматривать исходный код Программы на сайте GitHub.
+   b) Скачивать официальные сборки Программы со страницы Releases этого репозитория
+      и использовать их на своих устройствах в личных некоммерческих целях.
+
+   Иных прав эта лицензия не предоставляет. Всё, что прямо не разрешено, — запрещено.
+
+3. Что запрещено без письменного разрешения Автора
+
+   a) Копировать исходный код или его части, в том числе отдельные функции, файлы,
+      фрагменты интерфейса и дизайна.
+   b) Изменять Программу, создавать производные работы, форки с изменениями,
+      модификации, переводы и «пересборки».
+   c) Распространять Программу или её части в любом виде: публиковать, выкладывать
+      на другие сайты и в магазины приложений, передавать третьим лицам, в том числе
+      бесплатно.
+   d) Использовать код, дизайн, логотип или название Codeum в своих проектах
+      и продуктах.
+   e) Использовать Программу в коммерческих целях, продавать её, сдавать в аренду,
+      встраивать в платные продукты и услуги.
+   f) Декомпилировать, дизассемблировать и иным способом восстанавливать исходный код
+      из скомпилированных файлов, кроме случаев, прямо разрешённых законом.
+   g) Удалять или изменять упоминания об авторских правах.
+   h) Использовать исходный код Программы для обучения моделей машинного обучения
+      и систем искусственного интеллекта.
+
+4. Сторонние компоненты
+
+   Программа использует компоненты других авторов (Android SDK и библиотеки AndroidX,
+   Apache Commons Compress, XZ for Java, Gradle Wrapper и др.). Они распространяются
+   на условиях своих собственных лицензий, и эта лицензия на них не распространяется.
+   Языки программирования и Linux-окружение, которые Программа скачивает по запросу
+   пользователя, также распространяются на условиях лицензий их авторов.
+
+5. Отказ от гарантий
+
+   Программа предоставляется «как есть», без каких-либо гарантий. Автор не несёт
+   ответственности за любой ущерб, возникший в результате использования
+   или невозможности использования Программы.
+
+6. Прекращение
+
+   Нарушение любого из условий автоматически прекращает право использования Программы.
+
+7. Прочее
+
+   Публикация исходного кода в открытом доступе не означает передачу каких-либо прав
+   на него. По вопросам использования, сотрудничества и получения разрешений
+   обращайтесь к Автору через https://github.com/himsson.
+
+--------------------------------------------------------------------------------
+
+Codeum — Proprietary License
+Copyright (c) 2026 himsson. All rights reserved.
+
+This repository and everything in it — source code, compiled builds (APK),
+user interface, design, logo, name, texts and other materials (the "Software") —
+are the property of himsson (the "Author").
+
+PERMITTED:
+  - Viewing the source code on GitHub.
+  - Downloading official builds from this repository's Releases page and using
+    them on your own devices for personal, non-commercial purposes.
+
+PROHIBITED without the Author's prior written permission:
+  - Copying the source code or any part of it.
+  - Modifying the Software or creating derivative works, including modified forks.
+  - Redistributing, publishing, sublicensing or sharing the Software or any part
+    of it, in any form, whether free of charge or not.
+  - Using the code, design, logo or the "Codeum" name in other projects or products.
+  - Any commercial use, including selling, renting or bundling the Software.
+  - Decompiling or reverse engineering the compiled builds, except where such
+    restriction is prohibited by applicable law.
+  - Removing or altering copyright notices.
+  - Using the source code to train machine learning or AI models.
+
+Anything not expressly permitted is prohibited. Third-party components are
+licensed under their own terms and are not covered by this license.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. IN NO EVENT SHALL
+THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM THE
+USE OF OR INABILITY TO USE THE SOFTWARE.
+
+Any breach of these terms automatically terminates your right to use the Software.
+Making the source code publicly visible does not grant any rights to it.

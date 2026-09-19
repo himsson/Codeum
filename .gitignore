@@ -9,3 +9,4 @@ keystore/
 *.iml
 .claude/
 .kotlin/
+RELEASING.md
