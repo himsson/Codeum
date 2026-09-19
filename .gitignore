@@ -1,0 +1,11 @@
+.gradle/
+build/
+app/build/
+local.properties
+build.log
+# ключ подписи НЕ выкладывать в репозиторий — храни копию в надёжном месте
+keystore/
+.idea/
+*.iml
+.claude/
+.kotlin/

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Иконка для Android 7 и ниже (на 8+ используется adaptive icon из drawable-anydpi-v26) -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="12dp" />
+            <size android:width="48dp" android:height="48dp" />
+            <gradient
+                android:angle="315"
+                android:startColor="#5B8CFF"
+                android:endColor="#3DDBC4" />
+        </shape>
+    </item>
+    <item
+        android:drawable="@drawable/logo_mark"
+        android:bottom="10dp"
+        android:left="10dp"
+        android:right="10dp"
+        android:top="10dp" />
+</layer-list>

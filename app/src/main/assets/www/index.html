@@ -1,0 +1,1807 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-content">
+<meta name="theme-color" content="#0e1117">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Codeum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e1117;--panel:#161b25;--card:#1d2330;--line:#283044;--text:#e7eaf3;--muted:#8b93a8;--accent:#5b8cff;--accent2:#3ddbc4;--kw:#c792ea;--str:#b5e08d;--num:#ff9e64;--com:#5c6680;--fn:#7aa2f7;--ty:#ffcb6b;--term:#080a0f;--onacc:#fff;--fs:13px;--vh:100%}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+/* тонкие, почти незаметные полосы прокрутки */
+::-webkit-scrollbar{width:4px;height:4px;background:transparent}
+::-webkit-scrollbar-track,::-webkit-scrollbar-corner{background:transparent}
+::-webkit-scrollbar-button{display:none;width:0;height:0}
+::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--muted) 22%,transparent);border-radius:9px}
+::-webkit-scrollbar-thumb:hover,::-webkit-scrollbar-thumb:active{background:color-mix(in srgb,var(--muted) 45%,transparent)}
+@supports not selector(::-webkit-scrollbar){*{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--muted) 22%,transparent) transparent}}
+/* превью рабочего стола телефона */
+.homescreen{position:relative;border-radius:28px;padding:34px 14px 16px;overflow:hidden;border:1px solid var(--line);
+  background:radial-gradient(90% 60% at 20% 0%,color-mix(in srgb,var(--accent) 45%,transparent),transparent 70%),radial-gradient(80% 60% at 100% 100%,color-mix(in srgb,var(--accent2) 35%,transparent),transparent 70%),#0a0c12}
+.hs-status{position:absolute;top:10px;left:18px;right:18px;display:flex;justify-content:space-between;font:600 11px Inter;color:#fff;opacity:.85}
+.hs-clock{text-align:center;color:#fff;font-size:40px;font-weight:300;letter-spacing:-.02em;margin:6px 0 2px}
+.hs-date{text-align:center;color:rgba(255,255,255,.75);font-size:12px;margin-bottom:16px}
+.hs-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.hs-app{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10px;color:rgba(255,255,255,.85)}
+.hs-app i{width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.14);display:block}
+.hs-app .logo{width:46px;height:46px;border-radius:14px}
+.hs-app .logo svg{width:24px;height:24px}
+.homescreen .widget{box-shadow:0 20px 40px -18px rgba(0,0,0,.7)}
+.hs-pair{display:flex;gap:10px;align-items:stretch}
+.hs-pair .wsmall{width:auto;flex:1}
+pre,code,textarea,.tab,.term,.w-code,.code pre,.code textarea{font-variant-ligatures:none!important;font-feature-settings:"liga" 0,"calt" 0!important}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;overflow:hidden;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:disabled{opacity:.45;cursor:default}
+input,textarea,select{font:inherit;color:inherit}
+a{color:var(--accent)}
+.i{width:20px;height:20px;flex:0 0 auto}
+.app{height:var(--vh);display:flex;flex-direction:column;max-width:480px;margin:0 auto;position:relative;overflow:hidden;
+  background:radial-gradient(120% 50% at 50% -12%,color-mix(in srgb,var(--accent) 16%,transparent),transparent 62%),var(--bg)}
+@media(min-width:560px){.app{border-left:1px solid var(--line);border-right:1px solid var(--line)}}
+
+/* header */
+header{display:flex;align-items:center;gap:10px;padding:12px 16px 10px;padding-top:max(12px,env(safe-area-inset-top))}
+.logo{width:36px;height:36px;border-radius:11px;background:linear-gradient(140deg,var(--accent),var(--accent2));display:grid;place-items:center;flex:0 0 auto;
+  box-shadow:0 6px 18px -4px color-mix(in srgb,var(--accent) 60%,transparent),inset 0 1px 0 rgba(255,255,255,.35)}
+.logo svg{width:20px;height:20px}
+.logo.xs{width:22px;height:22px;border-radius:7px;box-shadow:none}.logo.xs svg{width:13px;height:13px}
+.htitle{flex:1;min-width:0}
+.htitle b{display:block;font-size:17px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.htitle small{display:block;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.htitle small:empty{display:none}
+.icon-btn{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);color:var(--text);flex:0 0 auto}
+.icon-btn:active{transform:scale(.94)}
+.run{height:38px;border-radius:12px;padding:0 14px 0 12px;display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;color:var(--onacc);
+  background:linear-gradient(140deg,var(--accent),color-mix(in srgb,var(--accent) 70%,var(--accent2)));box-shadow:0 6px 16px -6px var(--accent)}
+.run .i{width:16px;height:16px}
+.run:active{transform:scale(.96)}
+
+main{flex:1;position:relative;overflow:hidden}
+.view{position:absolute;inset:0;display:none;flex-direction:column;overflow-y:auto;overflow-x:hidden;animation:fade .22s ease}
+.view.on{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.pad{padding:4px 16px 24px}
+.muted{color:var(--muted)}
+.grow{flex:1;min-width:0}
+
+/* home */
+.hello{margin:6px 0 16px}.hello .muted{font-size:13px}.hello h2{font-size:26px;font-weight:800;letter-spacing:-.02em;margin-top:2px}
+.hero{position:relative;border-radius:22px;padding:16px;overflow:hidden;cursor:pointer;margin-top:4px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 26%,var(--panel)),color-mix(in srgb,var(--accent2) 16%,var(--panel)));border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line))}
+.hero:after{content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:radial-gradient(color-mix(in srgb,var(--accent2) 35%,transparent),transparent 70%)}
+.hero-top{display:flex;align-items:center;gap:14px;position:relative;z-index:1}
+.hero-k{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600}
+.hero-t{font-size:19px;font-weight:700;margin:2px 0}
+.hero-s{font-size:12.5px;color:var(--muted);font-family:'JetBrains Mono'}
+.hero-go{width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--onacc);display:grid;place-items:center;box-shadow:0 8px 20px -6px var(--accent)}
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0 4px}
+.qa{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:11.5px;font-weight:500;color:var(--muted)}
+.qa span{width:100%;aspect-ratio:1;max-width:64px;border-radius:18px;display:grid;place-items:center;background:var(--panel);border:1px solid var(--line);color:var(--c)}
+.qa span .i{width:24px;height:24px}
+.qa:active span{transform:scale(.94)}
+.sect-row{display:flex;align-items:center;justify-content:space-between;margin:22px 0 10px}
+.sect{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:600}
+.link{color:var(--accent);font-size:13px;font-weight:600}
+.hscroll{display:flex;gap:10px;overflow-x:auto;margin:0 -16px;padding:0 16px 4px;scrollbar-width:none}
+.hscroll::-webkit-scrollbar,.tabs::-webkit-scrollbar,.keys::-webkit-scrollbar,.chips::-webkit-scrollbar{display:none}
+.pcard{flex:0 0 150px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;text-align:left}
+.pcard .nm{font-weight:600;font-size:14px;margin-top:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard .sub{font-size:11.5px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
+.chips.wrap{flex-wrap:wrap}
+.chip{display:flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:13px;font-weight:500;white-space:nowrap}
+.chip.add{padding:6px 12px;color:var(--accent);border-style:dashed}
+.fchip{padding:7px 14px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:13px;font-weight:500;white-space:nowrap;color:var(--muted)}
+.fchip.mono{font-family:'JetBrains Mono';font-size:12.5px}
+.fchip.on{background:var(--accent);border-color:var(--accent);color:var(--onacc)}
+
+.tile{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex:0 0 auto;font:700 12px 'JetBrains Mono';letter-spacing:-.03em;
+  background:linear-gradient(145deg,var(--c),color-mix(in srgb,var(--c) 62%,#000));color:var(--fg);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.tile .i{width:18px;height:18px}
+.tile.sm{width:24px;height:24px;border-radius:7px;font-size:9px}.tile.sm .i{width:13px;height:13px}
+.tile.lg{width:50px;height:50px;border-radius:15px;font-size:15px}
+
+.item{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:8px;width:100%;text-align:left}
+.item .nm{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .sub{font-size:12px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .ghost{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:var(--muted);flex:0 0 auto}
+.item .ghost .i{width:18px;height:18px}
+.empty{padding:22px;text-align:center;border:1.5px dashed var(--line);border-radius:16px;color:var(--muted);font-size:13.5px;line-height:1.45}
+.search{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:0 12px;height:44px;margin-bottom:12px}
+.search input{flex:1;background:none;border:0;outline:0;font-size:15px;min-width:0}
+.search .i{color:var(--muted);width:18px}
+.fab{position:absolute;right:18px;bottom:18px;width:56px;height:56px;border-radius:18px;display:grid;place-items:center;color:var(--onacc);
+  background:linear-gradient(140deg,var(--accent),var(--accent2));box-shadow:0 12px 26px -8px var(--accent);z-index:3}
+.fab .i{width:26px;height:26px}
+.actions3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.act{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:14px;background:var(--panel);border:1px solid var(--line);font-size:12px;font-weight:600}
+.act .i{color:var(--accent)}
+
+/* widget */
+.widget{position:relative;overflow:hidden;border-radius:24px;padding:14px 15px 15px;border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line));
+  background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 20%,var(--panel)),var(--panel) 58%,color-mix(in srgb,var(--accent2) 10%,var(--panel)));box-shadow:0 18px 40px -22px var(--accent)}
+.widget:before{content:"";position:absolute;right:-50px;bottom:-60px;width:170px;height:170px;border-radius:50%;background:radial-gradient(color-mix(in srgb,var(--accent2) 22%,transparent),transparent 70%)}
+.w-top{display:flex;align-items:center;gap:8px;position:relative}
+.w-k{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);flex:1}
+.w-lang{display:flex;align-items:center;gap:6px;font:600 11px 'JetBrains Mono';color:var(--muted)}
+.w-t{font-size:16px;font-weight:700;margin:10px 0 8px;position:relative}
+.w-code{position:relative;background:color-mix(in srgb,var(--term) 70%,transparent);border:1px solid color-mix(in srgb,var(--line) 70%,transparent);border-radius:12px;padding:10px 12px;font:11.5px/1.55 'JetBrains Mono';white-space:pre;overflow:hidden;color:#d8dee9}
+.w-x{position:relative;font-size:12.5px;line-height:1.45;color:var(--muted);margin-top:9px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.w-foot{display:flex;justify-content:space-between;margin-top:8px;font:500 10.5px 'JetBrains Mono';color:var(--muted);position:relative}
+.wsmall{width:160px;aspect-ratio:1;display:flex;flex-direction:column;padding:13px}
+.wsmall .w-t{font-size:14px;margin:auto 0 4px}
+.wprev{display:flex;gap:12px;align-items:flex-end}
+.wlabel{font-size:11px;color:var(--muted);text-align:center;margin-top:6px}
+
+/* store */
+.banner{border-radius:20px;padding:16px 18px;margin-bottom:14px;background:linear-gradient(120deg,color-mix(in srgb,var(--accent2) 22%,var(--panel)),color-mix(in srgb,var(--accent) 22%,var(--panel)));border:1px solid var(--line);display:flex;gap:14px;align-items:center}
+.banner b{font-size:24px;font-weight:800;letter-spacing:-.02em;flex:1}
+.stack{display:flex}.stack .tile{width:32px;height:32px;border-radius:10px;font-size:9px;margin-left:-8px;border:2px solid var(--panel)}
+.lang .desc{font-size:12px;color:var(--muted);margin-top:3px;white-space:normal;line-height:1.35}
+.lang .meta{display:flex;gap:6px;margin-top:6px}
+.tag{font:500 10.5px 'JetBrains Mono';padding:2px 7px;border-radius:6px;background:var(--card);color:var(--muted)}
+.btn{height:34px;padding:0 13px;border-radius:10px;font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px;white-space:nowrap;flex:0 0 auto}
+.btn.pri{background:var(--accent);color:var(--onacc)}
+.btn.sec{background:var(--card);border:1px solid var(--line)}
+.btn.ok{background:color-mix(in srgb,var(--accent2) 18%,transparent);color:var(--accent2)}
+.btn.apk{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.btn .i{width:15px;height:15px}
+.spin{width:15px;height:15px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:rot .7s linear infinite;flex:0 0 auto}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+/* editor */
+.ed-bar{display:flex;align-items:center;gap:6px;padding:0 12px 8px}
+.tabs{flex:1;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.tab{display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:0 10px;height:34px;font:500 12px 'JetBrains Mono';white-space:nowrap;color:var(--muted)}
+.tab i{width:7px;height:7px;border-radius:50%;background:var(--c)}
+.tab.on{color:var(--text);border-color:color-mix(in srgb,var(--accent) 60%,var(--line));background:color-mix(in srgb,var(--accent) 12%,var(--panel));padding-right:4px}
+.tab .tx{display:none;width:20px;height:20px;border-radius:6px;place-items:center;color:var(--muted)}
+.tab.on .tx{display:grid}.tab .tx .i{width:13px;height:13px}
+.ed-bar .icon-btn{width:34px;height:34px;border-radius:10px}
+.ed-bar .icon-btn .i{width:17px;height:17px}
+.ed-bar .ai{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,var(--line));background:color-mix(in srgb,var(--accent) 12%,var(--card))}
+.findbar{display:flex;gap:6px;padding:0 12px 8px}
+.findbar input{flex:1;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--panel);padding:0 12px;outline:0;font-family:'JetBrains Mono';font-size:13px}
+.editor{flex:1;min-height:120px;display:flex;margin:0 12px;border-radius:16px;background:var(--panel);border:1px solid var(--line);overflow:hidden;position:relative}
+.gutter{overflow:hidden;background:color-mix(in srgb,var(--card) 60%,var(--panel));border-right:1px solid var(--line);flex:0 0 auto}
+.gutter div{padding:12px 8px 12px 10px;text-align:right;color:var(--com);font:var(--fs)/1.65 'JetBrains Mono';white-space:pre;user-select:none;min-width:36px}
+.nolines .gutter{display:none}
+.code{flex:1;position:relative;overflow:hidden}
+.code pre,.code textarea{padding:12px 14px 40vh;font:var(--fs)/1.65 'JetBrains Mono';white-space:pre;tab-size:4;letter-spacing:0;word-spacing:0;font-variant-ligatures:none}
+.code pre{position:absolute;top:0;left:0;min-width:100%;pointer-events:none;color:var(--text);will-change:transform}
+.code textarea{position:absolute;inset:0;width:100%;height:100%;background:transparent;color:transparent;caret-color:var(--accent);border:0;outline:0;resize:none;overflow:auto;-webkit-text-fill-color:transparent}
+.code textarea::selection{background:color-mix(in srgb,var(--accent) 35%,transparent);-webkit-text-fill-color:transparent}
+.ed-empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:14px;padding:30px;background:var(--panel);z-index:2}
+.kw{color:var(--kw)}.str{color:var(--str)}.num{color:var(--num)}.com{color:var(--com);font-style:italic}.fn{color:var(--fn)}.ty{color:var(--ty)}
+.status{display:flex;gap:12px;align-items:center;padding:7px 16px;font:500 11px 'JetBrains Mono';color:var(--muted);white-space:nowrap;overflow:hidden}
+.status .dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);display:inline-block;margin-right:5px}
+.keys{display:flex;gap:6px;padding:6px 10px 8px;overflow-x:auto;scrollbar-width:none;background:color-mix(in srgb,var(--panel) 70%,transparent);border-top:1px solid var(--line)}
+.keys button{flex:0 0 auto;min-width:40px;height:40px;padding:0 10px;border-radius:10px;background:var(--card);border:1px solid var(--line);font:600 15px 'JetBrains Mono';color:var(--text);box-shadow:0 2px 0 var(--line)}
+.keys button.acc{color:var(--accent)}
+.keys button:active{transform:translateY(2px);box-shadow:none;background:var(--line)}
+.nokeys #v-editor .keys{display:none}
+.drawer-bg{position:absolute;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:.2s;z-index:5}
+.drawer{position:absolute;left:0;top:0;bottom:0;width:84%;max-width:340px;background:var(--panel);border-right:1px solid var(--line);z-index:6;transform:translateX(-102%);transition:transform .25s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;padding:16px 10px 16px 12px}
+.drawer-on .drawer{transform:none}.drawer-on .drawer-bg{opacity:1;pointer-events:auto}
+.drawer h3{font-size:17px;margin-bottom:2px}
+.dtools{display:flex;gap:6px;margin:0 0 10px}
+.dtools button{flex:1;height:36px;border-radius:10px;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:600}
+.dtools .i{width:16px;height:16px;color:var(--accent)}
+.ftree{flex:1;overflow-y:auto;margin:0 -4px}
+.frow{display:flex;align-items:center;gap:8px;padding:8px;border-radius:10px;font:500 13px 'JetBrains Mono';width:100%;text-align:left}
+.frow.on{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
+.frow .grow{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.frow .x{color:var(--muted);padding:3px;display:grid;place-items:center}
+.frow .x .i{width:15px;height:15px}
+.frow .car{width:14px;height:14px;color:var(--muted);transition:.15s}
+.frow .car.open{transform:rotate(90deg)}
+.frow .fold{color:#f5a524}
+.gh-pill{display:flex;align-items:center;gap:8px;padding:10px;border-radius:12px;background:var(--card);font-size:12.5px;margin-top:8px}
+
+/* terminal */
+.term-wrap{flex:1;display:flex;flex-direction:column;margin:0 12px 10px;border-radius:16px;overflow:hidden;background:var(--term);border:1px solid var(--line);min-height:0}
+.term-head{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
+.dots{display:flex;gap:6px}.dots i{width:10px;height:10px;border-radius:50%}
+.term-head .t{flex:1;text-align:center;font:500 11.5px 'JetBrains Mono';color:#7f8aa3}
+.term-head button{font:500 11.5px 'JetBrains Mono';color:#7f8aa3}
+.term{flex:1;overflow:auto;padding:12px;font:12.5px/1.6 'JetBrains Mono';color:#d8dee9;white-space:pre-wrap;word-break:break-word}
+.term>div{min-height:1.6em}
+.term .p{color:var(--accent2)}.term .e{color:#ff6b81}.term .d{color:#7f8aa3}.term .w{color:#ffd166}.term .a{color:var(--accent)}
+.term-in{display:flex;align-items:center;gap:8px;padding:10px 12px;border-top:1px solid rgba(255,255,255,.06);font:13px 'JetBrains Mono'}
+.term-in span{color:var(--accent2);white-space:nowrap}
+.term-in input{flex:1;background:none;border:0;outline:0;color:#e9edf5;font:13px 'JetBrains Mono';min-width:0}
+
+/* nav */
+nav{display:flex;padding:6px 8px;padding-bottom:max(8px,env(safe-area-inset-bottom));background:color-mix(in srgb,var(--panel) 88%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line)}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;font-size:10.5px;font-weight:600;color:var(--muted)}
+nav button span{width:52px;height:30px;border-radius:999px;display:grid;place-items:center;transition:.2s}
+nav button.on{color:var(--text)}
+nav button.on span{background:color-mix(in srgb,var(--accent) 20%,transparent);color:var(--accent)}
+.kb nav{display:none}
+
+/* sheet */
+.sheet{position:fixed;inset:0;z-index:20;display:none}
+.sheet.on{display:block}
+.sheet-bg{position:absolute;inset:0;background:rgba(0,0,0,.5);animation:fadeIn .2s}
+.sheet-card{position:absolute;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;max-height:90%;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-bottom:0;border-radius:24px 24px 0 0;padding:8px 18px max(22px,env(safe-area-inset-bottom));animation:up .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes up{from{transform:translateY(100%)}}@keyframes fadeIn{from{opacity:0}}
+.grab{width:40px;height:5px;border-radius:9px;background:var(--line);margin:4px auto 14px}
+.sheet h3{font-size:20px;font-weight:700;margin-bottom:4px}
+.sheet p.muted{font-size:13.5px;line-height:1.5}
+.field{display:block;margin-top:14px}
+.field>span{display:block;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:6px}
+.field input,.field textarea{width:100%;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--card);padding:0 14px;outline:0;font-size:15px}
+.field textarea{height:84px;padding:12px 14px;resize:none;line-height:1.4}
+.field input:focus,.field textarea:focus{border-color:var(--accent)}
+.preview-path{margin-top:12px;font:500 12.5px 'JetBrains Mono';color:var(--muted)}
+.preview-path b{color:var(--text)}
+.lgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.lpick{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);font-size:11px;font-weight:600;position:relative}
+.lpick.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--card))}
+.hint{display:flex;gap:12px;align-items:center;padding:14px;border-radius:16px;margin:4px 0 6px;
+  background:linear-gradient(120deg,color-mix(in srgb,#f5a524 16%,var(--card)),var(--card));border:1px solid color-mix(in srgb,#f5a524 35%,var(--line))}
+.hint .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,#f5a524 22%,transparent);color:#f5a524;flex:0 0 auto}
+.hint b{display:block;font-size:14.5px}.hint small{display:block;font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.4}
+.bigbtn{width:100%;height:50px;border-radius:14px;font-weight:700;font-size:15px;margin-top:18px;background:linear-gradient(140deg,var(--accent),color-mix(in srgb,var(--accent) 70%,var(--accent2)));color:var(--onacc);display:flex;align-items:center;justify-content:center;gap:8px}
+.bigbtn.danger{background:#e5484d;color:#fff}
+.bigbtn.sec{background:var(--card);color:var(--text);border:1px solid var(--line);margin-top:10px}
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tcard{border-radius:14px;padding:11px;border:2px solid transparent;text-align:left;font-weight:600;font-size:13px}
+.tcard pre{font:11px/1.5 'JetBrains Mono';margin-top:6px}
+.row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line);font-size:14.5px;gap:12px;width:100%;text-align:left}
+.row .rl{display:flex;align-items:center;gap:12px;min-width:0}
+.row .rl small{display:block;font-size:12px;color:var(--muted);margin-top:1px}
+.row .ri{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--card);flex:0 0 auto}
+.row .ri .i{width:18px;height:18px}
+.row .rv{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:4px;white-space:nowrap}
+.row .rv .i{width:16px;height:16px}
+.seg{display:flex;background:var(--card);border-radius:10px;padding:3px}
+.seg button{padding:6px 12px;border-radius:8px;font-size:13px;font-weight:600;color:var(--muted);white-space:nowrap}
+.seg button.on{background:var(--accent);color:var(--onacc)}
+.seg.full{width:100%}.seg.full button{flex:1}
+.sw{width:46px;height:28px;border-radius:99px;background:var(--line);position:relative;transition:.2s;flex:0 0 auto}
+.sw:after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:var(--accent)}.sw.on:after{left:21px}
+input[type=range]{width:130px;accent-color:var(--accent)}
+.note{display:flex;gap:10px;padding:12px;border-radius:12px;background:var(--card);font-size:12.5px;color:var(--muted);line-height:1.45;margin-top:14px}
+.note .i{color:var(--accent);width:18px}
+.steps{margin:12px 0 0 18px;font-size:13.5px;line-height:1.6;color:var(--muted)}
+.steps b{color:var(--text)}
+.avatar{width:38px;height:38px;border-radius:50%;flex:0 0 auto;background:var(--card)}
+/* ai */
+.ai-out{margin-top:14px;font-size:14px;line-height:1.55}
+.ai-out p{margin:0 0 10px}
+.ai-out code{font:12.5px 'JetBrains Mono';background:var(--card);padding:1px 5px;border-radius:5px}
+.ai-code{margin:6px 0 12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--term)}
+.ai-code pre{padding:10px 12px;font:12px/1.55 'JetBrains Mono';overflow-x:auto;color:#d8dee9;white-space:pre}
+.ai-code div{display:flex;gap:6px;padding:6px;border-top:1px solid var(--line);background:var(--card)}
+.ai-code div button{flex:1;height:32px;border-radius:8px;font-size:12px;font-weight:600;background:var(--panel);border:1px solid var(--line)}
+.thinking{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13.5px;margin-top:16px}
+/* обновление */
+.trow{display:flex;align-items:center;gap:8px;min-width:0}
+.updbox{display:flex;align-items:center;gap:5px;flex:0 0 auto;animation:fade .3s ease}
+.upd{height:26px;padding:0 10px 0 8px;border-radius:999px;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:var(--onacc);
+  background:linear-gradient(140deg,var(--accent),var(--accent2));box-shadow:0 4px 14px -4px var(--accent)}
+.upd .i{width:14px;height:14px}
+.upd-more{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);color:var(--muted)}
+.upd-more .i{width:15px;height:15px;transition:transform .2s}
+.upd-more.open .i{transform:rotate(180deg)}
+.upd-panel{position:absolute;left:12px;right:12px;top:calc(max(12px,env(safe-area-inset-top)) + 54px);z-index:15;max-height:62%;overflow-y:auto;
+  background:var(--panel);border:1px solid color-mix(in srgb,var(--accent) 40%,var(--line));border-radius:20px;padding:16px;box-shadow:0 24px 50px -20px rgba(0,0,0,.7);animation:fade .2s ease}
+.upd-panel h4{font-size:17px;margin-bottom:2px}
+.upd-panel .meta{font-size:12px;color:var(--muted);font-family:'JetBrains Mono';margin-bottom:10px}
+.notes{font-size:14px;line-height:1.55}
+.notes p{margin:0 0 8px}.notes ul{margin:0 0 8px 18px}.notes li{margin:2px 0}
+.notes .h{display:block;font-weight:700;margin:10px 0 4px}
+.notes code{font:12.5px 'JetBrains Mono';background:var(--card);padding:1px 5px;border-radius:5px}
+
+/* онбординг */
+.onb{position:fixed;inset:0;z-index:30;display:flex;justify-content:center;overflow-y:auto;
+  background:radial-gradient(120% 55% at 50% -10%,color-mix(in srgb,var(--accent) 22%,transparent),transparent 65%),var(--bg)}
+.onb-in{width:100%;max-width:480px;padding:max(20px,env(safe-area-inset-top)) 22px max(24px,env(safe-area-inset-bottom));display:flex;flex-direction:column;min-height:100%}
+.onb-top{display:flex;align-items:center;gap:10px;height:40px}
+.onb-dots{flex:1;display:flex;justify-content:center;gap:6px}
+.onb-dots i{width:8px;height:8px;border-radius:9px;background:var(--line);transition:.3s}
+.onb-dots i.on{width:26px;background:var(--accent)}
+.onb-step{flex:1;display:flex;flex-direction:column;animation:fade .3s ease}
+.onb h1{font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-top:18px}
+.onb .lead{color:var(--muted);font-size:15px;line-height:1.5;margin-top:10px}
+.onb-logo{width:78px;height:78px;border-radius:24px;margin:28px auto 4px}
+.onb-logo svg{width:42px;height:42px}
+.nick-in{margin-top:26px;display:flex;align-items:center;gap:10px;height:58px;border-radius:16px;border:1.5px solid var(--line);background:var(--panel);padding:0 16px;transition:.2s}
+.nick-in:focus-within{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 18%,transparent)}
+.nick-in span{color:var(--accent);font:700 18px 'JetBrains Mono'}
+.nick-in input{flex:1;background:none;border:0;outline:0;font-size:19px;font-weight:600;min-width:0}
+.onb-hint{font-size:12.5px;color:var(--muted);margin-top:8px;min-height:18px}
+.onb-hint.err{color:#ff6b81}
+.onb-prev{margin-top:18px;border-radius:14px;background:var(--term);border:1px solid var(--line);padding:12px 14px;font:13px/1.6 'JetBrains Mono';color:#d8dee9}
+.onb-prev .p{color:var(--accent2)}
+.onb-foot{margin-top:auto;padding-top:22px;display:flex;flex-direction:column;gap:10px}
+.onb-foot .bigbtn{margin-top:0}
+.skip{height:46px;border-radius:14px;color:var(--muted);font-weight:600;font-size:14.5px}
+.lsel{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}
+.lsel button{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px 10px;border-radius:16px;border:1.5px solid var(--line);background:var(--panel);font-size:12px;font-weight:600}
+.lsel button small{font:500 10px 'JetBrains Mono';color:var(--muted)}
+.lsel button.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 13%,var(--panel))}
+.lsel button.on:after{content:"✓";position:absolute;top:6px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--accent);color:var(--onacc);font-size:11px;display:grid;place-items:center}
+.lsel button:disabled{opacity:.4}
+.oscards{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.oscard{border-radius:18px;border:1.5px solid var(--line);background:var(--panel);padding:12px;text-align:left}
+.oscard.on{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 15%,transparent)}
+.oscard .nm{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px}
+.oscard .nm small{font-weight:500;color:var(--muted);font-size:12px;margin-left:auto}
+.oscard .mini{margin-top:9px;border-radius:10px;overflow:hidden;font:11.5px/1.55 'JetBrains Mono'}
+.oscard .mini .bar{height:20px;display:flex;align-items:center;gap:5px;padding:0 8px;font-size:10px}
+.oscard .mini pre{padding:7px 10px;white-space:pre;overflow:hidden}
+
+/* терминалы разных ОС */
+.term-head .t{flex:1;text-align:center;font:500 11.5px 'JetBrains Mono';white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.term-head .clr{font:500 11.5px 'JetBrains Mono';opacity:.75}
+.wbtn{display:flex;gap:14px;font-size:12px;opacity:.8}
+.gbtn{display:flex;gap:7px}.gbtn i{width:12px;height:12px;border-radius:50%;background:#555;display:block}
+.os-mac{background:#1e1e1e!important;border-color:#3a3a3a!important}
+.os-mac .term-head{background:linear-gradient(#3a3a3a,#2e2e2e);color:#b8b8b8}
+.os-mac .term{color:#f2f2f2}.os-mac .term .p{color:#f2f2f2}.os-mac .term .d{color:#8e8e93}.os-mac .term .a{color:#64d2ff}
+.os-mac .term-in span{color:#f2f2f2}
+.os-linux{background:#300a24!important;border-color:#4a1a3c!important}
+.os-linux .term-head{background:#2c2c2c;color:#dcdcdc}
+.os-linux .term{color:#eeeeec}.os-linux .term .d{color:#a39aa0}.os-linux .term .a{color:#8ae234}
+.os-linux .pu{color:#8ae234;font-weight:700}.os-linux .pd{color:#729fcf;font-weight:700}
+.os-linux .term .p{color:#eeeeec}
+.os-windows{background:#012456!important;border-color:#16407e!important;border-radius:10px!important}
+.os-windows .term-head{background:#1f1f1f;color:#e6e6e6;justify-content:flex-start}
+.os-windows .term-head .t{text-align:left}
+.os-windows .term{color:#eeedf0}.os-windows .term .p{color:#eeedf0}.os-windows .term .d{color:#9fb3d1}.os-windows .term .e{color:#ff8b8b}.os-windows .term .a{color:#f9f1a5}
+.os-windows .term-in span{color:#eeedf0}
+.pstab{display:flex;align-items:center;gap:6px;background:#2b2b2b;border-radius:6px 6px 0 0;padding:3px 10px;margin:-4px 0 -10px;font:500 11px Inter;color:#e6e6e6}
+.pstab b{width:14px;height:14px;border-radius:3px;background:#2a6fd6;color:#fff;font:700 8px 'JetBrains Mono';display:grid;place-items:center}
+.toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,16px);background:var(--card);border:1px solid var(--line);padding:11px 16px;border-radius:14px;font-size:13.5px;font-weight:500;opacity:0;transition:.25s;pointer-events:none;z-index:40;box-shadow:0 10px 30px rgba(0,0,0,.35);max-width:90%;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7l5 5-5 5"/><path d="M13 17h6"/></svg></div>
+    <div class="htitle"><div class="trow"><b id="hTitle">Codeum</b>
+      <span class="updbox" id="updBox" hidden><button class="upd" data-act="update" id="updBtn"></button><button class="upd-more" data-act="upd-notes" id="updMore" aria-label="Что нового"></button></span></div>
+      <small id="hSub"></small></div>
+    <button class="run" id="runBtn" data-act="run" hidden></button>
+    <button class="icon-btn" data-act="settings" aria-label="Настройки" data-i="gear"></button>
+  </header>
+  <div class="upd-panel" id="updPanel" hidden></div>
+  <main id="main">
+    <section class="view on" id="v-home"></section>
+    <section class="view" id="v-projects"></section>
+    <section class="view" id="v-editor">
+      <div class="ed-bar">
+        <button class="icon-btn" data-act="drawer" aria-label="Файлы" data-i="sidebar"></button>
+        <div class="tabs" id="tabs"></div>
+        <button class="icon-btn ai" data-act="ai" aria-label="ИИ" data-i="spark"></button>
+        <button class="icon-btn" data-act="undo" aria-label="Отменить" data-i="undo"></button>
+        <button class="icon-btn" data-act="find" aria-label="Поиск" data-i="search"></button>
+      </div>
+      <div class="findbar" id="findbar" hidden><input id="fq" placeholder="Найти в файле…" autocapitalize="off"><button class="icon-btn" data-act="find-next" data-i="down"></button><button class="icon-btn" data-act="find" data-i="x"></button></div>
+      <div class="editor" id="editor"><div class="gutter"><div id="gl">1</div></div>
+        <div class="code"><pre id="hl"></pre><textarea id="ta" wrap="off" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></textarea></div>
+        <div class="ed-empty" id="edEmpty" hidden></div>
+      </div>
+      <div class="status"><span id="stSave"><i class="dot"></i>сохранено</span><span id="stLang"></span><span id="stPos">Ln 1, Col 1</span><span id="stTab"></span><span>UTF-8</span></div>
+      <div class="keys" id="keys"></div>
+      <div class="drawer-bg" data-act="drawer"></div>
+      <div class="drawer" id="drawer"></div>
+    </section>
+    <section class="view" id="v-term">
+      <div class="term-wrap">
+        <div class="term-head" id="termHead"></div>
+        <div class="term" id="term"></div>
+        <div class="term-in"><span id="tprompt">$</span><input id="tin" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="send"></div>
+      </div>
+      <div class="keys" id="tkeys"></div>
+    </section>
+    <section class="view" id="v-store"></section>
+  </main>
+  <nav id="nav"></nav>
+</div>
+<div class="sheet" id="sheet"><div class="sheet-bg" data-act="close-sheet"></div><div class="sheet-card"><div class="grab"></div><div id="sheetBody"></div></div></div>
+<div class="onb" id="onb" hidden></div>
+<div class="toast" id="toast"></div>
+<input type="file" id="fileIn" multiple hidden>
+<input type="file" id="dirIn" webkitdirectory multiple hidden>
+
+<script>
+/* ============ helpers ============ */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const ICONS={
+ home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+ folder:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+ folderPlus:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 10.5v6M9 13.5h6"/>',
+ filePlus:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 12v6M9 15h6"/>',
+ code:'<path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/>',
+ term:'<rect x="2" y="4" width="20" height="16" rx="3"/><path d="M6 9l3 3-3 3M12 15h5"/>',
+ box:'<path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/>',
+ gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+ play:'<path d="M7 4.5v15l12.5-7.5z" fill="currentColor" stroke="none"/>',
+ search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
+ undo:'<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>',
+ sidebar:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M9.5 4v16"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ x:'<path d="M6 6l12 12M18 6 6 18"/>',
+ down:'<path d="M6 9l6 6 6-6"/>',
+ right:'<path d="M9 6l6 6-6 6"/>',
+ trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+ server:'<rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/>',
+ download:'<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
+ upload:'<path d="M12 20V9M7 14l5-5 5 5M5 4h14"/>',
+ check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+ file:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>',
+ phone:'<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/>',
+ info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+ spark:'<path d="M12 3l1.8 4.7 4.7 1.8-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',
+ github:'<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/>',
+ widget:'<rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="18" height="8" rx="2"/>',
+ key:'<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3 21 2M17 6l3 3M14 9l2 2"/>',
+ lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+ push:'<path d="M12 19V5M5 12l7-7 7 7"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>',
+ hand:'<path d="M12 2a7 7 0 0 1 7 7c0 3-2 4-2 7H7c0-3-2-4-2-7a7 7 0 0 1 7-7z"/><path d="M9 20h6M10 23h4"/>'
+};
+const ic=n=>`<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[n]}</svg>`;
+$$('[data-i]').forEach(b=>b.innerHTML=ic(b.dataset.i));
+const LOGO_XS='<div class="logo xs"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7l5 5-5 5"/><path d="M13 17h6"/></svg></div>';
+const store={get(k,d){try{const v=localStorage.getItem('codeum3.'+k);return v?JSON.parse(v):d}catch{return d}},set(k,v){try{localStorage.setItem('codeum3.'+k,JSON.stringify(v))}catch{}}};
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2200)}
+const ago=t=>{const s=(Date.now()-t)/1000;return s<60?'только что':s<3600?Math.floor(s/60)+' мин назад':s<86400?Math.floor(s/3600)+' ч назад':Math.floor(s/86400)+' дн назад'};
+const base=p=>p.split('/').pop();
+const dirOf=p=>{const i=p.lastIndexOf('/');return i<0?'':p.slice(0,i)};
+const FIRST_LAUNCH=!store.get('launched',false);store.set('launched',true);
+
+/* ============ версия и обновления ============ */
+const APP_VERSION='1.0.0';      // версия веб-превью; в приложении версия берётся из APK
+const UPDATE_REPO='himsson/codeum';           // репозиторий с релизами, например 'username/codeum'
+
+/* ============ languages ============ */
+const R=String.raw;
+const LANGS=[
+ {id:'js',name:'JavaScript',c:'#f0db4f',m:'JS',ver:'ES2024',size:0,ext:'js',file:'main.js',cat:'web',run:'js',desc:'Встроенный движок. Работает офлайн, мгновенно.',com:'//',
+  kw:'const let var function return if else for while do of in new class extends import from export default async await try catch finally throw typeof instanceof true false null undefined this switch case break continue yield',
+  tpl:'// JavaScript · нажми ▶ Run\nconst fib = n => n < 2 ? n : fib(n - 1) + fib(n - 2);\n\nfor (let i = 0; i < 10; i++) {\n  console.log("fib(" + i + ") =", fib(i));\n}\n'},
+ {id:'py',name:'Python',c:'#3776ab',m:'PY',ver:'3.12',size:12,ext:'py',file:'main.py',cat:'general',run:'py',desc:'CPython 3.12 (Pyodide) + стандартная библиотека.',com:'#',
+  kw:'def return if elif else for while in not and or import from as class try except finally raise with lambda yield pass break continue True False None global nonlocal is async await',
+  tpl:R`# Python в Codeum
+def greet(name):
+    return f"Привет, {name}!"
+
+print(greet("мир"))
+for i in range(1, 6):
+    print(i, "→", i ** 2)
+`},
+ {id:'ts',name:'TypeScript',c:'#3178c6',m:'TS',ver:'5.6',size:38,ext:'ts',file:'main.ts',cat:'web',desc:'tsc + Node.js рантайм.',com:'//',
+  kw:'const let var function return if else for while of in new class extends implements interface type enum import from export async await true false null undefined this public private readonly',
+  tpl:R`const greet = (name: string): string => "Привет, " + name + "!";
+console.log(greet("TypeScript"));
+`},
+ {id:'c',name:'C',c:'#5c6bc0',m:'C',ver:'clang 18',size:64,ext:'c',file:'main.c',cat:'system',desc:'Компилятор clang, libc, make.',com:'//',
+  kw:'int char float double void return if else for while do struct typedef const unsigned long short static include define sizeof switch case break continue enum',
+  tpl:R`#include <stdio.h>
+
+int main(void) {
+    for (int i = 1; i <= 5; i++)
+        printf("Hello, Codeum! #%d\n", i);
+    return 0;
+}
+`},
+ {id:'cpp',name:'C++',c:'#00599c',m:'C++',ver:'clang++ 18',size:72,ext:'cpp',file:'main.cpp',cat:'system',desc:'C++20, STL, отладчик lldb.',com:'//',
+  kw:'int char float double void return if else for while do struct const unsigned long static include define sizeof switch case break continue class public private protected namespace using std template typename auto new delete virtual override nullptr bool true false',
+  tpl:R`#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> v{3, 1, 4, 1, 5};
+    for (auto x : v) std::cout << x << " ";
+    std::cout << "\nHello from C++!" << std::endl;
+}
+`},
+ {id:'cs',name:'C#',c:'#9b4f96',m:'C#',ver:'.NET 8',size:140,ext:'cs',file:'Program.cs',cat:'general',desc:'.NET 8 SDK, dotnet run.',com:'//',
+  kw:'using namespace class public private static void int string var new return if else for foreach in while bool true false null',
+  tpl:R`using System;
+
+class Program {
+    static void Main() {
+        var name = "C#";
+        Console.WriteLine($"Привет из {name}!");
+    }
+}
+`},
+ {id:'java',name:'Java',c:'#e76f00',m:'JV',ver:'OpenJDK 21',size:180,ext:'java',file:'Main.java',cat:'general',desc:'OpenJDK 21, javac, Gradle.',com:'//',
+  kw:'public private protected class static void int String new return if else for while boolean true false null import package extends implements final',
+  tpl:R`public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, Java!");
+    }
+}
+`},
+ {id:'kt',name:'Kotlin',c:'#7f52ff',m:'KT',ver:'2.0',size:95,ext:'kt',file:'main.kt',cat:'mobile',desc:'kotlinc + JVM. Идеально для Android.',com:'//',
+  kw:'fun val var class object if else when for while in return is as null true false import package data',
+  tpl:R`fun main() {
+    val langs = listOf("Kotlin", "Java", "Go")
+    langs.forEach { println("Hello, $it!") }
+}
+`},
+ {id:'go',name:'Go',c:'#00add8',m:'GO',ver:'1.23',size:110,ext:'go',file:'main.go',cat:'system',desc:'go build, go run, go mod.',com:'//',
+  kw:'package import func var const type struct interface map chan go defer return if else for range switch case select nil true false',
+  tpl:R`package main
+
+import "fmt"
+
+func main() {
+    for i := 1; i <= 3; i++ {
+        fmt.Println("Hello, Go!", i)
+    }
+}
+`},
+ {id:'rs',name:'Rust',c:'#dea584',m:'RS',ver:'1.81',size:220,ext:'rs',file:'main.rs',cat:'system',desc:'rustc + cargo, crates.io.',com:'//',
+  kw:'fn let mut const struct enum impl trait pub use mod match if else for while loop in return Some None Ok Err self Self true false',
+  tpl:R`fn main() {
+    let nums = vec![1, 2, 3, 4, 5];
+    let sum: i32 = nums.iter().sum();
+    println!("Hello, Rust! sum = {}", sum);
+}
+`},
+ {id:'php',name:'PHP',c:'#777bb4',m:'PHP',ver:'8.3',size:28,ext:'php',file:'index.php',cat:'web',desc:'PHP CLI + встроенный веб-сервер.',com:'//',
+  kw:'echo function return if else foreach as for while class public new true false null array',
+  tpl:R`<?php
+$name = "PHP";
+echo "Hello, $name!\n";
+`},
+ {id:'rb',name:'Ruby',c:'#cc342d',m:'RB',ver:'3.3',size:32,ext:'rb',file:'main.rb',cat:'web',desc:'Ruby 3.3, irb, gem.',com:'#',
+  kw:'def end if elsif else unless while do puts class module return true false nil require each',
+  tpl:R`def greet(name) = "Hello, #{name}!"
+puts greet("Ruby")
+`},
+ {id:'swift',name:'Swift',c:'#f05138',m:'SW',ver:'5.10',size:160,ext:'swift',file:'main.swift',cat:'mobile',desc:'Swift toolchain для Linux.',com:'//',
+  kw:'func let var if else for in while return class struct enum import print true false nil guard',
+  tpl:R`let name = "Swift"
+print("Hello, \(name)!")
+`},
+ {id:'dart',name:'Dart',c:'#0175c2',m:'DT',ver:'3.5',size:90,ext:'dart',file:'main.dart',cat:'mobile',desc:'Dart SDK — язык Flutter.',com:'//',
+  kw:'void main var final const class return if else for in while print true false null import',
+  tpl:R`void main() {
+  final name = 'Dart';
+  print('Hello, $name!');
+}
+`},
+ {id:'lua',name:'Lua',c:'#2c2d72',m:'LUA',ver:'5.4',size:1,ext:'lua',file:'main.lua',cat:'general',desc:'Крошечный и быстрый скриптовый язык.',com:'--',
+  kw:'local function end if then else elseif for in do while return nil true false and or not',
+  tpl:R`local function greet(name)
+  return "Hello, " .. name .. "!"
+end
+print(greet("Lua"))
+`},
+ {id:'sh',name:'Bash',c:'#4eaa25',m:'SH',ver:'5.2',size:4,ext:'sh',file:'main.sh',cat:'system',desc:'Bash + coreutils, git, curl.',com:'#',
+  kw:'echo if then else fi for in do done while case esac function return export local',
+  tpl:R`#!/bin/bash
+for i in 1 2 3; do
+  echo "Hello, Bash! $i"
+done
+`}
+];
+const LANG=Object.fromEntries(LANGS.map(l=>[l.id,l]));
+/* --- режим Android-приложения: настоящие компиляторы в Linux-окружении (Alpine + proot) --- */
+const NV=window.CodeumNative||null, NATIVE=!!NV;
+// примерный объём скачивания в Linux-окружении (МБ); Swift и Dart пока не собраны под Alpine
+const NSIZE={py:45,ts:60,c:150,cpp:150,cs:420,java:190,kt:260,go:230,rs:380,php:15,rb:25,lua:1,sh:2};
+LANG.swift.soon=LANG.dart.soon=true;
+if(NATIVE){ // в приложении языки ставятся пакетами Alpine — описания должны это отражать
+  Object.assign(LANG.py,{desc:'CPython 3 + pip из Alpine Linux.'});
+  Object.assign(LANG.c,{ver:'gcc 14',desc:'Компилятор gcc, libc, make.'});
+  Object.assign(LANG.cpp,{ver:'g++ 14',desc:'g++ (C++20), STL, make.'});
+}
+const sizeOf=L=>NATIVE?(NSIZE[L.id]||0):L.size;
+const LN=id=>LANG[id]||{id:'',name:'Проект',c:'#6b7389',m:'··',ext:'txt',file:'README.md'};
+const fg=h=>{const n=parseInt(h.slice(1),16);return ((n>>16)*299+((n>>8&255)*587)+((n&255)*114))/1000>150?'#16181d':'#fff'};
+const tile=(L,cls='')=>L&&L.m?`<div class="tile ${cls}" style="--c:${L.c};--fg:${fg(L.c)}">${L.m}</div>`:`<div class="tile ${cls}" style="--c:#6b7389;--fg:#fff">${ic('file')}</div>`;
+const EXT={h:'c',hpp:'cpp',cc:'cpp',mjs:'js',cjs:'js',jsx:'js',tsx:'ts',kts:'kt',bash:'sh'};
+const langOf=f=>{const e=base(f).split('.').pop().toLowerCase();return LANG[EXT[e]]||LANGS.find(l=>l.ext===e)||null};
+LANGS.forEach(L=>{
+  const com=L.com==='#'?'#.*':L.com==='--'?'--.*':R`\/\/.*|\/\*[\s\S]*?\*\/`;
+  const str=R`"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'`+(L.id==='js'||L.id==='ts'?"|`(?:\\\\.|[^`\\\\])*`":'');
+  L.re=new RegExp(`(${com})|(${str})|\\b(${L.kw.split(' ').join('|')})\\b|\\b(\\d+(?:\\.\\d+)?)\\b|\\b([A-Za-z_]\\w*)(?=\\s*[(!])|\\b([A-Z][A-Za-z0-9_]*)\\b`,'g');
+});
+function highlight(src,L,nl=true){
+  if(!L)return esc(src)+(nl?'\n':'');
+  let o='',last=0;
+  for(const m of src.matchAll(L.re)){
+    o+=esc(src.slice(last,m.index));
+    const c=m[1]?'com':m[2]?'str':m[3]?'kw':m[4]?'num':m[5]?'fn':'ty';
+    o+=`<span class="${c}">${esc(m[0])}</span>`;last=m.index+m[0].length;
+  }
+  return o+esc(src.slice(last))+(nl?'\n':'');
+}
+const TEXT_EXT=/\.(png|jpe?g|gif|webp|ico|bmp|pdf|zip|gz|tar|7z|rar|jar|class|so|dll|exe|bin|woff2?|ttf|otf|eot|mp[34]|mov|avi|wav|ogg|apk|keystore|db|sqlite|lock)$/i;
+function guessLang(paths){const cnt={};paths.forEach(p=>{const L=langOf(p);if(L)cnt[L.id]=(cnt[L.id]||0)+1});return Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0]||''}
+
+/* ============ code of the day (widget) ============ */
+const SNIPS=[
+ {l:'py',t:'Переменная и if',c:R`age = 17
+if age >= 18:
+    print("Добро пожаловать!")
+else:
+    print("Пока рано")`,x:'Переменная age хранит число. if проверяет условие: если оно истинно — выполняется первый блок, иначе срабатывает else.'},
+ {l:'js',t:'Цикл for',c:R`for (let i = 1; i <= 5; i++) {
+  console.log(i * i);
+}`,x:'Цикл повторяет код: i стартует с 1 и растёт на 1, пока i ≤ 5. На экран выводятся квадраты: 1, 4, 9, 16, 25.'},
+ {l:'py',t:'Списковое включение',c:R`nums = range(10)
+evens = [n * n for n in nums if n % 2 == 0]
+print(evens)  # [0, 4, 16, 36, 64]`,x:'Создаёт новый список в одну строку: берёт только чётные n и сразу возводит их в квадрат.'},
+ {l:'js',t:'Стрелочная функция',c:R`const add = (a, b) => a + b;
+console.log(add(2, 3)); // 5`,x:'Короткая запись функции. Если тело — одно выражение, его результат возвращается автоматически, без return.'},
+ {l:'go',t:'Несколько return-значений',c:R`func divmod(a, b int) (int, int) {
+    return a / b, a % b
+}
+q, r := divmod(17, 5) // 3, 2`,x:'В Go функция может вернуть сразу несколько значений. := объявляет переменные и выводит их тип сам.'},
+ {l:'rs',t:'Сопоставление match',c:R`let n = 7;
+let kind = match n {
+    0 => "ноль",
+    1..=9 => "цифра",
+    _ => "большое число",
+};`,x:'match сравнивает значение с образцами по порядку. 1..=9 — диапазон включительно, а _ ловит всё остальное.'},
+ {l:'cpp',t:'Вектор и range-for',c:R`std::vector<int> v{4, 8, 15};
+int sum = 0;
+for (int x : v) sum += x;
+// sum == 27`,x:'vector — динамический массив. Цикл for (x : v) проходит по каждому элементу без индексов.'},
+ {l:'kt',t:'Выражение when',c:R`val hour = 14
+val part = when (hour) {
+    in 6..11 -> "утро"
+    in 12..17 -> "день"
+    else -> "вечер"
+}`,x:'when — умный switch в Kotlin. Проверяет диапазоны и сразу возвращает значение, которое кладём в part.'},
+ {l:'js',t:'filter и map',c:R`const prices = [120, 45, 300, 80];
+const cheap = prices
+  .filter(p => p < 100)
+  .map(p => p + " ₽");`,x:'filter оставляет элементы, прошедшие проверку, а map превращает каждый из них. Итог: ["45 ₽", "80 ₽"].'},
+ {l:'py',t:'Словарь',c:R`user = {"name": "Alex", "level": 3}
+user["level"] += 1
+print(user["name"], user["level"])`,x:'Словарь хранит пары ключ → значение. По ключу можно прочитать или изменить значение.'},
+ {l:'c',t:'Указатель',c:R`int x = 5;
+int *p = &x;   // адрес x
+*p = 10;       // меняем x через p
+printf("%d", x); // 10`,x:'Указатель p хранит адрес переменной x. Через *p мы добираемся до самого x и меняем его значение.'},
+ {l:'cs',t:'Интерполяция строк',c:R`var lang = "C#";
+var year = 2000;
+Console.WriteLine($"{lang} появился в {year}");`,x:'Символ $ перед строкой позволяет вставлять переменные прямо в текст внутри фигурных скобок.'},
+ {l:'py',t:'try / except',c:R`try:
+    n = int("abc")
+except ValueError:
+    print("Это не число!")`,x:'try пробует выполнить код. Если возникает ошибка ValueError, программа не падает, а переходит в except.'},
+ {l:'js',t:'Тернарный оператор',c:R`const score = 72;
+const result = score >= 50 ? "сдал" : "не сдал";`,x:'Короткий if в одну строку: условие ? если да : если нет. Здесь result станет "сдал".'},
+ {l:'rs',t:'Option и if let',c:R`let found: Option<i32> = Some(42);
+if let Some(v) = found {
+    println!("нашёл {v}");
+}`,x:'Option — либо Some(значение), либо None. if let распаковывает значение, только если оно есть. Так Rust избегает null.'},
+ {l:'sh',t:'Цикл по файлам',c:R`for f in *.txt; do
+  echo "Файл: $f"
+done`,x:'Bash перебирает все файлы с расширением .txt в папке и выводит имя каждого.'},
+ {l:'java',t:'Класс и объект',c:R`class Cat {
+    String name;
+    Cat(String n) { name = n; }
+}
+Cat c = new Cat("Мурзик");`,x:'Класс — это чертёж. Конструктор Cat(...) задаёт имя, а new создаёт конкретный объект по чертежу.'}
+];
+function wBucket(){const iv=S.settings.wInt;if(iv==='5h'){const len=5*36e5;const b=Math.floor(Date.now()/len);return{b,next:(b+1)*len}}
+  const d=new Date();d.setHours(0,0,0,0);const n=new Date(d);n.setDate(n.getDate()+1);return{b:Math.floor(d.getTime()/864e5),next:n.getTime()}}
+function snipNow(){const{b}=wBucket();return SNIPS[((b*2654435761)>>>0)%SNIPS.length]}
+function untilNext(){const ms=wBucket().next-Date.now(),h=Math.floor(ms/36e5),m=Math.floor(ms%36e5/6e4);return h?`${h} ч ${m} мин`:`${m} мин`}
+function widgetHTML(small){
+  const s=snipNow(),L=LANG[s.l];
+  if(small)return`<div class="widget wsmall"><div class="w-top">${LOGO_XS}<div class="w-k">Код дня</div></div><div class="w-t">${esc(s.t)}</div><div class="w-lang">${tile(L,'sm')}${L.name}</div></div>`;
+  return`<div class="widget"><div class="w-top">${LOGO_XS}<div class="w-k">Код дня</div><div class="w-lang">${tile(L,'sm')}${L.name}</div></div>
+   <div class="w-t">${esc(s.t)}</div><div class="w-code">${highlight(s.c,L,false)}</div><div class="w-x">${esc(s.x)}</div>
+   <div class="w-foot"><span>codeum</span><span>новый через ${untilNext()}</span></div></div>`;
+}
+
+/* ============ themes ============ */
+const TH_KEYS='bg panel card line text muted accent accent2 kw str num com fn ty term onacc'.split(' ');
+const THEMES={
+ midnight:['Midnight','#0e1117 #161b25 #1d2330 #283044 #e7eaf3 #8b93a8 #5b8cff #3ddbc4 #c792ea #b5e08d #ff9e64 #5c6680 #7aa2f7 #ffcb6b #080a0f #ffffff'],
+ tokyo:['Tokyo Night','#16161e #1a1b26 #222436 #2f334d #c0caf5 #737aa2 #7aa2f7 #bb9af7 #bb9af7 #9ece6a #ff9e64 #565f89 #7aa2f7 #2ac3de #101014 #16161e'],
+ dracula:['Dracula','#1e1f29 #282a36 #313344 #414558 #f8f8f2 #9197b3 #bd93f9 #ff79c6 #ff79c6 #f1fa8c #bd93f9 #6272a4 #50fa7b #8be9fd #16171f #1e1f29'],
+ mocha:['Catppuccin','#11111b #1e1e2e #262637 #363a4f #cdd6f4 #9399b2 #cba6f7 #f5c2e7 #cba6f7 #a6e3a1 #fab387 #6c7086 #89b4fa #f9e2af #0b0b12 #11111b'],
+ nord:['Nord','#242933 #2e3440 #3b4252 #4c566a #eceff4 #a3acbd #88c0d0 #a3be8c #81a1c1 #a3be8c #b48ead #6b7894 #88c0d0 #8fbcbb #1d2129 #242933'],
+ monokai:['Monokai','#1c1d19 #272822 #31322c #3e3f38 #f8f8f2 #a09f93 #a6e22e #66d9ef #f92672 #e6db74 #ae81ff #75715e #a6e22e #66d9ef #141511 #1c1d19'],
+ solar:['Solarized','#002b36 #073642 #0b4250 #15535f #e4ecec #93a1a1 #2aa198 #b58900 #859900 #2aa198 #d33682 #5f7a80 #268bd2 #cb4b16 #00212a #002b36'],
+ paper:['Paper','#f4f6fa #ffffff #eef1f6 #dfe3ec #1b2030 #697189 #3a6ff7 #0fa38f #8a3ffc #2f8a3b #d0582b #9aa1b3 #1f63d6 #b7791f #1b2030 #ffffff']
+};
+const themeVars=id=>{const v=THEMES[id][1].split(' ');return Object.fromEntries(TH_KEYS.map((k,i)=>[k,v[i]]))};
+
+/* ============ state ============ */
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function mkProject(name,lang){const L=LANG[lang];return{id:uid(),name,lang,files:{[L.file]:L.tpl,'README.md':`# ${name}\n\nПроект на ${L.name}, создан в Codeum.\n`},dirs:[],open:[L.file],updated:Date.now()}}
+let S=store.get('state',null);
+if(!S){const a=mkProject('hello-world','js'),b=mkProject('py-playground','py');b.updated-=36e5;
+  S={projects:[a,b],cur:{p:a.id,f:'main.js'},installed:[],hosts:[],gh:null,
+     ai:{prov:'claude',keys:{},model:{}},
+     settings:{theme:'midnight',fs:13,tab:2,lines:true,keys:true,greet:true,wInt:'day'}}}
+S.settings.os=S.settings.os||'linux';   // терминал: linux | windows | mac
+S.settings.nick=S.settings.nick||'';
+const save=()=>store.set('state',S);
+const NICK=()=>S.settings.nick||'coder';
+const pkgHint=x=>({windows:'winget install ',mac:'brew install ',linux:'sudo apt install '}[S.settings.os]||'pkg install ')+x;
+const OS=()=>S.settings.os||'linux';
+const P=()=>S.projects.find(p=>p.id===S.cur.p)||S.projects[0];
+
+/* ============ navigation ============ */
+const VIEWS=[['home','Главная','home'],['projects','Проекты','folder'],['editor','Код','code'],['term','Терминал','term'],['store','Языки','box']];
+$('#nav').innerHTML=VIEWS.map(([v,n,i])=>`<button data-act="go" data-v="${v}"><span>${ic(i)}</span>${n}</button>`).join('');
+let view='home';
+function show(v){
+  view=v;$$('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));
+  $$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  const p=P();
+  const T={home:['Codeum',''],projects:['Проекты',S.projects.length+' в рабочей области'],editor:[p?p.name:'Редактор',p?LN(p.lang).name+' · '+Object.keys(p.files).length+' файл(ов)':''],term:['Терминал',{windows:'PowerShell',mac:'zsh',linux:'bash'}[OS()]+' · '+(p?p.name:'~')],store:['Языки','']}[v];
+  $('#hTitle').textContent=T[0];$('#hSub').textContent=T[1];
+  const rb=$('#runBtn');rb.hidden=!(v==='editor'&&p);if(p)rb.innerHTML=ic('play')+'Run';
+  if(v==='home')renderHome();if(v==='projects')renderProjects();if(v==='store')renderStore();
+  if(v==='editor')renderEditor();if(v==='term'){updPrompt();$('#term').scrollTop=1e9}
+  $('#app').classList.remove('drawer-on');
+  renderUpd();
+}
+
+/* ============ home ============ */
+function renderHome(){
+  const h=new Date().getHours(),g=h<6?'Доброй ночи':h<12?'Доброе утро':h<18?'Добрый день':'Добрый вечер';
+  const p=P(),L=p&&LN(p.lang);
+  const recent=[...S.projects].sort((a,b)=>b.updated-a.updated).slice(0,8);
+  $('#v-home').innerHTML=`<div class="pad">
+   ${S.settings.greet?`<div class="hello"><div class="muted">${g}, ${esc(NICK())} 👋</div><h2>Что пишем сегодня?</h2></div>`:''}
+   ${p?`<div class="hero" data-act="go" data-v="editor"><div class="hero-top">${tile(L,'lg')}<div class="grow"><div class="hero-k">Продолжить</div><div class="hero-t">${esc(p.name)}</div><div class="hero-s">${esc(S.cur.f?base(S.cur.f):'')} · ${ago(p.updated)}</div></div><div class="hero-go">${ic('play')}</div></div></div>`:''}
+   <div class="quick">
+    <button class="qa" data-act="new-proj" style="--c:var(--accent)"><span>${ic('plus')}</span>Проект</button>
+    <button class="qa" data-act="open-file" style="--c:var(--accent2)"><span>${ic('upload')}</span>Открыть</button>
+    <button class="qa" data-act="gh-clone" style="--c:#f5a524"><span>${ic('github')}</span>GitHub</button>
+    <button class="qa" data-act="host" style="--c:#c084fc"><span>${ic('server')}</span>SSH</button>
+   </div>
+   <div class="sect-row"><div class="sect">Недавние проекты</div><button class="link" data-act="go" data-v="projects">Все</button></div>
+   <div class="hscroll">${recent.map(r=>`<button class="pcard" data-act="open-proj" data-id="${r.id}">${tile(LN(r.lang))}<div class="nm">${esc(r.name)}</div><div class="sub">${r.gh?'GitHub · ':''}${ago(r.updated)}</div></button>`).join('')||'<div class="empty" style="flex:1">Пока пусто — создай первый проект</div>'}</div>
+   <div class="sect-row"><div class="sect">Мои языки</div><button class="link" data-act="go" data-v="store">Все языки</button></div>
+   <div class="chips">${S.installed.map(id=>`<div class="chip">${tile(LANG[id],'sm')}${LANG[id].name}</div>`).join('')}<button class="chip add" data-act="go" data-v="store">+ Установить</button></div>
+   <div class="sect-row"><div class="sect">Серверы</div><button class="link" data-act="host">+ Добавить</button></div>
+   ${S.hosts.length?S.hosts.map((h,i)=>`<div class="item"><div class="tile" style="--c:#8b5cf6;--fg:#fff">${ic('server')}</div><div class="grow"><div class="nm">${esc(h.name)}</div><div class="sub">${esc(h.user)}@${esc(h.host)}:${esc(h.port)}</div></div><button class="ghost" data-act="host-go" data-i="${i}">${ic('term')}</button><button class="ghost" data-act="host-del" data-i="${i}">${ic('trash')}</button></div>`).join('')
+     :`<div class="empty">Добавь VPS — подключайся по SSH и запускай код прямо на сервере</div>`}
+  </div>`;
+}
+
+/* ============ projects ============ */
+let pq='';
+function renderProjects(){
+  const list=S.projects.filter(p=>p.name.toLowerCase().includes(pq.toLowerCase())).sort((a,b)=>b.updated-a.updated);
+  const v=$('#v-projects');const focused=document.activeElement&&document.activeElement.id==='pq';
+  v.innerHTML=`<div class="pad">
+   <div class="actions3">
+    <button class="act" data-act="open-file">${ic('file')}Открыть файл</button>
+    <button class="act" data-act="open-dir">${ic('folder')}Открыть папку</button>
+    <button class="act" data-act="gh-clone">${ic('github')}Из GitHub</button>
+   </div>
+   <label class="search">${ic('search')}<input id="pq" placeholder="Поиск проектов" value="${esc(pq)}"></label>
+   ${list.map(p=>`<div class="item" data-act="open-proj" data-id="${p.id}">${tile(LN(p.lang))}<div class="grow"><div class="nm">${esc(p.name)}</div><div class="sub">${p.gh?'⎇ '+esc(p.gh.full)+' · ':LN(p.lang).name+' · '}${Object.keys(p.files).length} файл(ов) · ${ago(p.updated)}</div></div><button class="ghost" data-act="del-proj" data-id="${p.id}">${ic('trash')}</button></div>`).join('')||'<div class="empty">Ничего не найдено</div>'}
+   <div style="height:70px"></div></div><button class="fab" data-act="new-proj">${ic('plus')}</button>`;
+  const inp=$('#pq');inp.oninput=e=>{pq=e.target.value;renderProjects()};
+  if(focused){inp.focus();inp.setSelectionRange(pq.length,pq.length)}
+}
+let npLang='';
+function newProjSheet(){
+  const inst=LANGS.filter(L=>S.installed.includes(L.id));
+  if(!inst.find(L=>L.id===npLang))npLang=inst[0]?inst[0].id:'';
+  openSheet(`${inst.length?'':`<div class="hint"><div class="ico">${ic('search')}</div><div class="grow"><b>Не находишь нужный язык?</b><small>Сначала установи его во вкладке «Языки» — там ${LANGS.length} языков на выбор.</small></div><button class="btn pri" data-act="go-store">Языки</button></div>`}
+   <h3 style="margin-top:${inst.length?0:10}px">Новый проект</h3><p class="muted">Codeum создаст шаблон на выбранном языке.</p>
+   <label class="field"><span>Название</span><input id="npName" placeholder="my-app" autocapitalize="off"></label>
+   <div class="field"><span>Язык</span>${inst.length?`<div class="lgrid">${inst.map(L=>`<button class="lpick ${L.id===npLang?'on':''}" data-act="np-lang" data-id="${L.id}">${tile(L)}${L.name}</button>`).join('')}</div>`:`<div class="empty">Пока не установлено ни одного языка</div>`}</div>
+   <button class="bigbtn" data-act="np-create" ${inst.length?'':'disabled'}>Создать проект</button>`);
+}
+
+/* ============ editor ============ */
+const ta=$('#ta'),hl=$('#hl'),gl=$('#gl');let lineCount=0;const collapsed=new Set();
+function ensureCur(p){
+  if(!p)return;
+  if(!p.files[S.cur.f])S.cur.f=(p.open||[]).find(f=>p.files[f]!=null)||Object.keys(p.files)[0]||'';
+  p.open=(p.open||[]).filter(f=>p.files[f]!=null);
+  if(S.cur.f&&!p.open.includes(S.cur.f))p.open.push(S.cur.f);
+}
+function renderEditor(){
+  const p=P();ensureCur(p);
+  const empty=!p||!S.cur.f;$('#edEmpty').hidden=!empty;
+  if(empty){$('#edEmpty').innerHTML=p?`<div>В проекте нет файлов<br><br><button class="btn pri" data-act="new-file" style="margin:auto">${ic('filePlus')}Создать файл</button></div>`:`<div>Нет открытого проекта<br><br><button class="btn pri" data-act="new-proj" style="margin:auto">${ic('plus')}Новый проект</button></div>`;
+    $('#tabs').innerHTML='';ta.value='';hl.innerHTML='';renderDrawer();return}
+  $('#tabs').innerHTML=p.open.map(f=>{const L=langOf(f);return`<button class="tab ${f===S.cur.f?'on':''}" data-act="tab" data-f="${esc(f)}" style="--c:${L?L.c:'#6b7389'}"><i></i>${esc(base(f))}<span class="tx" data-act="tab-close" data-f="${esc(f)}">${ic('x')}</span></button>`}).join('');
+  if(ta.value!==p.files[S.cur.f])ta.value=p.files[S.cur.f];
+  paint();pos();
+  const L=langOf(S.cur.f);$('#stLang').textContent=L?L.name:'Text';$('#stTab').textContent='Spaces: '+S.settings.tab;
+  renderDrawer();
+  requestAnimationFrame(()=>{const t=$('.tab.on');t&&t.scrollIntoView({inline:'nearest',block:'nearest'})});
+}
+function paint(){
+  hl.innerHTML=highlight(ta.value,langOf(S.cur.f));
+  const n=ta.value.split('\n').length;
+  if(n!==lineCount){lineCount=n;gl.textContent=Array.from({length:n},(_,i)=>i+1).join('\n')}
+  sync();
+}
+function sync(){hl.style.transform=`translate(${-ta.scrollLeft}px,${-ta.scrollTop}px)`;gl.style.transform=`translateY(${-ta.scrollTop}px)`}
+function pos(){const b=ta.value.slice(0,ta.selectionStart).split('\n');$('#stPos').textContent=`Ln ${b.length}, Col ${b[b.length-1].length+1}`}
+let saveT;
+function onEdit(){
+  const p=P();if(!p||!S.cur.f)return;p.files[S.cur.f]=ta.value;p.updated=Date.now();paint();pos();
+  $('#stSave').innerHTML='<i class="dot" style="background:var(--num)"></i>изменён';
+  clearTimeout(saveT);saveT=setTimeout(()=>{save();$('#stSave').innerHTML='<i class="dot"></i>сохранено'},400);
+}
+ta.addEventListener('input',onEdit);ta.addEventListener('scroll',sync);
+['click','keyup','select'].forEach(e=>ta.addEventListener(e,pos));
+function ins(t,back=0){
+  ta.focus();
+  if(!document.execCommand('insertText',false,t)){ta.setRangeText(t,ta.selectionStart,ta.selectionEnd,'end');onEdit()}
+  if(back){const q=ta.selectionStart-back;ta.setSelectionRange(q,q)}
+  pos();
+}
+const TAB=()=>' '.repeat(S.settings.tab);
+ta.addEventListener('keydown',e=>{
+  if(e.key==='Tab'){e.preventDefault();ins(TAB())}
+  else if(e.key==='Enter'){
+    e.preventDefault();const s=ta.selectionStart,before=ta.value.slice(0,s),line=before.split('\n').pop(),ind=line.match(/^\s*/)[0];
+    const open=/[{(\[:]\s*$/.test(line),close=/^[}\])]/.test(ta.value.slice(s));
+    if(open&&close)ins('\n'+ind+TAB()+'\n'+ind,ind.length+1);else ins('\n'+ind+(open?TAB():''));
+  }
+});
+const KEYS=[['⇥','tab'],['{ }','{}'],['( )','()'],['[ ]','[]'],['" "','""'],["' '","''"],[';'],[':'],['='],['<'],['>'],['/'],['.'],[','],['!'],['&'],['|'],['+'],['-'],['*'],['_'],['#'],['$'],['\\'],['←','L'],['→','R'],['↑','U'],['↓','D']];
+$('#keys').innerHTML=KEYS.map((k,i)=>`<button data-k="${i}" class="${k[1]&&k[1].length===1?'acc':''}">${esc(k[0])}</button>`).join('');
+$('#keys').addEventListener('pointerdown',e=>{
+  const b=e.target.closest('button');if(!b)return;e.preventDefault();const[l,a]=KEYS[b.dataset.k];
+  if(!a)return ins(l);if(a==='tab')return ins(TAB());
+  if(a.length===2){const s=ta.selectionStart,en=ta.selectionEnd,sel=ta.value.slice(s,en);return sel?ins(a[0]+sel+a[1]):ins(a,1)}
+  ta.focus();let s=ta.selectionStart;const v=ta.value;
+  if(a==='L')s=Math.max(0,s-1);else if(a==='R')s=Math.min(v.length,s+1);
+  else{const ls=v.lastIndexOf('\n',s-1)+1,col=s-ls;
+    if(a==='U'){if(ls===0)return;const ps=v.lastIndexOf('\n',ls-2)+1;s=Math.min(ps+col,ls-1)}
+    else{const ne=v.indexOf('\n',s);if(ne<0)return;const nn=v.indexOf('\n',ne+1);s=Math.min(ne+1+col,nn<0?v.length:nn)}}
+  ta.setSelectionRange(s,s);pos();
+});
+/* file tree */
+function allDirs(p){const set=new Set(p.dirs||[]);Object.keys(p.files).forEach(f=>{let d=dirOf(f);while(d){set.add(d);d=dirOf(d)}});return[...set].sort()}
+function treeHTML(p,dir,depth){
+  const dirs=allDirs(p).filter(d=>dirOf(d)===dir),files=Object.keys(p.files).filter(f=>dirOf(f)===dir).sort();
+  const pad=`style="padding-left:${6+depth*16}px"`;
+  return dirs.map(d=>{const open=!collapsed.has(p.id+':'+d);
+    return`<div class="frow" data-act="dir-toggle" data-d="${esc(d)}" ${pad}><svg class="i car ${open?'open':''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">${ICONS.right}</svg><span class="fold">${ic('folder')}</span><span class="grow">${esc(base(d))}</span><span class="x" data-act="new-file" data-dir="${esc(d)}">${ic('plus')}</span><span class="x" data-act="del-dir" data-d="${esc(d)}">${ic('trash')}</span></div>`+(open?treeHTML(p,d,depth+1):'')}).join('')
+   +files.map(f=>`<div class="frow ${f===S.cur.f?'on':''}" data-act="tab" data-f="${esc(f)}" ${pad}><span style="width:14px"></span>${tile(langOf(f),'sm')}<span class="grow">${esc(base(f))}</span><span class="x" data-act="del-file" data-f="${esc(f)}">${ic('x')}</span></div>`).join('');
+}
+function renderDrawer(){
+  const p=P();if(!p){$('#drawer').innerHTML='';return}
+  $('#drawer').innerHTML=`<div style="display:flex;align-items:center;gap:10px;margin:0 4px 14px">${tile(LN(p.lang))}<div class="grow"><h3>${esc(p.name)}</h3><div class="muted" style="font-size:12px">${p.gh?'⎇ '+esc(p.gh.full)+' · '+esc(p.gh.branch):LN(p.lang).name}</div></div></div>
+   <div class="dtools"><button data-act="new-file" data-dir="">${ic('filePlus')}Файл</button><button data-act="new-dir">${ic('folderPlus')}Папка</button><button data-act="import-here">${ic('upload')}Импорт</button></div>
+   <div class="ftree">${treeHTML(p,'',0)||'<div class="empty">Пусто</div>'}</div>
+   ${p.gh?`<button class="bigbtn" data-act="gh-push" style="margin-top:10px">${ic('push')}Commit и Push</button>`:''}
+   <button class="frow" data-act="go" data-v="projects" style="color:var(--muted);margin-top:6px">${ic('folder')}Все проекты</button>`;
+}
+function find(next){
+  const q=$('#fq').value;if(!q)return;const v=ta.value.toLowerCase(),ql=q.toLowerCase();
+  let i=v.indexOf(ql,next?ta.selectionEnd:ta.selectionStart);if(i<0)i=v.indexOf(ql);
+  if(i<0){toast('Не найдено');return}
+  ta.focus();ta.setSelectionRange(i,i+q.length);
+  const line=ta.value.slice(0,i).split('\n').length;ta.scrollTop=Math.max(0,(line-4)*S.settings.fs*1.65);sync();pos();
+}
+$('#fq').addEventListener('input',()=>find(false));
+$('#fq').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();find(true)}});
+function openFile(f){const p=P();S.cur.f=f;ensureCur(p);save();lineCount=0;ta.scrollTop=0;ta.scrollLeft=0;renderEditor();$('#app').classList.remove('drawer-on');$('#stSave').innerHTML='<i class="dot"></i>сохранено'}
+
+/* new file / folder sheets */
+let nf={dir:'',ext:''};
+const COMMON_EXT=['txt','md','json','html','css','yml'];
+function newFileSheet(dir){
+  const p=P();if(!p){newProjSheet();return}
+  const exts=[...new Set([...S.installed.map(id=>LANG[id].ext),LN(p.lang).ext,...COMMON_EXT])];
+  nf={dir:dir||'',ext:nf.ext&&exts.includes(nf.ext)?nf.ext:exts[0]};
+  const dirs=['',...allDirs(p)];
+  openSheet(`<h3>Новый файл</h3>
+   <label class="field"><span>Имя файла</span><input id="nfN" placeholder="utils" autocapitalize="off" autocorrect="off"></label>
+   <div class="field"><span>Расширение</span><div class="chips wrap">${exts.map(e=>`<button class="fchip mono ${e===nf.ext?'on':''}" data-act="nf-ext" data-e="${e}">.${e}</button>`).join('')}</div></div>
+   <div class="field"><span>Папка</span><div class="chips wrap">${dirs.map(d=>`<button class="fchip mono ${d===nf.dir?'on':''}" data-act="nf-dir" data-d="${esc(d)}">${d?esc(d)+'/':'/ корень'}</button>`).join('')}</div></div>
+   <div class="preview-path" id="nfPrev"></div>
+   <button class="bigbtn" data-act="nf-create">${ic('filePlus')}Создать файл</button>`);
+  $('#nfN').oninput=nfPrev;nfPrev();
+}
+function nfPath(){let n=($('#nfN')?.value||'').trim().replace(/^\/+|\/+$/g,'')||'untitled';if(!/\.[\w]+$/.test(n))n+='.'+nf.ext;return(nf.dir?nf.dir+'/':'')+n}
+function nfPrev(){const e=$('#nfPrev');if(e)e.innerHTML='Будет создан: <b>'+esc(nfPath())+'</b>'}
+function newDirSheet(){
+  const p=P();const dirs=['',...allDirs(p)];nf.dir='';
+  openSheet(`<h3>Новая папка</h3>
+   <label class="field"><span>Название</span><input id="ndN" placeholder="src" autocapitalize="off" autocorrect="off"></label>
+   <div class="field"><span>Внутри</span><div class="chips wrap">${dirs.map(d=>`<button class="fchip mono ${d===''?'on':''}" data-act="nd-dir" data-d="${esc(d)}">${d?esc(d)+'/':'/ корень'}</button>`).join('')}</div></div>
+   <button class="bigbtn" data-act="nd-create">${ic('folderPlus')}Создать папку</button>`);
+}
+
+/* ============ import files ============ */
+let importTarget='current';
+function readText(file){return new Promise(res=>{if(file.size>2e6||TEXT_EXT.test(file.name))return res(null);const r=new FileReader();r.onload=()=>res(String(r.result).includes(' ')?null:r.result);r.onerror=()=>res(null);r.readAsText(file)})}
+$('#fileIn').addEventListener('change',async e=>{
+  const files=[...e.target.files];e.target.value='';if(!files.length)return;
+  let p=P();if(!p||importTarget==='new'){p={id:uid(),name:'imported',lang:'',files:{},dirs:[],open:[],updated:Date.now()};S.projects.unshift(p)}
+  let ok=0,skip=0,last='';
+  for(const f of files){const t=await readText(f);if(t==null){skip++;continue}let n=f.name;while(p.files[n]!=null)n=n.replace(/(\.\w+)?$/,'-copy$1');p.files[n]=t;last=n;ok++}
+  if(!p.lang)p.lang=guessLang(Object.keys(p.files));
+  p.updated=Date.now();S.cur={p:p.id,f:last||S.cur.f};save();show('editor');
+  toast(`Открыто файлов: ${ok}`+(skip?` · пропущено ${skip} (не текст)`:''));
+});
+$('#dirIn').addEventListener('change',async e=>{
+  const files=[...e.target.files];e.target.value='';if(!files.length)return;
+  const root=(files[0].webkitRelativePath||files[0].name).split('/')[0]||'folder';
+  const p={id:uid(),name:root,lang:'',files:{},dirs:[],open:[],updated:Date.now()};let skip=0,n=0;
+  for(const f of files.slice(0,400)){const rel=(f.webkitRelativePath||f.name).split('/').slice(1).join('/')||f.name;
+    if(/(^|\/)(node_modules|\.git|build|dist|\.gradle)\//.test(rel)){skip++;continue}
+    const t=await readText(f);if(t==null){skip++;continue}p.files[rel]=t;n++}
+  if(!n){toast('В папке нет текстовых файлов');return}
+  importFolder(root,p.files,skip);
+});
+function importFolder(name,files,skip=0){
+  const n=Object.keys(files).length;if(!n){toast('В папке нет текстовых файлов');return}
+  let nm=name||'folder';while(S.projects.some(x=>x.name===nm))nm+='-2';
+  const p={id:uid(),name:nm,lang:guessLang(Object.keys(files)),files,dirs:[],open:[],updated:Date.now()};
+  S.projects.unshift(p);S.cur={p:p.id,f:''};save();show('editor');
+  toast(`Папка «${nm}» открыта · ${n} файл(ов)`+(skip?`, пропущено ${skip}`:''));
+}
+
+/* ============ runtimes ============ */
+const PYO='https://cdn.jsdelivr.net/pyodide/v0.26.4/full/';
+let pyP=null,py=null;
+function loadPy(){
+  if(pyP)return pyP;
+  pyP=new Promise((res,rej)=>{const s=document.createElement('script');s.src=PYO+'pyodide.js';
+    s.onload=async()=>{try{py=await loadPyodide({indexURL:PYO});res(py)}catch(e){rej(e)}};s.onerror=()=>rej(new Error('network'));document.head.appendChild(s)});
+  pyP.catch(()=>{pyP=null});return pyP;
+}
+const pyErr=e=>String(e.message||e).trim().split('\n').slice(-4).join('\n');
+async function runPy(code){
+  if(!S.installed.includes('py')){out('python: не установлен. Выполни: '+pkgHint('python'),'e');return}
+  if(!py)out('⏳ Запускаю интерпретатор Python…','d');
+  try{const p=await loadPy();p.setStdout({batched:s=>out(s)});p.setStderr({batched:s=>out(s,'e')});return await p.runPythonAsync(code)}
+  catch(e){out(pyErr(e),'e')}
+}
+const fmt=v=>typeof v==='string'?v:v instanceof Error?v.name+': '+v.message:(()=>{try{return JSON.stringify(v,null,0)??String(v)}catch{return String(v)}})();
+function runJS(code){
+  const o={};['log','info','warn','error'].forEach(k=>{o[k]=console[k];console[k]=(...a)=>out(a.map(fmt).join(' '),k==='error'?'e':k==='warn'?'w':'')});
+  try{return(0,eval)(code)}catch(e){out(e.name+': '+e.message,'e')}finally{Object.assign(console,o)}
+}
+async function runFile(f){
+  const p=P();if(!p)return;
+  let L=f&&langOf(f);
+  if(!L){const m=LN(p.lang).file;if(p.files[m]!=null){f=m;L=langOf(f)}else{f=Object.keys(p.files).find(x=>langOf(x));L=f&&langOf(f)}}
+  if(!L||p.files[f]==null){out('Нечего запускать: нет файла с кодом','e');return}
+  const cmd={js:'node',py:'python3',ts:'tsx',c:'cc -o main && ./main',cpp:'c++ -o main && ./main',cs:'dotnet run',java:'java',kt:'kotlinc -script',go:'go run',rs:'cargo run',php:'php',rb:'ruby',swift:'swift',dart:'dart run',lua:'lua',sh:'bash'}[L.id];
+  if(NATIVE&&L.id!=='js'){
+    if(!S.installed.includes(L.id)){out(`${L.name} не установлен. Открой «Языки» или выполни: ${pkgHint(L.id)}`,'e');return}
+    if(sh.busy){out('Сначала дождись окончания текущей программы (или нажми ^C)','w');return}
+    outPrompt(NCMD[L.id](shq(f)));
+    shellRun(p,`${NCMD[L.id](shq(f))}`,true);return;
+  }
+  outPrompt(`${cmd} ${f}`);
+  if(!S.installed.includes(L.id)&&L.run){out(`${L.name} не установлен. Открой «Языки» или выполни: pkg install ${L.id==='py'?'python':L.id}`,'e');return}
+  const t=performance.now();
+  if(L.run==='js')runJS(p.files[f]);
+  else if(L.run==='py')await runPy(p.files[f]);
+  else{out(`${L.name} ${L.ver} — нативный тулчейн (${L.size} МБ).`,'w');out('В веб-превью запускаются JavaScript и Python. Компиляторы C/C++/Rust/Go/Kotlin и др. скачиваются внутри Android-версии Codeum.','d');return}
+  out(`✓ завершено за ${(performance.now()-t).toFixed(0)} мс`,'d');
+}
+
+/* ============ terminal ============ */
+const term=$('#term'),tin=$('#tin');let mode='sh',hist=store.get('hist',[]),hi=hist.length;
+let openLine=null;
+function trimTerm(){while(term.childNodes.length>1500)term.firstChild.remove();term.scrollTop=1e9}
+function out(t,c=''){openLine=null;const d=document.createElement('div');if(c)d.className=c;d.textContent=t;term.appendChild(d);trimTerm()}
+/* потоковый вывод: куски текста без перевода строки дописываются в текущую строку */
+function outRaw(text,cls=''){
+  if(!text)return;text=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  const parts=text.split('\n');
+  parts.forEach((part,i)=>{
+    if(i>0)openLine=null;
+    if(part===''&&i===parts.length-1)return;
+    if(!openLine||openLine.dataset.c!==cls){openLine=document.createElement('div');if(cls)openLine.className=cls;openLine.dataset.c=cls;term.appendChild(openLine)}
+    openLine.textContent+=part;
+  });
+  trimTerm();
+}
+/* приглашение и вид окна зависят от выбранного терминала: Windows / Linux / macOS */
+function promptParts(){
+  const p=P(),pn=p?p.name:'',n=NICK();
+  if(OS()==='windows')return{txt:`PS C:\\Users\\${n}${pn?'\\'+pn:''}> `};
+  if(OS()==='mac')return{txt:`${n}@Codeum-Phone ${pn||'~'} % `};
+  return{txt:`${n}@codeum:~/${pn}$ `,html:`<span class="pu">${esc(n)}@codeum</span>:<span class="pd">~/${esc(pn)}</span>$ `};
+}
+const promptStr=()=>promptParts().txt;
+function outPrompt(line){
+  openLine=null;const pp=promptParts(),d=document.createElement('div');d.className='p';
+  if(pp.html){d.innerHTML=pp.html;d.appendChild(document.createTextNode(line))}else d.textContent=pp.txt+line;
+  term.appendChild(d);trimTerm();
+}
+function termHead(){
+  const os=OS(),p=P(),pn=p?p.name:'~',n=NICK(),busy=NATIVE&&typeof sh!=='undefined'&&sh.busy;
+  const w=$('.term-wrap');w.classList.remove('os-linux','os-mac','os-windows');w.classList.add('os-'+os);
+  $('#termHead').innerHTML=
+    os==='mac'?`<div class="dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div><div class="t">${esc(pn)} — ${busy?'выполняется':'-zsh'} — 80×24</div><button class="clr" data-act="term-clear">clear</button>`
+   :os==='windows'?`<div class="pstab"><b>PS</b>PowerShell${busy?' · выполняется':''}</div><div class="t"></div><button class="clr" data-act="term-clear">cls</button><div class="wbtn"><span>—</span><span>▢</span><span>✕</span></div>`
+   :`<button class="clr" data-act="term-clear">clear</button><div class="t">${esc(n)}@codeum: ~/${esc(pn)}${busy?' · выполняется':''}</div><div class="gbtn"><i></i><i></i><i style="background:#e95420"></i></div>`;
+}
+function updPrompt(){
+  termHead();
+  const el=$('#tprompt'),pp=promptParts();
+  if(NATIVE&&sh.busy){el.textContent='›';tin.placeholder='ввод для программы…';return}
+  tin.placeholder='';
+  if(!NATIVE&&mode!=='sh'){el.textContent=mode==='py'?'>>>':'>';return}
+  if(pp.html)el.innerHTML=pp.html.replace(/\$ $/,'$');else el.textContent=pp.txt.trimEnd();
+}
+function termBanner(){
+  const os=OS(),n=NICK();
+  if(os==='windows')out(`Codeum PowerShell${NATIVE?' · Linux внутри':''}\nПривет, ${n}! Введи help, чтобы увидеть команды.`,'d');
+  else if(os==='mac')out(`Last login: ${new Date().toLocaleString('ru-RU',{weekday:'short',hour:'2-digit',minute:'2-digit'})} on ttys000\nПривет, ${n}! Введи help.`,'d');
+  else out(`Welcome to Codeum Linux${NATIVE?' (Alpine)':''}, ${n}!\nВведи help, чтобы увидеть команды.`,'d');
+}
+
+/* команды «чужих» систем переводятся в Linux: dir → ls, type → cat, brew install → pkg install… */
+const WIN_MAP={dir:'ls -l',gci:'ls','get-childitem':'ls',ls:'ls',type:'cat',gc:'cat','get-content':'cat',
+  copy:'cp',cpi:'cp','copy-item':'cp',move:'mv',mi:'mv','move-item':'mv',ren:'mv','rename-item':'mv',
+  del:'rm',erase:'rm',ri:'rm -r','remove-item':'rm -r',rd:'rm -r',rmdir:'rm -r',md:'mkdir -p',mkdir:'mkdir -p',
+  'new-item':'touch',ni:'touch',findstr:'grep','select-string':'grep',sls:'grep',where:'which','where.exe':'which',
+  tasklist:'ps','set-location':'cd',sl:'cd',chdir:'cd',cd:'cd',ipconfig:'ip addr','get-process':'ps',ps:'ps',
+  echo:'echo','write-host':'echo','write-output':'echo',cat:'cat'};
+function osTranslate(raw){
+  const t=raw.trim();if(!t)return{line:''};
+  const a=t.split(/\s+/),c=a[0],lc=c.toLowerCase(),rest=a.slice(1),os=OS();
+  if(lc==='sudo')return osTranslate(rest.join(' '));
+  if(['apt','apt-get','brew','winget','choco','scoop','pkg'].includes(lc)&&rest[0]==='install'&&rest[1])return{line:'pkg install '+rest[1]};
+  if(['whoami','help','clear','cls','clear-host','projects'].includes(lc))return{builtin:lc==='cls'||lc==='clear-host'?'clear':lc};
+  if(['notepad','notepad.exe','code','edit','nano','vim','vi'].includes(lc)||(os==='mac'&&lc==='open')||(os==='windows'&&(lc==='start'||lc==='ii')))
+    return{builtin:'edit',arg:rest.join(' ').replace(/\\/g,'/')};
+  if(os==='windows'){
+    if(['pwd','get-location','gl'].includes(lc))return{builtin:'pwd'};
+    if(['ver','$psversiontable','winver'].includes(lc))return{builtin:'ver'};
+    const m=WIN_MAP[lc];
+    if(m){const ps=lc.includes('-')||['gci','gc','cpi','mi','ri','ni','sls','sl'].includes(lc);
+      const args=rest.filter(x=>!(ps&&x.startsWith('-'))).map(x=>x.replace(/\\/g,'/').replace(/^[a-z]:/i,''));
+      return{line:[m,...args].join(' ')}}
+  }
+  if(os==='mac'&&lc==='sw_vers')return{builtin:'ver'};
+  if(lc==='ver'||(lc==='uname'&&rest[0]==='-a'&&!NATIVE))return{builtin:'ver'};
+  return{line:t};
+}
+function osHelp(){
+  const os=OS(),common=`
+  run [файл]           собрать и запустить код
+  projects             список проектов
+  project <имя>        переключиться на проект
+  whoami, clear, help`;
+  if(os==='windows')return`Режим Windows (PowerShell). Команды:
+  dir, ls              список файлов
+  cd <папка>, cd ..    перейти в папку / назад
+  type <файл>          показать содержимое файла
+  copy, move, ren      копировать, переместить, переименовать
+  del <файл>, rd <папка>  удалить
+  md <папка>           создать папку
+  cls                  очистить экран
+  notepad <файл>       открыть файл в редакторе
+  winget install <язык>  установить язык (python, go, rust…)`+common;
+  if(os==='mac')return`Режим macOS (zsh). Команды:
+  ls, cd, cat, cp, mv, rm, mkdir, grep, clear
+  open <файл>          открыть файл в редакторе
+  brew install <язык>  установить язык (python, go, rust…)
+  sw_vers              версия системы`+common;
+  return`Режим Linux (bash). Команды:
+  ls, cd, cat, cp, mv, rm, mkdir, grep, clear
+  nano <файл>          открыть файл в редакторе Codeum
+  sudo apt install <язык>  установить язык (python, go, rust…)`+common;
+}
+function osVer(){
+  const v=NATIVE?NV.version():APP_VERSION;
+  if(OS()==='windows')out(`\nCodeum PowerShell ${v}\nПлатформа: ${NATIVE?'Android · Linux '+NV.abi():'веб-превью'}\n`);
+  else if(OS()==='mac')out(`ProductName:\tCodeum\nProductVersion:\t${v}\nBuildVersion:\t${NATIVE?NV.abi():'web'}`);
+  else out(`Codeum Linux ${v} ${NATIVE?NV.abi():'(web)'}`);
+}
+function editCmd(arg){
+  const p=P();if(!p){out('Нет открытого проекта','e');return}
+  if(!arg){show('editor');return}
+  const f=arg.replace(/^\.\//,'');
+  if(p.files[f]==null){p.files[f]='';save();out(`Создан файл ${f}`,'d')}
+  openFile(f);show('editor');
+}
+/* общие встроенные команды для обоих режимов; true — команда обработана */
+async function osBuiltin(tr){
+  const p=P();
+  switch(tr.builtin){
+    case'whoami':out(NICK());return true;
+    case'help':out(NATIVE?osHelp()+`\n\nЭто настоящий Linux внутри: работают и обычные команды (ls, git, apk…).\nКнопка ^C останавливает программу.`:osHelp(),'d');return true;
+    case'clear':term.innerHTML='';openLine=null;return true;
+    case'projects':S.projects.forEach(x=>out((p&&x.id===p.id?'* ':'  ')+x.name+'  ('+LN(x.lang).name+')',p&&x.id===p.id?'a':''));return true;
+    case'edit':editCmd(tr.arg);return true;
+    case'ver':osVer();return true;
+    case'pwd':out(`\nPath\n----\nC:\\Users\\${NICK()}${p?'\\'+p.name:''}\n`);return true;
+  }
+  return false;
+}
+
+/* ---------- нативный Linux-терминал (Android) ---------- */
+const MARK='__CODEUM_DONE__';
+const shq=s=>/^[\w./-]+$/.test(s)?s:"'"+String(s).replace(/'/g,"'\\''")+"'";
+const NCMD={
+  py:f=>`python3 ${f}`, ts:f=>`tsx ${f}`,
+  c:f=>`gcc ${f} -o /tmp/a.out -lm && /tmp/a.out`,
+  cpp:f=>`g++ -std=c++20 ${f} -o /tmp/a.out && /tmp/a.out`,
+  cs:f=>`mkdir -p /tmp/csrun && cp ${f} /tmp/csrun/Program.cs && (cd /tmp/csrun && { [ -f run.csproj ] || printf '%s' '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings></PropertyGroup></Project>' > run.csproj; } && dotnet run)`,
+  java:f=>`java ${f}`,
+  kt:f=>`kotlinc -nowarn ${f} -include-runtime -d /tmp/kt.jar && java -jar /tmp/kt.jar`,
+  go:f=>`go run ${f}`,
+  rs:f=>`if [ -f Cargo.toml ]; then cargo run -q; else rustc ${f} -o /tmp/rs.out && /tmp/rs.out; fi`,
+  php:f=>`php ${f}`, rb:f=>`ruby ${f}`, lua:f=>`lua5.4 ${f}`, sh:f=>`bash ${f}`,
+  swift:f=>`swift ${f}`, dart:f=>`dart run ${f}`
+};
+const sh={alive:false,proj:null,busy:false,run:false,t0:0,buf:''};
+function shellEnsure(p){
+  if(!NV.ready()){out('Linux-окружение ещё не установлено. Установи любой язык во вкладке «Языки» или выполни: '+pkgHint('python'),'w');return false}
+  NV.syncProject(p.name,JSON.stringify(p.files));
+  if(!sh.alive||sh.proj!==p.id){
+    if(!NV.shellStart(NV.projectPath(p.name))){out('Не удалось запустить Linux-терминал','e');return false}
+    sh.alive=true;sh.proj=p.id;sh.busy=false;sh.buf='';
+  }
+  return true;
+}
+function shellRun(p,command,isRun){
+  if(!shellEnsure(p))return;
+  sh.busy=true;sh.run=isRun;sh.t0=performance.now();updPrompt();
+  // всё в одну строку: иначе программа, читающая stdin, «съела» бы строку с маркером
+  NV.shellWrite(`${isRun?'cd '+NV.projectPath(p.name)+' && ':''}${command}; echo "${MARK}$?"\n`);
+}
+function markTail(b){for(let k=Math.min(MARK.length+4,b.length);k>0;k--){const t=b.slice(-k);if(MARK.startsWith(t)||(t.startsWith(MARK)&&/^\d*$/.test(t.slice(MARK.length))))return b.length-k}return b.length}
+function shellData(text,err){
+  if(err){outRaw(text,'e');return}
+  sh.buf+=text;
+  const m=sh.buf.match(new RegExp(MARK+'(\\d+)\\n'));
+  if(m){outRaw(sh.buf.slice(0,m.index));const rest=sh.buf.slice(m.index+m[0].length);sh.buf='';shellDone(+m[1]);if(rest)shellData(rest,false);return}
+  const k=markTail(sh.buf);outRaw(sh.buf.slice(0,k));sh.buf=sh.buf.slice(k);
+}
+function shellDone(code){
+  sh.busy=false;openLine=null;
+  if(sh.run)out(code===0?`✓ завершено за ${(performance.now()-sh.t0).toFixed(0)} мс`:`✗ завершено с кодом ${code}`,code===0?'d':'e');
+  pullFiles();updPrompt();
+}
+/* файлы, созданные из терминала (touch, cargo new…), появляются в проекте */
+function pullFiles(){
+  const p=S.projects.find(x=>x.id===sh.proj);if(!p)return;
+  let disk;try{disk=JSON.parse(NV.readProject(p.name))}catch{return}
+  let n=0;for(const k in disk)if(p.files[k]==null){p.files[k]=disk[k];n++}
+  if(n){p.updated=Date.now();save();if(view==='editor')renderEditor();out(`+ ${n} новых файл(ов) добавлено в проект`,'d')}
+}
+function shellStop(){NV.shellKill();sh.alive=false;const was=sh.busy;sh.busy=false;sh.buf='';updPrompt();return was}
+const NHELP=`Это настоящий Linux (Alpine) — работают обычные команды:
+  ls, cd, cat, mkdir, rm, cp, mv, grep, git…, apk add <пакет>
+Команды Codeum:
+  run [файл]         собрать и запустить (или текущий файл)
+  pkg list           языки и их статус
+  pkg install <язык> установить язык (python, go, rust…)
+  projects, open <имя>  список проектов / переключиться
+  python, node       интерактивный REPL
+  neofetch, clear
+Кнопка ^C останавливает программу.`;
+async function pkgCmd(a){
+  if(a[0]==='list'){LANGS.forEach(L=>out(`${S.installed.includes(L.id)?'✓':' '} ${L.id.padEnd(6)} ${L.name.padEnd(11)} ${L.ver.padEnd(11)} ${sizeOf(L)?'~'+sizeOf(L)+' МБ':'встроен'}${NATIVE&&L.soon?'  (скоро)':''}`,S.installed.includes(L.id)?'a':''));return true}
+  if(a[0]==='install'&&a[1]){const q=a[1].toLowerCase().replace('python3','python').replace('node','js');const L=LANGS.find(l=>l.id===q||l.name.toLowerCase()===q);
+    if(!L){out('pkg: пакет '+a[1]+' не найден. Смотри pkg list','e');return true}
+    if(S.installed.includes(L.id)){out(L.name+' уже установлен','d');return true}
+    if(!NATIVE&&!L.run){out(`${L.name} ${L.ver} ставится в Android-версии Codeum.`,'w');return true}
+    if(NATIVE&&L.soon){out(`${L.name} пока недоступен в Linux-окружении Codeum.`,'w');return true}
+    out(`Устанавливаю ${L.name} ${L.ver}${sizeOf(L)?` (~${sizeOf(L)} МБ)`:''}…`,'d');instTerm=L.id;
+    const ok=await installLang(L.id);instTerm=null;out(ok?'✓ '+L.name+' установлен':'✗ установка не удалась',ok?'a':'e');return true}
+  return false;
+}
+let instTerm=null;
+async function nativeCmd(line){
+  const p=P();
+  if(sh.busy){outRaw(line+'\n','p');NV.shellWrite(line+'\n');return}
+  outPrompt(line);
+  const tr=osTranslate(line);
+  if(tr.builtin){await osBuiltin(tr);return}
+  line=tr.line;
+  const[c,...a]=line.trim().split(/\s+/),arg=a.join(' ');
+  switch(c){
+    case'':return;
+    case'project':{const x=S.projects.find(q=>q.name===arg);if(!x){out('project: нет проекта '+arg,'e');return}S.cur={p:x.id,f:''};ensureCur(x);save();shellStop();updPrompt();out('Открыт проект '+x.name,'d');return}
+    case'run':await runFile(arg||S.cur.f);return;
+    case'neofetch':out(`   ▄▄▄▄▄▄▄▄     ${NICK()}@codeum
+  █ ▶  ▁▁  █    ────────────
+  █        █    OS: Codeum ${NV.version()} · Alpine Linux
+   ▀▀▀▀▀▀▀▀     CPU: ${NV.abi()}
+                Theme: ${THEMES[S.settings.theme][0]}
+                Languages: ${S.installed.length} / ${LANGS.length}
+                Projects: ${S.projects.length}`,'a');return;
+    case'pkg':if(await pkgCmd(a))return;break;
+    case'python':case'python3':if(!arg)line='python3 -i -u';break;
+    case'node':if(!arg)line='node -i';break;
+  }
+  if(!p){out('Нет открытого проекта','e');return}
+  shellRun(p,line,false);
+}
+const HELP=`Команды Codeum shell:
+  ls                 файлы проекта
+  cat <файл>         показать файл
+  run [файл]         запустить (или текущий файл)
+  touch / rm <файл>  создать / удалить файл
+  mkdir <папка>      создать папку
+  projects, cd <имя> список проектов / переключиться
+  pkg list           доступные языки
+  pkg install <язык> установить язык (js, python…)
+  python, node       интерактивный REPL
+  neofetch, date, whoami, echo, clear`;
+async function cmd(line){
+  if(NATIVE)return nativeCmd(line);
+  if(mode==='py'){out('>>> '+line,'p');if(/^(exit|quit)(\(\))?$/.test(line)){mode='sh';updPrompt();return}const r=await runPy(line);if(r!==undefined&&r!==null)out(String(r),'a');return}
+  if(mode==='js'){out('> '+line,'p');if(line==='.exit'){mode='sh';updPrompt();return}const r=runJS(line);if(r!==undefined)out(fmt(r),'a');return}
+  outPrompt(line);
+  const tr=osTranslate(line);
+  if(tr.builtin){await osBuiltin(tr);return}
+  line=tr.line;
+  const[c0,...a]=line.trim().split(/\s+/),arg=a.join(' '),p=P();
+  const c={project:'cd','mkdir':'mkdir'}[c0]||c0;
+  if(!p&&['ls','cat','touch','rm','mkdir','run'].includes(c)){out('Нет открытого проекта','e');return}
+  switch(c){
+    case'help':out(HELP,'d');break;
+    case'clear':term.innerHTML='';break;
+    case'ls':out(Object.keys(p.files).sort().join('\n'));break;
+    case'pwd':out('/home/codeum/'+(p?p.name:''));break;
+    case'whoami':out(S.gh?S.gh.login:'codeum');break;
+    case'date':out(new Date().toString());break;
+    case'echo':out(arg);break;
+    case'cat':out(p.files[arg]!=null?p.files[arg]:'cat: '+arg+': нет такого файла',p.files[arg]!=null?'':'e');break;
+    case'touch':if(!arg){out('touch: укажи имя','e');break}if(p.files[arg]==null)p.files[arg]='';save();break;
+    case'mkdir':if(!arg){out('mkdir: укажи имя','e');break}p.dirs=[...new Set([...(p.dirs||[]),arg.replace(/\/+$/,'')])];save();break;
+    case'rm':if(p.files[arg]==null){out('rm: нет файла '+arg,'e');break}delete p.files[arg];save();break;
+    case'run':await runFile(arg||S.cur.f);break;
+    case'projects':S.projects.forEach(x=>out((p&&x.id===p.id?'* ':'  ')+x.name+'  ('+LN(x.lang).name+')',p&&x.id===p.id?'a':''));break;
+    case'cd':{const x=S.projects.find(q=>q.name===arg);if(!x){out('cd: нет проекта '+arg,'e');break}S.cur={p:x.id,f:''};ensureCur(x);save();updPrompt();break}
+    case'python':case'python3':if(arg){await runFile(arg);break}if(!S.installed.includes('py')){out('python: не установлен. Выполни: '+pkgHint('python'),'e');break}mode='py';updPrompt();out('Python 3.12 (Pyodide) — exit() для выхода','d');loadPy().catch(()=>out('Ошибка загрузки Python','e'));break;
+    case'node':if(arg){await runFile(arg);break}if(!S.installed.includes('js')){out('node: JavaScript не установлен. Выполни: pkg install js','e');break}mode='js';updPrompt();out('JavaScript REPL — .exit для выхода','d');break;
+    case'pkg':case'apt':if(!(await pkgCmd(a)))out('Использование: pkg list | pkg install <язык>','d');break;
+    case'neofetch':out(
+`   ▄▄▄▄▄▄▄▄     ${NICK()}@codeum
+  █ ▶  ▁▁  █    ────────────
+  █        █    OS: Codeum 0.3 (preview)
+   ▀▀▀▀▀▀▀▀     Shell: csh 1.0
+                Theme: ${THEMES[S.settings.theme][0]}
+                Languages: ${S.installed.length} / ${LANGS.length}
+                Projects: ${S.projects.length}`,'a');break;
+    case'':break;
+    default:out(c+': команда не найдена. Введи help','e');
+  }
+}
+tin.addEventListener('keydown',async e=>{
+  if(e.key==='Enter'){const v=tin.value;tin.value='';if(v.trim()){hist.push(v);hist=hist.slice(-100);store.set('hist',hist)}hi=hist.length;await cmd(v)}
+  else if(e.key==='ArrowUp'){e.preventDefault();histMove(-1)}else if(e.key==='ArrowDown'){e.preventDefault();histMove(1)}
+});
+function histMove(d){hi=Math.max(0,Math.min(hist.length,hi+d));tin.value=hist[hi]||''}
+const TKEYS=[['↑','up'],['↓','dn'],['⇥','tab'],['^C','c'],['|'],['/'],['-'],['~'],['.'],['"'],['clear','clr']];
+$('#tkeys').innerHTML=TKEYS.map((k,i)=>`<button data-k="${i}">${k[0]}</button>`).join('');
+$('#tkeys').addEventListener('pointerdown',e=>{
+  const b=e.target.closest('button');if(!b)return;e.preventDefault();const[l,a]=TKEYS[b.dataset.k];tin.focus();
+  if(!a){tin.setRangeText(l,tin.selectionStart,tin.selectionEnd,'end');return}
+  if(a==='up')histMove(-1);if(a==='dn')histMove(1);
+  if(a==='c'){
+    if(NATIVE){const was=shellStop();out((was?'':promptStr())+tin.value+'^C'+(was?'  (программа остановлена)':''),'d');tin.value='';return}
+    out((mode==='sh'?promptStr():'')+tin.value+'^C','d');tin.value='';if(mode!=='sh'){mode='sh';updPrompt()}}
+  if(a==='clr')term.innerHTML='';
+  if(a==='tab'){const v=tin.value,w=v.split(' ').pop(),p=P();const m=[...(p?Object.keys(p.files):[]),...'help ls cat run touch rm mkdir projects cd pkg python node neofetch clear'.split(' ')].filter(x=>x.startsWith(w));if(m.length===1)tin.value=v.slice(0,v.length-w.length)+m[0]+' ';else if(m.length)out(m.join('  '),'d')}
+});
+termBanner();
+
+/* ============ store ============ */
+let sq='',sf='all',installing=null;const instProg={},instWait={};
+async function installLang(id){
+  if(NATIVE&&id!=='js'){
+    if(LANG[id].soon){langInfo(id);return false}
+    if(installing){toast('Дождись окончания установки '+LANG[installing].name);return false}
+    installing=id;instProg[id]={text:NV.ready()?'Подготовка…':'Первый запуск: скачиваю Linux-окружение…',pct:0};if(view==='store')renderStore();
+    const ok=await new Promise(res=>{instWait[id]=res;NV.install(id)});
+    installing=null;delete instProg[id];
+    if(ok){if(!S.installed.includes(id))S.installed.push(id);save();toast(LANG[id].name+' установлен ✓')}
+    if(view==='store')renderStore();if(view==='home')renderHome();return ok;
+  }
+  installing=id;if(view==='store')renderStore();let ok=false;
+  try{if(id==='py')await loadPy();if(!S.installed.includes(id))S.installed.push(id);save();ok=true;toast(LANG[id].name+' установлен ✓')}
+  catch{toast('Ошибка загрузки — проверь интернет')}
+  installing=null;if(view==='store')renderStore();return ok;
+}
+function renderStore(){
+  const cats=[['all','Все'],['inst','Установлены'],['web','Web'],['system','Системные'],['mobile','Мобильные'],['general','Общие']];
+  const list=LANGS.filter(L=>(sf==='all'||(sf==='inst'?S.installed.includes(L.id):L.cat===sf))&&(L.name+L.id).toLowerCase().includes(sq.toLowerCase()));
+  const focused=document.activeElement&&document.activeElement.id==='sq';
+  $('#v-store').innerHTML=`<div class="pad">
+   <div class="banner"><b>${FIRST_LAUNCH?LANGS.length+' языков':'Языки'}</b><div class="stack">${['py','rs','go','kt'].map(i=>tile(LANG[i])).join('')}</div></div>
+   <label class="search">${ic('search')}<input id="sq" placeholder="Python, Rust, Go…" value="${esc(sq)}"></label>
+   <div class="chips" style="margin-bottom:14px">${cats.map(([k,n])=>`<button class="fchip ${sf===k?'on':''}" data-act="sf" data-k="${k}">${n}</button>`).join('')}</div>
+   ${list.map(L=>{const inst=S.installed.includes(L.id);let b;
+     const pr=instProg[L.id];
+     if(installing===L.id)b=`<button class="btn sec"><span class="spin"></span>${pr&&pr.pct>0?pr.pct+'%':'Загрузка'}</button>`;
+     else if(inst)b=`<button class="btn ok" data-act="lang-info" data-id="${L.id}">${ic('check')}Готов</button>`;
+     else if(NATIVE&&L.soon)b=`<button class="btn apk" data-act="lang-info" data-id="${L.id}">Скоро</button>`;
+     else if(L.run||NATIVE)b=`<button class="btn pri" data-act="install" data-id="${L.id}">${ic('download')}${sizeOf(L)?'~'+sizeOf(L)+' МБ':'Установить'}</button>`;
+     else b=`<button class="btn apk" data-act="lang-info" data-id="${L.id}">${ic('phone')}APK</button>`;
+     return`<div class="item lang">${tile(L)}<div class="grow"><div class="nm">${L.name}</div><div class="desc">${installing===L.id&&pr?esc(pr.text):L.desc}</div><div class="meta"><span class="tag">${L.ver}</span><span class="tag">.${L.ext}</span></div></div>${b}</div>`}).join('')||'<div class="empty">Ничего не найдено</div>'}
+  </div>`;
+  const inp=$('#sq');inp.oninput=e=>{sq=e.target.value;renderStore()};if(focused){inp.focus();inp.setSelectionRange(sq.length,sq.length)}
+}
+function langInfo(id){
+  const L=LANG[id],inst=S.installed.includes(id);
+  const note=NATIVE
+    ?(L.soon?`${L.name} пока не собран для Linux-окружения Codeum (Alpine). Появится в одном из обновлений.`
+      :L.id==='js'?'Встроенный движок, работает без интернета.'
+      :`Ставится настоящим пакетом Alpine Linux внутри Codeum (~${sizeOf(L)} МБ). Первый язык дополнительно скачивает само Linux-окружение (~10 МБ).`)
+    :(L.run?'':`${L.name} — нативный компилятор, ему нужен Linux-рантайм. Он скачивается внутри <b>Android-версии Codeum</b>. В веб-превью работают JavaScript и Python.`);
+  openSheet(`<div style="display:flex;gap:14px;align-items:center;margin-bottom:10px">${tile(L,'lg')}<div><h3>${L.name}</h3><div class="muted" style="font-size:13px">${L.ver} · ${sizeOf(L)?'~'+sizeOf(L)+' МБ':'встроен'}</div></div></div>
+   <p class="muted">${L.desc}</p>
+   ${note?`<div class="note">${ic('info')}<div>${note}</div></div>`:''}
+   ${inst?`<button class="bigbtn" data-act="lang-new" data-id="${id}">Создать проект на ${L.name}</button><button class="bigbtn sec" data-act="uninstall" data-id="${id}">Удалить</button>`:''}`);
+}
+
+/* ============ GitHub ============ */
+async function gh(path,opt={}){
+  const r=await fetch('https://api.github.com'+path,{...opt,headers:{Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28',Authorization:'Bearer '+S.gh.token,...(opt.body?{'Content-Type':'application/json'}:{})}});
+  const j=r.status===204?{}:await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(j.message||('HTTP '+r.status));return j;
+}
+function ghConnectSheet(){
+  openSheet(`<div style="display:flex;gap:12px;align-items:center"><div class="tile lg" style="--c:#24292f;--fg:#fff">${ic('github')}</div><div><h3>Подключить GitHub</h3><div class="muted" style="font-size:13px">клонирование, commit и push</div></div></div>
+   <ol class="steps"><li>Открой <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com → Settings → Tokens</a></li><li>Создай <b>fine-grained token</b>, выдай доступ <b>Contents: Read and write</b></li><li>Вставь токен сюда</li></ol>
+   <label class="field"><span>Personal access token</span><input id="ghT" type="password" placeholder="github_pat_…" autocapitalize="off" autocomplete="off"></label>
+   <div class="note">${ic('lock')}<div>Токен хранится только на этом устройстве и отправляется только в api.github.com.</div></div>
+   <button class="bigbtn" data-act="gh-save">${ic('github')}Подключить</button>`);
+}
+async function ghSave(){
+  const t=$('#ghT').value.trim();if(!t){toast('Вставь токен');return}
+  const btn=$('[data-act=gh-save]');btn.disabled=true;btn.innerHTML='<span class="spin"></span>Проверяю…';
+  S.gh={token:t};
+  try{const u=await gh('/user');S.gh={token:t,login:u.login,avatar:u.avatar_url,name:u.name||u.login};save();toast('GitHub подключён: '+u.login);settingsSheet()}
+  catch(e){S.gh=null;btn.disabled=false;btn.innerHTML=ic('github')+'Подключить';toast('Не удалось: '+e.message)}
+}
+async function ghCloneSheet(){
+  if(!S.gh){ghConnectSheet();return}
+  openSheet(`<h3>Клонировать репозиторий</h3><p class="muted">Репозитории ${esc(S.gh.login)}</p><div id="repoList"><div class="thinking"><span class="spin"></span>Загружаю список…</div></div>`);
+  try{const repos=await gh('/user/repos?sort=updated&per_page=50');
+    $('#repoList').innerHTML=`<div style="margin-top:12px">${repos.map(r=>{const L=LANGS.find(l=>l.name===r.language);return`<div class="item" data-act="gh-do-clone" data-full="${esc(r.full_name)}" data-br="${esc(r.default_branch)}">${tile(L||null)}<div class="grow"><div class="nm">${esc(r.name)} ${r.private?'🔒':''}</div><div class="sub">${esc(r.language||'—')} · ${ago(new Date(r.updated_at).getTime())}</div></div>${ic('download')}</div>`}).join('')||'<div class="empty">Репозиториев нет</div>'}</div>`}
+  catch(e){$('#repoList').innerHTML=`<div class="note">${ic('info')}<div>Ошибка: ${esc(e.message)}</div></div>`}
+}
+async function ghClone(full,branch){
+  $('#sheetBody').innerHTML=`<h3>Клонирую ${esc(full)}</h3><div class="thinking"><span class="spin"></span><span id="clP">Получаю структуру…</span></div>`;
+  try{
+    const tree=await gh(`/repos/${full}/git/trees/${encodeURIComponent(branch)}?recursive=1`);
+    const blobs=tree.tree.filter(t=>t.type==='blob'&&t.size<300000&&!TEXT_EXT.test(t.path)&&!/(^|\/)(node_modules|\.git)\//.test(t.path)).slice(0,120);
+    const files={},shas={};let done=0;
+    for(let i=0;i<blobs.length;i+=6){await Promise.all(blobs.slice(i,i+6).map(async b=>{
+      const j=await gh(`/repos/${full}/git/blobs/${b.sha}`);const bin=atob(j.content.replace(/\n/g,''));const bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));
+      const txt=new TextDecoder().decode(bytes);if(!txt.includes(' ')){files[b.path]=txt;shas[b.path]=b.sha}
+      done++;const e=$('#clP');if(e)e.textContent=`Файлы: ${done} / ${blobs.length}`}))}
+    const p={id:uid(),name:full.split('/')[1],lang:guessLang(Object.keys(files)),files,dirs:tree.tree.filter(t=>t.type==='tree').map(t=>t.path),open:[],updated:Date.now(),gh:{full,branch,paths:Object.keys(files)}};
+    S.projects.unshift(p);S.cur={p:p.id,f:''};save();closeSheet();show('editor');toast(`Склонировано: ${Object.keys(files).length} файл(ов)`+(tree.truncated||blobs.length<tree.tree.filter(t=>t.type==='blob').length?' (без бинарных/больших)':''));
+  }catch(e){$('#sheetBody').innerHTML=`<h3>Ошибка клонирования</h3><p class="muted">${esc(e.message)}</p><button class="bigbtn sec" data-act="close-sheet">Закрыть</button>`}
+}
+function ghPushSheet(){
+  const p=P();
+  openSheet(`<h3>Commit и Push</h3><p class="muted">${esc(p.gh.full)} → <b>${esc(p.gh.branch)}</b></p>
+   <label class="field"><span>Сообщение коммита</span><input id="cmM" value="Update from Codeum"></label>
+   <button class="bigbtn" data-act="gh-do-push">${ic('push')}Отправить</button>`);
+}
+async function ghPush(){
+  const p=P(),{full,branch}=p.gh,msg=$('#cmM').value.trim()||'Update from Codeum';
+  const btn=$('[data-act=gh-do-push]');btn.disabled=true;btn.innerHTML='<span class="spin"></span>Отправляю…';
+  try{
+    const ref=await gh(`/repos/${full}/git/ref/heads/${encodeURIComponent(branch)}`);
+    const head=await gh(`/repos/${full}/git/commits/${ref.object.sha}`);
+    const items=Object.entries(p.files).map(([path,content])=>({path,mode:'100644',type:'blob',content}));
+    (p.gh.paths||[]).filter(x=>p.files[x]==null).forEach(path=>items.push({path,mode:'100644',type:'blob',sha:null}));
+    const tree=await gh(`/repos/${full}/git/trees`,{method:'POST',body:JSON.stringify({base_tree:head.tree.sha,tree:items})});
+    const c=await gh(`/repos/${full}/git/commits`,{method:'POST',body:JSON.stringify({message:msg,tree:tree.sha,parents:[ref.object.sha]})});
+    await gh(`/repos/${full}/git/refs/heads/${encodeURIComponent(branch)}`,{method:'PATCH',body:JSON.stringify({sha:c.sha})});
+    p.gh.paths=Object.keys(p.files);save();closeSheet();toast('Запушено ✓ '+c.sha.slice(0,7));
+  }catch(e){btn.disabled=false;btn.innerHTML=ic('push')+'Отправить';toast('Ошибка push: '+e.message)}
+}
+
+/* ============ AI ============ */
+const AI_PROV={
+  claude:{name:'Claude',def:'claude-opus-5',link:'https://console.anthropic.com/settings/keys',ph:'sk-ant-…'},
+  openai:{name:'OpenAI',def:'gpt-5-mini',link:'https://platform.openai.com/api-keys',ph:'sk-…'},
+  gemini:{name:'Gemini',def:'gemini-2.5-flash',link:'https://aistudio.google.com/apikey',ph:'AIza…'}
+};
+const aiModel=()=>S.ai.model[S.ai.prov]||AI_PROV[S.ai.prov].def;
+const AI_SYS='Ты — ИИ-ассистент в мобильной IDE Codeum. Пользователь пишет код с телефона. Отвечай по-русски, коротко и по делу. Код всегда оформляй в блоках ``` с указанием языка.';
+async function aiCall(prompt){
+  const k=S.ai.keys[S.ai.prov],m=aiModel();
+  if(S.ai.prov==='claude'){
+    const fb=/^claude-(opus-5|fable-5-1)$/.test(m);
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true',...(fb?{'anthropic-beta':'server-side-fallback-2026-07-01'}:{})},
+      body:JSON.stringify({model:m,max_tokens:16000,system:AI_SYS,messages:[{role:'user',content:prompt}],...(fb?{fallbacks:'default'}:{})})});
+    const j=await r.json();if(!r.ok)throw new Error(j.error?.message||'HTTP '+r.status);
+    if(j.stop_reason==='refusal')throw new Error('Модель отказалась отвечать на этот запрос');
+    return j.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+  }
+  if(S.ai.prov==='openai'){
+    const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+k},body:JSON.stringify({model:m,messages:[{role:'system',content:AI_SYS},{role:'user',content:prompt}]})});
+    const j=await r.json();if(!r.ok)throw new Error(j.error?.message||'HTTP '+r.status);return j.choices[0].message.content;
+  }
+  const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(m)}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':k},body:JSON.stringify({systemInstruction:{parts:[{text:AI_SYS}]},contents:[{role:'user',parts:[{text:prompt}]}]})});
+  const j=await r.json();if(!r.ok)throw new Error(j.error?.message||'HTTP '+r.status);return(j.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('');
+}
+function aiSetupSheet(){
+  const pv=AI_PROV[S.ai.prov];
+  openSheet(`<div style="display:flex;gap:12px;align-items:center"><div class="tile lg" style="--c:var(--accent);--fg:#fff">${ic('spark')}</div><div><h3>ИИ-ассистент</h3><div class="muted" style="font-size:13px">объясняет, чинит и пишет код</div></div></div>
+   <div class="field"><span>Провайдер</span><div class="seg full">${Object.entries(AI_PROV).map(([k,v])=>`<button class="${S.ai.prov===k?'on':''}" data-act="ai-prov" data-k="${k}">${v.name}</button>`).join('')}</div></div>
+   <label class="field"><span>API-ключ ${pv.name} · <a href="${pv.link}" target="_blank" rel="noopener">получить</a></span><input id="aiK" type="password" placeholder="${pv.ph}" value="${esc(S.ai.keys[S.ai.prov]||'')}" autocapitalize="off" autocomplete="off"></label>
+   <label class="field"><span>Модель</span><input id="aiM" value="${esc(aiModel())}" autocapitalize="off" style="font-family:'JetBrains Mono';font-size:14px"></label>
+   <div class="note">${ic('lock')}<div>Ключ хранится только на устройстве и отправляется напрямую провайдеру. Запросы оплачиваются с твоего аккаунта.</div></div>
+   <button class="bigbtn" data-act="ai-save">Сохранить</button>`);
+}
+let aiLast='';
+function mdLite(t){
+  const parts=t.split(/```(\w*)\n?([\s\S]*?)```/g);let h='';
+  for(let i=0;i<parts.length;i++){
+    if(i%3===0){h+=parts[i].trim().split(/\n{2,}/).filter(Boolean).map(p=>'<p>'+esc(p).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\n/g,'<br>')+'</p>').join('')}
+    else if(i%3===2){const L=LANGS.find(l=>l.id===parts[i-1]||l.name.toLowerCase()===parts[i-1]||l.ext===parts[i-1])||langOf(S.cur.f||'');const n=aiBlocks.push(parts[i])-1;
+      h+=`<div class="ai-code"><pre>${highlight(parts[i].replace(/\n$/,''),L,false)}</pre><div><button data-act="ai-insert" data-n="${n}">Вставить</button><button data-act="ai-replace" data-n="${n}">Заменить файл</button><button data-act="ai-copy" data-n="${n}">Копировать</button></div></div>`}
+  }
+  return h;
+}
+let aiBlocks=[];
+function aiSheet(){
+  if(!S.ai.keys[S.ai.prov]){aiSetupSheet();toast('Сначала добавь API-ключ');return}
+  const p=P();const has=p&&S.cur.f;
+  openSheet(`<div style="display:flex;gap:12px;align-items:center"><div class="tile" style="--c:var(--accent);--fg:#fff">${ic('spark')}</div><div class="grow"><h3 style="margin:0">ИИ-ассистент</h3><div class="muted" style="font-size:12px;font-family:'JetBrains Mono'">${AI_PROV[S.ai.prov].name} · ${esc(aiModel())}</div></div><button class="icon-btn" data-act="ai-setup">${ic('key')}</button></div>
+   ${has?`<div class="chips wrap" style="margin-top:14px">${['Объясни код','Найди ошибки','Добавь комментарии','Оптимизируй','Напиши тесты'].map(q=>`<button class="fchip" data-act="ai-quick" data-q="${q}">${q}</button>`).join('')}</div>`:''}
+   <label class="field"><span>${has?'Вопрос по файлу '+esc(base(S.cur.f)):'Вопрос'}</span><textarea id="aiQ" placeholder="Например: как прочитать JSON-файл?"></textarea></label>
+   <button class="bigbtn" data-act="ai-ask" id="aiBtn">${ic('spark')}Спросить</button>
+   <div id="aiOut" class="ai-out">${aiLast}</div>`);
+}
+async function aiAsk(q){
+  q=(q||$('#aiQ').value).trim();if(!q){toast('Напиши вопрос');return}
+  const p=P(),f=S.cur.f,L=f&&langOf(f);
+  const sel=ta.value.slice(ta.selectionStart,ta.selectionEnd);
+  const prompt=f&&p?`${q}\n\nФайл: ${f} (${L?L.name:'text'})${sel?'\nВыделенный фрагмент:\n```\n'+sel+'\n```':''}\n\n\`\`\`${L?L.ext:''}\n${p.files[f]}\n\`\`\``:q;
+  const btn=$('#aiBtn');btn.disabled=true;$('#aiOut').innerHTML=`<div class="thinking"><span class="spin"></span>Думаю…</div>`;
+  try{const t=await aiCall(prompt);aiBlocks=[];aiLast=mdLite(t);$('#aiOut').innerHTML=aiLast}
+  catch(e){$('#aiOut').innerHTML=`<div class="note">${ic('info')}<div>Ошибка: ${esc(e.message)}</div></div>`}
+  btn.disabled=false;
+}
+
+/* ============ sheets ============ */
+function openSheet(h){$('#sheetBody').innerHTML=h;$('#sheet').classList.add('on');$('.sheet-card').scrollTop=0}
+function closeSheet(){$('#sheet').classList.remove('on')}
+function confirmSheet(title,text,btn,fn){openSheet(`<h3>${title}</h3><p class="muted">${text}</p><button class="bigbtn danger" id="cfYes">${btn}</button><button class="bigbtn sec" data-act="close-sheet">Отмена</button>`);$('#cfYes').onclick=()=>{closeSheet();fn()}}
+function settingsSheet(){
+  const s=S.settings;
+  openSheet(`<h3>Настройки</h3>
+   <div class="sect" style="margin:16px 0 2px">Профиль</div>
+   <button class="row" data-act="nick-edit"><span class="rl"><span class="ri" style="color:var(--accent)">${ic('user')}</span><span>Ник<small>${esc(NICK())}</small></span></span><span class="rv">Изменить${ic('right')}</span></button>
+   <div class="row"><span class="rl"><span class="ri" style="color:var(--accent2)">${ic('term')}</span>Терминал</span><div class="seg">${OS_LIST.map(([k,n])=>`<button class="${OS()===k?'on':''}" data-act="set-os" data-k="${k}">${n}</button>`).join('')}</div></div>
+   <div class="sect" style="margin:22px 0 2px">Аккаунты</div>
+   <button class="row" data-act="${S.gh?'gh-off':'gh-connect'}"><span class="rl">${S.gh&&S.gh.avatar?`<img class="avatar" src="${esc(S.gh.avatar)}" alt="">`:`<span class="ri">${ic('github')}</span>`}<span>GitHub<small>${S.gh?esc(S.gh.login)+' · подключён':'клонирование, commit, push'}</small></span></span><span class="rv">${S.gh?'Отключить':'Подключить'}${ic('right')}</span></button>
+   <button class="row" data-act="ai-setup"><span class="rl"><span class="ri" style="color:var(--accent)">${ic('spark')}</span><span>ИИ-ассистент<small>${S.ai.keys[S.ai.prov]?AI_PROV[S.ai.prov].name+' · '+esc(aiModel()):'подключи по API-ключу'}</small></span></span><span class="rv">${S.ai.keys[S.ai.prov]?'Ключ добавлен':'Настроить'}${ic('right')}</span></button>
+   <div class="sect" style="margin:22px 0 2px">Главный экран</div>
+   <div class="row">Приветствие «Что пишем сегодня?»<button class="sw ${s.greet?'on':''}" data-act="toggle" data-k="greet"></button></div>
+   <button class="row" data-act="widget"><span class="rl"><span class="ri" style="color:var(--accent2)">${ic('widget')}</span><span>Виджет «Код дня»<small>${s.wInt==='5h'?'обновляется каждые 5 часов':'обновляется каждый день'}</small></span></span><span class="rv">${ic('right')}</span></button>
+   <div class="sect" style="margin:22px 0 10px">Тема</div>
+   <div class="tgrid">${Object.keys(THEMES).map(k=>{const v=themeVars(k);return`<button class="tcard" data-act="theme" data-t="${k}" style="background:${v.panel};color:${v.text};border-color:${s.theme===k?v.accent:v.line}">${THEMES[k][0]}<pre><span style="color:${v.kw}">const</span> <span style="color:${v.fn}">run</span> = <span style="color:${v.num}">42</span>\n<span style="color:${v.com}">// ${k}</span> <span style="color:${v.str}">"ok"</span></pre></button>`}).join('')}</div>
+   <div class="sect" style="margin:22px 0 2px">Редактор</div>
+   <div class="row">Размер шрифта <span style="display:flex;align-items:center;gap:10px"><input type="range" min="10" max="20" value="${s.fs}" id="fsR"><b id="fsV" style="width:22px">${s.fs}</b></span></div>
+   <div class="row">Отступ<div class="seg">${[2,4].map(n=>`<button class="${s.tab===n?'on':''}" data-act="tabsize" data-n="${n}">${n}</button>`).join('')}</div></div>
+   <div class="row">Номера строк<button class="sw ${s.lines?'on':''}" data-act="toggle" data-k="lines"></button></div>
+   <div class="row">Панель символов<button class="sw ${s.keys?'on':''}" data-act="toggle" data-k="keys"></button></div>
+   <div class="sect" style="margin:22px 0 2px">О приложении</div>
+   <button class="row" data-act="upd-check"><span class="rl"><span class="ri" style="color:var(--accent)">${ic('download')}</span><span>Codeum v${esc(curVersion())}<small>${NATIVE?'Android · '+esc(NV.abi()):'веб-превью'}${UPDATE_REPO?' · обновления: '+esc(UPDATE_REPO):''}</small></span></span><span class="rv">Проверить${ic('right')}</span></button>
+   <div class="note">${ic('info')}<div>Всё хранится на устройстве. Обновления не стирают данные.</div></div>
+   <button class="bigbtn sec" data-act="reset" style="color:#e5484d">Сбросить все данные</button>`);
+  $('#fsR').oninput=e=>{S.settings.fs=+e.target.value;$('#fsV').textContent=e.target.value;applySettings();save()};
+}
+function widgetSheet(){
+  const now=new Date(),hm=now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}),dt=now.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'});
+  const apps=n=>Array.from({length:n},()=>'<div class="hs-app"><i></i></div>').join('');
+  openSheet(`<h3>Виджет «Код дня»</h3><p class="muted">Живёт на рабочем столе телефона, а не внутри приложения. Каждый раз новый кусочек кода с объяснением — учишься, даже не открывая Codeum.</p>
+   <div class="sect" style="margin:16px 0 10px">Так он выглядит на экране телефона</div>
+   <div class="homescreen"><div class="hs-status"><span>${hm}</span><span>5G ▮▮▮ 87%</span></div>
+    <div class="hs-clock">${hm}</div><div class="hs-date">${dt}</div>
+    ${widgetHTML()}
+    <div class="hs-row">${apps(3)}<div class="hs-app">${document.querySelector('header .logo').outerHTML}Codeum</div></div>
+    <div class="hs-row">${apps(4)}</div></div>
+   <div class="sect" style="margin:18px 0 10px">Маленький размер · 2×2</div>
+   <div class="homescreen" style="padding-top:16px"><div class="hs-pair">${widgetHTML(true)}<div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:center">${apps(4)}</div></div></div>
+   <div class="field"><span>Как часто менять код</span><div class="seg full"><button class="${S.settings.wInt==='day'?'on':''}" data-act="w-int" data-v="day">Каждый день</button><button class="${S.settings.wInt==='5h'?'on':''}" data-act="w-int" data-v="5h">Каждые 5 часов</button></div></div>
+   <button class="bigbtn" data-act="w-add" data-s="0">${ic('widget')}Добавить большой · 4×2</button>
+   <button class="bigbtn sec" data-act="w-add" data-s="1">Добавить маленький · 2×2</button>
+   <div class="note">${ic('info')}<div>Кнопка откроет системное окно Android «Добавить виджет». Ещё можно так: долгий тап по рабочему столу → Виджеты → Codeum.</div></div>`);
+}
+function hostSheet(){
+  openSheet(`<h3>Новый SSH-хост</h3><p class="muted">Подключение к VPS — запускай любой язык прямо на сервере.</p>
+   <label class="field"><span>Название</span><input id="hN" placeholder="my-vps"></label>
+   <label class="field"><span>Адрес</span><input id="hH" placeholder="203.0.113.10" autocapitalize="off"></label>
+   <div style="display:flex;gap:10px"><label class="field" style="flex:2"><span>Пользователь</span><input id="hU" value="root" autocapitalize="off"></label><label class="field" style="flex:1"><span>Порт</span><input id="hP" value="22" inputmode="numeric"></label></div>
+   <div class="note">${ic('info')}<div>Сохраняются только адрес и имя пользователя. Пароль не хранится.</div></div>
+   <button class="bigbtn" data-act="host-save">Сохранить</button>`);
+}
+function applySettings(){
+  const v=themeVars(S.settings.theme),r=document.documentElement.style;
+  TH_KEYS.forEach(k=>r.setProperty('--'+k,v[k]));r.setProperty('--fs',S.settings.fs+'px');
+  $('meta[name=theme-color]').content=v.bg;
+  if(NATIVE)try{NV.setBars(v.bg,S.settings.theme==='paper')}catch{}
+  document.body.classList.toggle('nolines',!S.settings.lines);document.body.classList.toggle('nokeys',!S.settings.keys);
+  if(view==='editor')requestAnimationFrame(sync);
+}
+
+/* ============ actions ============ */
+const ACT={
+  go:d=>{closeSheet();show(d.v)},
+  'go-store':()=>{closeSheet();show('store')},
+  'close-sheet':closeSheet,
+  settings:settingsSheet,
+  widget:widgetSheet,
+  'w-int':d=>{S.settings.wInt=d.v;save();NATIVE&&NV.setWidgetInterval(d.v);widgetSheet()},
+  'w-add':d=>{if(!NATIVE){toast('В Android-версии тут откроется окно «Добавить виджет»');return}
+    if(!NV.pinWidget(d.s==='1'))toast('Лаунчер не умеет добавлять виджеты по кнопке — долгий тап по экрану → Виджеты → Codeum')},
+  'new-proj':newProjSheet,
+  'np-lang':d=>{npLang=d.id;$$('.lpick').forEach(b=>b.classList.toggle('on',b.dataset.id===d.id))},
+  'np-create':()=>{if(!npLang)return;const n=($('#npName').value.trim()||'my-'+npLang+'-app').replace(/[^\wа-яА-ЯёЁ.-]+/g,'-');const p=mkProject(n,npLang);S.projects.unshift(p);S.cur={p:p.id,f:LANG[npLang].file};save();closeSheet();show('editor');toast('Проект '+n+' создан')},
+  'open-proj':d=>{const p=S.projects.find(x=>x.id===d.id);S.cur={p:p.id,f:''};ensureCur(p);save();show('editor')},
+  'del-proj':d=>{const p=S.projects.find(x=>x.id===d.id);confirmSheet('Удалить проект?',`«${esc(p.name)}» и все его файлы будут удалены с устройства.`,'Удалить',()=>{S.projects=S.projects.filter(x=>x.id!==d.id);if(S.cur.p===d.id)S.cur={p:S.projects[0]&&S.projects[0].id,f:''};save();renderProjects();toast('Проект удалён')})},
+  'open-file':()=>{importTarget=P()?'current':'new';$('#fileIn').click()},
+  'import-here':()=>{importTarget='current';$('#fileIn').click()},
+  'open-dir':()=>NATIVE?NV.pickFolder():$('#dirIn').click(),
+  tab:d=>openFile(d.f),
+  'tab-close':d=>{const p=P();p.open=p.open.filter(f=>f!==d.f);if(S.cur.f===d.f)S.cur.f=p.open[p.open.length-1]||'';if(!S.cur.f&&Object.keys(p.files).length){S.cur.f='';}save();lineCount=0;if(!S.cur.f){renderEditor();$('#edEmpty').hidden=false;$('#edEmpty').innerHTML=`<div>Все вкладки закрыты<br><br><button class="btn pri" data-act="drawer" style="margin:auto">${ic('sidebar')}Файлы проекта</button></div>`}else renderEditor()},
+  drawer:()=>$('#app').classList.toggle('drawer-on'),
+  'dir-toggle':d=>{const k=P().id+':'+d.d;collapsed.has(k)?collapsed.delete(k):collapsed.add(k);renderDrawer()},
+  'new-file':d=>newFileSheet(d.dir||''),
+  'nf-ext':d=>{nf.ext=d.e;$$('[data-act=nf-ext]').forEach(b=>b.classList.toggle('on',b.dataset.e===d.e));nfPrev()},
+  'nf-dir':d=>{nf.dir=d.d;$$('[data-act=nf-dir]').forEach(b=>b.classList.toggle('on',b.dataset.d===d.d));nfPrev()},
+  'nf-create':()=>{const p=P(),path=nfPath();if(p.files[path]!=null){toast('Такой файл уже есть');return}p.files[path]='';p.updated=Date.now();closeSheet();openFile(path);toast('Создан '+path)},
+  'new-dir':newDirSheet,
+  'nd-dir':d=>{nf.dir=d.d;$$('[data-act=nd-dir]').forEach(b=>b.classList.toggle('on',b.dataset.d===d.d))},
+  'nd-create':()=>{const p=P(),n=$('#ndN').value.trim().replace(/^\/+|\/+$/g,'');if(!n){toast('Укажи название');return}const path=(nf.dir?nf.dir+'/':'')+n;p.dirs=[...new Set([...(p.dirs||[]),path])];save();closeSheet();renderDrawer();toast('Папка '+path+' создана')},
+  'del-file':d=>{const p=P();confirmSheet('Удалить файл?',esc(d.f),'Удалить',()=>{delete p.files[d.f];save();renderEditor()})},
+  'del-dir':d=>{const p=P(),pre=d.d+'/';const n=Object.keys(p.files).filter(f=>f.startsWith(pre)).length;
+    confirmSheet('Удалить папку?',`${esc(d.d)}/ и ${n} файл(ов) внутри`,'Удалить',()=>{Object.keys(p.files).forEach(f=>{if(f.startsWith(pre))delete p.files[f]});p.dirs=(p.dirs||[]).filter(x=>x!==d.d&&!x.startsWith(pre));save();renderEditor()})},
+  undo:()=>{ta.focus();document.execCommand('undo')},
+  find:()=>{const f=$('#findbar');f.hidden=!f.hidden;if(!f.hidden)$('#fq').focus()},
+  'find-next':()=>find(true),
+  run:async()=>{clearTimeout(saveT);save();show('term');await runFile(S.cur.f)},
+  'term-clear':()=>term.innerHTML='',
+  sf:d=>{sf=d.k;renderStore()},
+  install:d=>installLang(d.id),
+  'lang-info':d=>langInfo(d.id),
+  'lang-new':d=>{npLang=d.id;newProjSheet()},
+  uninstall:d=>{S.installed=S.installed.filter(x=>x!==d.id);save();closeSheet();renderStore();toast(LANG[d.id].name+' удалён')},
+  theme:d=>{S.settings.theme=d.t;save();applySettings();settingsSheet()},
+  tabsize:d=>{S.settings.tab=+d.n;save();settingsSheet();if(view==='editor')renderEditor()},
+  toggle:d=>{S.settings[d.k]=!S.settings[d.k];save();applySettings();settingsSheet();if(view==='home')renderHome()},
+  reset:()=>confirmSheet('Сбросить всё?','Все проекты, файлы, ключи и настройки будут удалены.','Сбросить',()=>{try{Object.keys(localStorage).filter(k=>k.startsWith('codeum3.')).forEach(k=>localStorage.removeItem(k))}catch{}location.reload()}),
+  'gh-connect':ghConnectSheet,
+  'gh-save':ghSave,
+  'gh-off':()=>confirmSheet('Отключить GitHub?','Токен будет удалён с устройства. Проекты останутся.','Отключить',()=>{S.gh=null;save();toast('GitHub отключён')}),
+  'gh-clone':ghCloneSheet,
+  'gh-do-clone':d=>ghClone(d.full,d.br),
+  'gh-push':ghPushSheet,
+  'gh-do-push':ghPush,
+  ai:aiSheet,
+  'ai-setup':aiSetupSheet,
+  'ai-prov':d=>{S.ai.prov=d.k;save();aiSetupSheet()},
+  'ai-save':()=>{const k=$('#aiK').value.trim(),m=$('#aiM').value.trim();if(k)S.ai.keys[S.ai.prov]=k;else delete S.ai.keys[S.ai.prov];S.ai.model[S.ai.prov]=m||AI_PROV[S.ai.prov].def;save();toast(k?'ИИ подключён: '+AI_PROV[S.ai.prov].name:'Ключ удалён');if(k&&view==='editor')aiSheet();else closeSheet()},
+  'ai-quick':d=>aiAsk(d.q),
+  'ai-ask':()=>aiAsk(),
+  'ai-insert':d=>{closeSheet();show('editor');ins(aiBlocks[+d.n])},
+  'ai-replace':d=>{closeSheet();show('editor');ta.focus();ta.select();ins(aiBlocks[+d.n])},
+  'ai-copy':d=>{navigator.clipboard?.writeText(aiBlocks[+d.n]).then(()=>toast('Скопировано'),()=>toast('Не удалось скопировать'))},
+  host:hostSheet,
+  'host-save':()=>{const h={name:$('#hN').value.trim()||'server',host:$('#hH').value.trim(),user:$('#hU').value.trim()||'root',port:$('#hP').value.trim()||'22'};if(!h.host){toast('Укажи адрес сервера');return}S.hosts.push(h);save();closeSheet();renderHome();toast('Хост сохранён')},
+  'host-del':d=>{S.hosts.splice(+d.i,1);save();renderHome()},
+  'host-go':d=>{const h=S.hosts[+d.i];show('term');outPrompt(`ssh ${h.user}@${h.host} -p ${h.port}`);out(NATIVE?'Полноценный SSH-терминал (с вводом пароля) появится в следующем обновлении Codeum.':'SSH-соединения работают в Android-версии Codeum (браузер не умеет открывать TCP-сокеты).','w')}
+};
+document.addEventListener('click',e=>{const a=e.target.closest('[data-act]');if(!a)return;const f=ACT[a.dataset.act];if(f){e.preventDefault();f(a.dataset,a,e)}});
+
+/* ============ viewport / keyboard ============ */
+const vv=window.visualViewport;
+function fit(){document.documentElement.style.setProperty('--vh',(vv?vv.height:innerHeight)+'px');if(vv)window.scrollTo(0,0)}
+if(vv){vv.addEventListener('resize',fit)}window.addEventListener('resize',fit);fit();
+document.addEventListener('focusin',e=>{if(e.target===ta||e.target===tin)document.body.classList.add('kb')});
+document.addEventListener('focusout',()=>setTimeout(()=>{if(document.activeElement!==ta&&document.activeElement!==tin)document.body.classList.remove('kb')},50));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+setInterval(()=>{if(view==='home'&&!$('#sheet').classList.contains('on'))renderHome()},60000);
+
+/* ============ первый запуск: ник → языки → терминал ============ */
+const OS_LIST=[['windows','Windows'],['linux','Linux'],['mac','macOS']];
+const OS_DESC={windows:'dir, cls, type',linux:'ls, clear, cat',mac:'ls, open, brew'};
+const OS_ICON={
+  windows:'<svg class="i" viewBox="0 0 24 24"><path fill="#4aa3ff" d="M3 5.5l7.5-1v7H3zM11.5 4.3L21 3v8.5h-9.5zM3 12.5h7.5v7L3 18.5zM11.5 12.5H21V21l-9.5-1.3z"/></svg>',
+  linux:'<span style="color:#e95420;display:flex">'+ic('term')+'</span>',
+  mac:'<span style="font-size:18px;width:20px;text-align:center;line-height:1">⌘</span>'};
+const NICK_RE=/^[\p{L}\p{N}_.\-]{2,20}$/u;
+const onb={step:1,nick:'',langs:new Set(),os:'linux'};
+const onbCan=L=>!S.installed.includes(L.id)&&(NATIVE?!L.soon:(L.id==='js'||L.id==='py'));
+function osMini(k,n){
+  n=esc(n||'coder');
+  if(k==='windows')return`<div class="mini"><div class="bar" style="background:#1f1f1f;color:#ddd"><b style="background:#2a6fd6;color:#fff;border-radius:3px;padding:0 3px;font-size:8px">PS</b>PowerShell</div><pre style="background:#012456;color:#eee">PS C:\\Users\\${n}&gt; dir\nmain.py   README.md</pre></div>`;
+  if(k==='mac')return`<div class="mini"><div class="bar" style="background:linear-gradient(#3a3a3a,#2e2e2e);color:#bbb"><i style="width:8px;height:8px;border-radius:50%;background:#ff5f57"></i><i style="width:8px;height:8px;border-radius:50%;background:#febc2e"></i><i style="width:8px;height:8px;border-radius:50%;background:#28c840"></i>&nbsp;zsh</div><pre style="background:#1e1e1e;color:#f2f2f2">${n}@Codeum-Phone ~ % ls\nmain.py   README.md</pre></div>`;
+  return`<div class="mini"><div class="bar" style="background:#2c2c2c;color:#ddd">${n}@codeum: ~</div><pre style="background:#300a24;color:#eee"><b style="color:#8ae234">${n}@codeum</b>:<b style="color:#729fcf">~</b>$ ls\nmain.py   README.md</pre></div>`;
+}
+function renderOnb(){
+  const el=$('#onb');el.hidden=false;
+  const dots=[1,2,3].map(i=>`<i class="${i===onb.step?'on':''}"></i>`).join('');
+  const back=onb.step>1?`<button class="icon-btn" data-act="onb-back" aria-label="Назад"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>`:'<span style="width:38px"></span>';
+  let body='';
+  if(onb.step===1){
+    body=`<div class="logo onb-logo">${$('header .logo').innerHTML}</div>
+     <h1 style="text-align:center">Привет! Я Codeum</h1>
+     <p class="lead" style="text-align:center">Среда разработки прямо в телефоне.<br>Как к тебе обращаться?</p>
+     <label class="nick-in"><span>@</span><input id="onbNick" maxlength="20" placeholder="твой ник" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="next" value="${esc(onb.nick)}"></label>
+     <div class="onb-hint" id="onbHint"></div>
+     <div class="onb-prev" id="onbPrev"></div>
+     <div class="onb-foot"><button class="bigbtn" data-act="onb-next" id="onbNext">Дальше</button></div>`;
+  }else if(onb.step===2){
+    const list=[...LANGS].sort((a,b)=>(onbCan(b)?1:0)-(onbCan(a)?1:0));
+    const sel=[...onb.langs],mb=sel.reduce((s,id)=>s+sizeOf(LANG[id]),0);
+    const tag=L=>S.installed.includes(L.id)?'установлен':!onbCan(L)?(NATIVE?'скоро':'в APK'):sizeOf(L)?'~'+sizeOf(L)+' МБ':'мгновенно';
+    body=`<h1>Какие языки поставить?</h1>
+     <p class="lead">Выбери, на чём будешь писать. Загрузка пойдёт в фоне — приложением можно пользоваться сразу.</p>
+     <div class="lsel">${list.map(L=>`<button class="${onb.langs.has(L.id)?'on':''}" data-act="onb-lang" data-id="${L.id}" ${onbCan(L)?'':'disabled'}>${tile(L)}${L.name}<small>${tag(L)}</small></button>`).join('')}</div>
+     <div class="onb-foot"><button class="bigbtn" data-act="onb-next" ${sel.length?'':'disabled'}>${sel.length?`${ic('download')}Установить ${sel.length} · ~${mb} МБ`:'Выбери языки'}</button>
+      <button class="skip" data-act="onb-skip">Пропустить — поставлю позже</button></div>`;
+  }else{
+    body=`<h1>Какой терминал тебе привычнее?</h1>
+     <p class="lead">Команды и вид терминала подстроятся под твою систему. Поменять можно в настройках.</p>
+     <div class="oscards">${OS_LIST.map(([k,n])=>`<button class="oscard ${onb.os===k?'on':''}" data-act="onb-os" data-k="${k}"><div class="nm">${OS_ICON[k]}${n}<small>${OS_DESC[k]}</small></div>${osMini(k,onb.nick)}</button>`).join('')}</div>
+     <div class="onb-foot"><button class="bigbtn" data-act="onb-finish">Начать</button></div>`;
+  }
+  el.innerHTML=`<div class="onb-in"><div class="onb-top">${back}<div class="onb-dots">${dots}</div><span style="width:38px"></span></div><div class="onb-step">${body}</div></div>`;
+  if(onb.step===1){
+    const inp=$('#onbNick');
+    const upd=()=>{onb.nick=inp.value.trim();const ok=NICK_RE.test(onb.nick),h=$('#onbHint');
+      h.className='onb-hint'+(onb.nick&&!ok?' err':'');
+      h.textContent=!onb.nick?'Этот ник будет в приветствии и в терминале':ok?'Отлично! Так тебя и будем звать':'2–20 символов: буквы, цифры, _ . - (без пробелов)';
+      $('#onbNext').disabled=!ok;
+      const n=esc(onb.nick||'ник');
+      $('#onbPrev').innerHTML=`<span class="p">${n}@codeum:~$</span> whoami<br>${n}`;};
+    inp.oninput=upd;inp.onkeydown=e=>{if((e.key==='Enter'||e.keyCode===13)&&NICK_RE.test(onb.nick)){e.preventDefault();ACT['onb-next']()}};upd();
+    setTimeout(()=>inp.focus(),350);
+  }
+}
+function finishOnb(){
+  S.settings.nick=onb.nick;S.settings.os=onb.os;S.onboarded=true;save();
+  $('#onb').hidden=true;$('#onb').innerHTML='';
+  term.innerHTML='';openLine=null;termBanner();updPrompt();show('home');
+  const q=[...onb.langs].filter(id=>!S.installed.includes(id));
+  toast(q.length?`Привет, ${NICK()}! Языки ставятся в фоне`:`Добро пожаловать, ${NICK()}!`);
+  if(q.length)(async()=>{for(const id of q)await installLang(id)})();
+}
+
+/* ============ обновления из GitHub Releases ============ */
+const verNum=v=>String(v||'').replace(/^v/i,'').split(/[.\-+]/).slice(0,3).map(n=>parseInt(n,10)||0);
+const newer=(a,b)=>{a=verNum(a);b=verNum(b);for(let i=0;i<3;i++)if(a[i]!==b[i])return a[i]>b[i];return false};
+const curVersion=()=>NATIVE?NV.version():APP_VERSION;
+let UPD=store.get('upd',null),updating=false,updPct=0;
+const hasUpdate=()=>!!(UPD&&UPD.tag&&newer(UPD.tag,curVersion()));
+async function checkUpdate(force){
+  if(!UPDATE_REPO){renderUpd();return false}
+  if(!force&&UPD&&UPD.repo===UPDATE_REPO&&Date.now()-UPD.t<30*60e3){renderUpd();return hasUpdate()}
+  try{
+    const r=await fetch(`https://api.github.com/repos/${UPDATE_REPO}/releases/latest`,{headers:{Accept:'application/vnd.github+json'}});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const j=await r.json(),apk=(j.assets||[]).find(a=>/\.apk$/i.test(a.name));
+    UPD={t:Date.now(),repo:UPDATE_REPO,tag:j.tag_name,name:j.name||j.tag_name,body:j.body||'',url:j.html_url,date:j.published_at,apk:apk&&apk.browser_download_url,size:apk&&apk.size};
+    store.set('upd',UPD);
+  }catch(e){if(force)throw e}
+  renderUpd();return hasUpdate();
+}
+function renderUpd(){
+  const on=view==='home'&&hasUpdate();$('#updBox').hidden=!on;
+  if(!on){$('#updPanel').hidden=true;$('#updMore').classList.remove('open');return}
+  $('#updBtn').innerHTML=updating?`<span class="spin" style="width:12px;height:12px"></span>${updPct}%`:ic('download')+'Обновить';
+  $('#updMore').innerHTML=ic('down');
+}
+function mdNotes(t){
+  if(!String(t||'').trim())return'<p class="muted">Автор не добавил описание к этой версии.</p>';
+  const inl=s=>esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code>$1</code>');
+  let h='',ul=false;
+  for(const raw of t.replace(/\r/g,'').split('\n')){
+    const l=raw.trim(),li=l.match(/^[-*•]\s+(.*)/);
+    if(li){if(!ul){h+='<ul>';ul=true}h+='<li>'+inl(li[1])+'</li>';continue}
+    if(ul){h+='</ul>';ul=false}
+    if(!l)continue;
+    const hd=l.match(/^#{1,6}\s+(.*)/);h+=hd?`<span class="h">${inl(hd[1])}</span>`:`<p>${inl(l)}</p>`;
+  }
+  return h+(ul?'</ul>':'');
+}
+function updPanelHTML(){
+  const d=UPD.date?new Date(UPD.date).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'}):'';
+  return`<h4>Что нового в ${esc(UPD.tag)}</h4>
+   <div class="meta">${UPD.name&&UPD.name!==UPD.tag?esc(UPD.name)+' · ':''}${d} · у тебя v${esc(curVersion())}</div>
+   <div class="notes">${mdNotes(UPD.body)}</div>
+   <button class="bigbtn" data-act="update">${ic('download')}Обновить до ${esc(UPD.tag)}${UPD.size?' · '+(UPD.size/1048576).toFixed(1)+' МБ':''}</button>
+   <div class="note">${ic('lock')}<div>Ник, проекты, языки и настройки сохранятся — обновление ставится поверх.</div></div>`;
+}
+function doUpdate(){
+  if(!UPD)return;
+  if(NATIVE&&UPD.apk){if(updating)return;updating=true;updPct=0;renderUpd();toast('Скачиваю '+UPD.tag+'…');NV.downloadUpdate(UPD.apk,UPD.tag);return}
+  const u=UPD.apk||UPD.url;if(!u)return;
+  NATIVE?NV.openUrl(u):window.open(u,'_blank','noopener');
+}
+
+/* ============ связь с Android ============ */
+let storeRenderT=null;
+window.__native={
+  onInstall(id,stage,text,pct){
+    if(stage==='progress'){
+      const pr=instProg[id]||(instProg[id]={text:'',pct:0});if(text)pr.text=text;if(pct>=0)pr.pct=pct;
+      if(instTerm===id&&text)out(text,'d');
+      if(view==='store'&&!storeRenderT)storeRenderT=setTimeout(()=>{storeRenderT=null;if(view==='store')renderStore()},250);
+      return;
+    }
+    if(stage==='error'){toast('Ошибка установки: '+text);if(instTerm===id)out('✗ '+text,'e')}
+    const r=instWait[id];delete instWait[id];r&&r(stage==='done');
+  },
+  onShell:shellData,
+  onShellExit(){const was=sh.busy;sh.alive=false;sh.busy=false;if(was)out('[процесс завершён]','d');updPrompt()},
+  onFolder(name,json){try{importFolder(name,JSON.parse(json))}catch{toast('Не удалось прочитать папку')}},
+  onUpdate(stage,pct,msg){
+    if(stage==='progress'){updPct=pct;renderUpd();return}
+    if(stage==='install'){updating=false;renderUpd();toast('Подтверди установку обновления');return}
+    updating=false;renderUpd();toast('Не удалось обновиться: '+msg);
+  },
+  onBack(){
+    if(!$('#onb').hidden){if(onb.step>1){onb.step--;renderOnb();return true}return false}
+    if(!$('#updPanel').hidden){$('#updPanel').hidden=true;$('#updMore').classList.remove('open');return true}
+    if($('#sheet').classList.contains('on')){closeSheet();return true}
+    if($('#app').classList.contains('drawer-on')){$('#app').classList.remove('drawer-on');return true}
+    if(!$('#findbar').hidden){$('#findbar').hidden=true;return true}
+    if(view!=='home'){show('home');return true}
+    return false;
+  }
+};
+if(NATIVE){
+  // источник правды об установленных языках — само Linux-окружение
+  try{const nat=JSON.parse(NV.installed());S.installed=[...new Set([...S.installed.filter(id=>id==='js'||nat.includes(id)),...nat])];save()}catch{}
+  NV.setWidgetInterval(S.settings.wInt||'day');
+}
+
+Object.assign(ACT,{
+  'onb-next':()=>{
+    if(onb.step===1){if(!NICK_RE.test(onb.nick))return;onb.step=2}
+    else if(onb.step===2)onb.step=3;
+    renderOnb();
+  },
+  'onb-skip':()=>{onb.langs.clear();onb.step=3;renderOnb()},
+  'onb-back':()=>{if(onb.step>1){onb.step--;renderOnb()}},
+  'onb-lang':d=>{onb.langs.has(d.id)?onb.langs.delete(d.id):onb.langs.add(d.id);renderOnb()},
+  'onb-os':d=>{onb.os=d.k;renderOnb()},
+  'onb-finish':finishOnb,
+  'nick-edit':()=>{
+    openSheet(`<h3>Твой ник</h3><p class="muted">Используется в приветствии, терминале и neofetch.</p>
+     <label class="nick-in" style="margin-top:16px"><span>@</span><input id="nkIn" maxlength="20" value="${esc(NICK())}" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"></label>
+     <div class="onb-hint" id="nkHint"></div><button class="bigbtn" data-act="nick-save">Сохранить</button>`);
+    setTimeout(()=>$('#nkIn').focus(),250);
+  },
+  'nick-save':()=>{const v=$('#nkIn').value.trim();if(!NICK_RE.test(v)){const h=$('#nkHint');h.className='onb-hint err';h.textContent='2–20 символов: буквы, цифры, _ . - (без пробелов)';return}
+    S.settings.nick=v;save();closeSheet();updPrompt();if(view==='home')renderHome();toast('Теперь ты — '+v)},
+  'set-os':d=>{S.settings.os=d.k;save();settingsSheet();out('',);termBanner();updPrompt();if(view==='term')show('term');toast('Терминал: '+OS_LIST.find(x=>x[0]===d.k)[1])},
+  update:doUpdate,
+  'upd-notes':()=>{const p=$('#updPanel');if(p.hidden){p.innerHTML=updPanelHTML();p.hidden=false;$('#updMore').classList.add('open')}else{p.hidden=true;$('#updMore').classList.remove('open')}},
+  'upd-check':async()=>{if(!UPDATE_REPO){toast('Репозиторий обновлений ещё не задан');return}
+    try{const has=await checkUpdate(true);toast(has?'Доступна версия '+UPD.tag:'У тебя последняя версия');if(has){closeSheet();show('home')}}catch(e){toast('Не удалось проверить: '+e.message)}}
+});
+
+applySettings();show('home');
+if(!S.onboarded){onb.nick=S.settings.nick||'';onb.os=OS();renderOnb()}
+setTimeout(()=>checkUpdate(false),1200);
+</script>
+</body>
+</html>
