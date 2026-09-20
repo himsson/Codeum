@@ -1,0 +1,66 @@
+name: 🐞 Bug report
+description: Something in the app does not work the way it should
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this. Please check the
+        [existing issues](https://github.com/himsson/Codeum/issues?q=is%3Aissue) first —
+        maybe it is already known.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Describe the problem in your own words. A screenshot or a screen recording helps a lot.
+      placeholder: I tapped Run on a Python file and nothing happened.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to repeat it
+      description: The steps that lead to the problem.
+      placeholder: |
+        1. Create a Python project
+        2. Write print("hi")
+        3. Tap Run
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect instead?
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: Codeum version
+      description: Settings → the bottom line, for example 1.0.3
+      placeholder: "1.0.3"
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: Phone and Android version
+      placeholder: Samsung A54, Android 14
+    validations:
+      required: true
+
+  - type: textarea
+    id: error
+    attributes:
+      label: Error text
+      description: >
+        If the app closed by itself, it offers to report the error on the next launch —
+        that report already contains everything needed. Otherwise paste what the terminal printed.
+      render: text
+    validations:
+      required: false

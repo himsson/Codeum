@@ -1,0 +1,43 @@
+name: 💡 Feature request
+description: Suggest something Codeum should be able to do
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please check the [existing issues](https://github.com/himsson/Codeum/issues?q=is%3Aissue)
+        first — the idea may already be there.
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: What should the app do?
+      placeholder: Let me change the font size with a pinch gesture.
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why do you need it?
+      description: What are you trying to do, and what gets in the way today?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part of the app?
+      options:
+        - Editor
+        - Terminal
+        - Languages
+        - Projects and files
+        - Web preview
+        - SSH / servers
+        - GitHub
+        - AI helper
+        - Widget
+        - Something else
+    validations:
+      required: true

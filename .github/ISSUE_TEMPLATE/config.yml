@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 📖 Read the README first
+    url: https://github.com/himsson/Codeum#readme
+    about: Installation, what the app can do and the most common questions.
+  - name: ⬇️ Download the latest version
+    url: https://github.com/himsson/Codeum/releases/latest
+    about: Many problems are already fixed in the newest APK.
