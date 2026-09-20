@@ -51,6 +51,8 @@ Linux и семнадцать языков в одном приложении �
 
 Последняя версия всегда здесь: **[Releases → codeum-vX.X.X.apk](https://github.com/himsson/Codeum/releases/latest)**
 
+Или со страницы проекта: **[himsson.github.io/Codeum](https://himsson.github.io/Codeum/)**
+
 ### 📱 Как установить
 
 1. Открой ссылку выше с телефона и скачай файл `codeum-v….apk`.

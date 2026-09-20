@@ -50,6 +50,8 @@ seventeen languages in one app, made for a phone screen rather than squeezed ont
 
 The latest version is always here: **[Releases → codeum-vX.X.X.apk](https://github.com/himsson/Codeum/releases/latest)**
 
+Or from the project page: **[himsson.github.io/Codeum](https://himsson.github.io/Codeum/)**
+
 ### 📱 How to install
 
 1. Open the link above on your phone and download the `codeum-v….apk` file.
