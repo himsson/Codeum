@@ -150,8 +150,8 @@ Codeum развивается как личный проект одного че
 
 Перед тем как создавать issue, посмотри, не сообщили ли о том же раньше.
 
-Подробнее — в [CONTRIBUTING.md](CONTRIBUTING.md). Что менялось в каждой версии — в
-[CHANGELOG.md](CHANGELOG.md), а про дыры в безопасности — в [SECURITY.md](SECURITY.md).
+Подробнее — в [CONTRIBUTING.md](.github/CONTRIBUTING.md). Что менялось в каждой версии — в
+[CHANGELOG.md](CHANGELOG.md), а про дыры в безопасности — в [SECURITY.md](.github/SECURITY.md).
 
 ## ⭐ Поддержать проект
 

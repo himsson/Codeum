@@ -148,8 +148,8 @@ If you find a bug or have a feature request, feel free to open an
 
 Before submitting an issue, please check whether it has already been reported.
 
-More details are in [CONTRIBUTING.md](CONTRIBUTING.md). What changed in each version is in
-[CHANGELOG.md](CHANGELOG.md); for a security problem, see [SECURITY.md](SECURITY.md).
+More details are in [CONTRIBUTING.md](.github/CONTRIBUTING.md). What changed in each version is in
+[CHANGELOG.md](CHANGELOG.md); for a security problem, see [SECURITY.md](.github/SECURITY.md).
 
 ## ⭐ Support the Project
 
