@@ -21,11 +21,11 @@ No computer, but you want to learn programming? Codeum turns your phone into a p
 workstation: a comfortable editor, a real terminal and seventeen programming languages
 that install with one tap. No workarounds, no keyboard hacks — everything is already inside.
 
-## Download
+## ⬇️ Download
 
 The latest version is always here: **[Releases → codeum-vX.X.X.apk](https://github.com/himsson/Codeum/releases/latest)**
 
-### How to install
+### 📱 How to install
 
 1. Open the link above on your phone and download the `codeum-v….apk` file.
 2. Tap the downloaded file.
@@ -35,7 +35,7 @@ The latest version is always here: **[Releases → codeum-vX.X.X.apk](https://gi
 
 Codeum needs Android 8.0 or newer.
 
-## What it can do
+## ✨ What it can do
 
 - **Code editor** with syntax highlighting, line numbers and tabs. Above the keyboard there’s a bar
   with arrows and the symbols your language uses most — no more hunting for `{ }` across three layouts.
@@ -70,7 +70,7 @@ Codeum needs Android 8.0 or newer.
 - **One-tap updates.** When a new version is out, an “Update” button appears on the home screen,
   with a list of what changed next to it. Your projects and settings stay put.
 
-## Languages
+## 🧩 Languages
 
 Installed from the Languages tab. Download only what you need.
 
@@ -88,7 +88,7 @@ Installed from the Languages tab. Download only what you need.
 
 C and C++ share one compiler, so together they take the same space as one.
 
-## Questions
+## ❓ Questions
 
 **Why isn’t the app on Google Play?**
 Google Play doesn’t allow apps that download and run compilers. Codeum can’t work without that —
@@ -114,7 +114,7 @@ Open an [issue](https://github.com/himsson/Codeum/issues) — what you did, what
 and what happened. A screenshot helps a lot. If the app closed by itself, the next launch offers
 to report it: a page opens with the error text already filled in, you just press «Create».
 
-## License
+## 📄 License
 
 © 2026 himsson. All rights reserved.
 
