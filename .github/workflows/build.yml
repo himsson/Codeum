@@ -26,11 +26,12 @@ jobs:
           distribution: temurin
           java-version: '21'
 
+      # packages задаём явно: по умолчанию экшен ставит устаревший пакет tools и падает
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
-
-      - name: Install SDK packages
-        run: sdkmanager --install "platforms;android-35" "build-tools;36.0.0"
+        with:
+          packages: 'platform-tools platforms;android-35 build-tools;36.0.0'
+          log-accepted-android-sdk-licenses: false
 
       - name: Build
         run: |
