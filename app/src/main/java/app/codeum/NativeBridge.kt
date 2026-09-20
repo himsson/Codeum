@@ -157,6 +157,27 @@ class NativeBridge(private val act: MainActivity) {
 
     @JavascriptInterface fun openUrl(url: String) { ui.post { act.openExternal(url) } }
 
+    // ------------ отчёт об ошибке ------------
+
+    @JavascriptInterface fun lastCrash(): String = Crash.last(act)
+    @JavascriptInterface fun clearCrash() { Crash.clear(act) }
+
+    @JavascriptInterface
+    fun deviceInfo(): String = JSONObject()
+        .put("model", android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL)
+        .put("android", android.os.Build.VERSION.RELEASE)
+        .put("sdk", android.os.Build.VERSION.SDK_INT)
+        .put("abi", LinuxEnv.abiName())
+        .toString()
+
+    // ------------ сохранение проекта в файл ------------
+
+    /** Отдаёт zip системному диалогу «Сохранить»: пользователь сам выбирает папку. */
+    @JavascriptInterface
+    fun saveFile(name: String, base64: String) {
+        ui.post { act.saveFile(name, base64) }
+    }
+
     @JavascriptInterface
     fun downloadUpdate(url: String, version: String) {
         Updater.download(act, url, version) { stage, pct, msg -> emit("onUpdate", stage, pct, msg) }

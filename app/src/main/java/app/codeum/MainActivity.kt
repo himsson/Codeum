@@ -29,6 +29,7 @@ class MainActivity : Activity() {
     companion object {
         private const val REQ_FILES = 1
         private const val REQ_FOLDER = 2
+        private const val REQ_SAVE = 3
         private const val APP_URL = "https://appassets.androidplatform.net/assets/www/index.html"
     }
 
@@ -36,6 +37,7 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LinuxEnv.ctx = applicationContext
+        Crash.install(this)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         if (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) WebView.setWebContentsDebuggingEnabled(true)
 
@@ -100,6 +102,26 @@ class MainActivity : Activity() {
         }
     }
 
+    private var pendingSave: ByteArray? = null
+
+    /** Открывает системный диалог «Сохранить как» для готового zip-архива проекта. */
+    fun saveFile(name: String, base64: String) {
+        pendingSave = try { android.util.Base64.decode(base64, android.util.Base64.DEFAULT) } catch (_: Exception) { null }
+        if (pendingSave == null) { bridge.emit("onSave", false, name); return }
+        try {
+            startActivityForResult(
+                Intent(Intent.ACTION_CREATE_DOCUMENT)
+                    .addCategory(Intent.CATEGORY_OPENABLE)
+                    .setType("application/zip")
+                    .putExtra(Intent.EXTRA_TITLE, name),
+                REQ_SAVE
+            )
+        } catch (e: ActivityNotFoundException) {
+            pendingSave = null
+            bridge.emit("onSave", false, name)
+        }
+    }
+
     fun pickFolder() {
         try {
             startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE), REQ_FOLDER)
@@ -127,6 +149,15 @@ class MainActivity : Activity() {
             REQ_FOLDER -> {
                 val tree = data?.data
                 if (resultCode == RESULT_OK && tree != null) readFolder(tree)
+            }
+            REQ_SAVE -> {
+                val bytes = pendingSave
+                pendingSave = null
+                val uri = data?.data
+                val ok = if (resultCode == RESULT_OK && uri != null && bytes != null) try {
+                    contentResolver.openOutputStream(uri)?.use { it.write(bytes) } != null
+                } catch (_: Exception) { false } else false
+                if (resultCode == RESULT_OK) bridge.emit("onSave", ok, displayName(uri ?: Uri.EMPTY) ?: "")
             }
         }
     }

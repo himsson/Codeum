@@ -389,3 +389,47 @@ input[type=range]{width:130px;accent-color:var(--accent)}
 .xterm-box .xterm-viewport{scrollbar-width:thin}
 .xterm .xterm-viewport::-webkit-scrollbar{width:4px}
 .xterm .xterm-viewport::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:9px}
+
+/* ============ заставка при запуске ============ */
+.splash{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  background:radial-gradient(120% 60% at 50% 0%,color-mix(in srgb,var(--accent) 22%,transparent),transparent 60%),var(--bg);
+  transition:opacity .45s ease,visibility .45s}
+.splash.off{opacity:0;visibility:hidden;pointer-events:none}
+.sp-logo{width:76px;height:76px;border-radius:24px;animation:sp-in .5s cubic-bezier(.2,.9,.3,1.4) both}
+.sp-logo svg{width:42px;height:42px}
+.sp-name{font-size:21px;font-weight:800;letter-spacing:-.02em;animation:sp-in .5s .08s cubic-bezier(.2,.9,.3,1.4) both}
+.sp-bar{width:168px;height:4px;border-radius:99px;background:color-mix(in srgb,var(--muted) 22%,transparent);overflow:hidden;margin-top:6px}
+.sp-bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .3s ease}
+@keyframes sp-in{from{opacity:0;transform:translateY(10px) scale(.9)}to{opacity:1;transform:none}}
+
+/* ============ обучение: затемнение с «окошком» ============ */
+.coach{position:fixed;inset:0;z-index:70;pointer-events:none}
+.coach .dim,.coach .card{pointer-events:auto}
+.coach .dim{position:absolute;background:rgba(5,7,12,.76);transition:all .28s cubic-bezier(.2,.8,.2,1)}
+.coach .ring{position:absolute;border:2px solid var(--accent);border-radius:16px;pointer-events:none;
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent),0 10px 40px -10px var(--accent);
+  transition:all .28s cubic-bezier(.2,.8,.2,1)}
+.coach .tap{position:absolute;pointer-events:none;display:flex;align-items:center;gap:6px;transform:translate(-50%,-50%);
+  font:700 13px 'JetBrains Mono';color:var(--accent);white-space:nowrap;animation:tap-p 1.1s ease-in-out infinite}
+.coach .tap b{width:26px;height:26px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;font-size:0}
+.coach .tap b:after{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent)}
+@keyframes tap-p{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.85}50%{transform:translate(-50%,-50%) scale(1.12);opacity:1}}
+.coach .card{position:absolute;left:16px;right:16px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:16px;
+  box-shadow:0 26px 60px -20px rgba(0,0,0,.8);animation:c-in .28s ease both}
+@keyframes c-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.coach .card h4{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.coach .card p{font-size:13.5px;line-height:1.5;color:var(--muted);margin-top:6px}
+.coach .card .hint{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:5px 10px;border-radius:999px;
+  background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent);font:600 12.5px 'JetBrains Mono'}
+.coach .foot{display:flex;align-items:center;gap:10px;margin-top:14px}
+.coach .skip{flex:0 0 auto}
+.coach .prog{flex:1;min-width:28px;height:4px;border-radius:99px;background:var(--line);overflow:hidden}
+.coach .prog i{display:block;height:100%;border-radius:99px;background:var(--accent);transition:width .25s}
+.coach .skip{font-size:13px;color:var(--muted);font-weight:600;padding:8px 4px}
+.coach .next{height:38px;padding:0 18px;border-radius:12px;font-weight:700;font-size:14px;color:var(--onacc);
+  background:linear-gradient(140deg,var(--accent),color-mix(in srgb,var(--accent) 70%,var(--accent2)))}
+.coach .next:active{transform:scale(.96)}
+
+/* текст ошибки в окне отчёта */
+.crash-pre{margin:12px 0 4px;padding:10px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);
+  font:500 12px "JetBrains Mono";color:#ff8b8b;white-space:pre-wrap;word-break:break-word;max-height:120px;overflow:auto}

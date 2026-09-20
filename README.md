@@ -49,6 +49,10 @@ Codeum needs Android 8.0 or newer.
 - **SSH to your server.** Add a VPS and connect in one tap — with a password prompt, just like on a computer.
 - **Projects and folders.** Create files with any extension, organize them into folders,
   open files and whole folders from your phone.
+- **Save a project to a file.** One button puts the whole project into a ZIP on your phone:
+  send it to yourself, drop it in the cloud or open it on a computer.
+- **A tutorial on first launch.** The screen dims, one button lights up, and next to it you read
+  what it is for. You can replay it from settings.
 - **GitHub.** Connect your account to clone your repositories, edit them and push changes.
 - **AI helper.** Plug in your own Claude, OpenAI or Gemini key: it explains code, finds bugs
   and adds comments.
@@ -100,7 +104,8 @@ Only in your phone’s memory. They’re sent nowhere except GitHub itself and t
 
 **Found a bug or have an idea?**
 Open an [issue](https://github.com/himsson/Codeum/issues) — what you did, what you expected
-and what happened. A screenshot helps a lot.
+and what happened. A screenshot helps a lot. If the app closed by itself, the next launch offers
+to report it: a page opens with the error text already filled in, you just press «Create».
 
 ## License
 

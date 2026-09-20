@@ -436,7 +436,7 @@ function renderProjects(){
 }
 function renderProjList(){
   const list=S.projects.filter(p=>p.name.toLowerCase().includes(pq.toLowerCase())).sort((a,b)=>b.updated-a.updated);
-  $('#projList').innerHTML=list.map(p=>`<div class="item" data-act="open-proj" data-id="${p.id}">${tile(LN(p.lang))}<div class="grow"><div class="nm">${esc(p.name)}</div><div class="sub">${p.gh?'⎇ '+esc(p.gh.full):LN(p.lang).name} · ${tn('files',Object.keys(p.files).length)} · ${ago(p.updated)}</div></div><button class="ghost" data-act="del-proj" data-id="${p.id}">${ic('trash')}</button></div>`).join('')||`<div class="empty">${t('common.notFound')}</div>`;
+  $('#projList').innerHTML=list.map(p=>`<div class="item" data-act="open-proj" data-id="${p.id}">${tile(LN(p.lang))}<div class="grow"><div class="nm">${esc(p.name)}</div><div class="sub">${p.gh?'⎇ '+esc(p.gh.full):LN(p.lang).name} · ${tn('files',Object.keys(p.files).length)} · ${ago(p.updated)}</div></div><button class="ghost" data-act="exp-proj" data-id="${p.id}" aria-label="${esc(t('proj.export'))}">${ic('download')}</button><button class="ghost" data-act="del-proj" data-id="${p.id}">${ic('trash')}</button></div>`).join('')||`<div class="empty">${t('common.notFound')}</div>`;
 }
 let npLang='';
 function newProjSheet(){
@@ -575,7 +575,8 @@ function renderDrawer(){
    <div class="dtools"><button data-act="new-file" data-dir="">${ic('filePlus')}${t('drawer.file')}</button><button data-act="new-dir">${ic('folderPlus')}${t('drawer.folder')}</button><button data-act="import-here">${ic('upload')}${t('drawer.import')}</button></div>
    <div class="ftree">${treeHTML(p,'',0)||`<div class="empty">${t('drawer.empty')}</div>`}</div>
    ${p.gh?`<button class="bigbtn" data-act="gh-push" style="margin-top:10px">${ic('push')}${t('gh.commitPush')}</button>`:''}
-   <button class="frow" data-act="go" data-v="projects" style="color:var(--muted);margin-top:6px">${ic('folder')}${t('drawer.allProjects')}</button>`;
+   <button class="frow" data-act="exp-proj" data-id="${p.id}" style="color:var(--muted);margin-top:10px">${ic('download')}${t('proj.export')}</button>
+   <button class="frow" data-act="go" data-v="projects" style="color:var(--muted)">${ic('folder')}${t('drawer.allProjects')}</button>`;
 }
 function find(next){
   const q=$('#fq').value;if(!q)return;const v=ta.value.toLowerCase(),ql=q.toLowerCase();
@@ -1209,6 +1210,7 @@ function settingsSheet(){
    <div class="sect" style="margin:22px 0 2px">${t('settings.home')}</div>
    <div class="row">${t('settings.greeting')}<button class="sw ${s.greet?'on':''}" data-act="toggle" data-k="greet"></button></div>
    <button class="row" data-act="widget"><span class="rl"><span class="ri" style="color:var(--accent2)">${ic('widget')}</span><span>${t('widget.title')}<small>${t(s.wInt==='5h'?'widget.every5h':'widget.everyDay')}</small></span></span><span class="rv">${ic('right')}</span></button>
+   <button class="row" data-act="tut"><span class="rl"><span class="ri" style="color:var(--accent)">${ic('info')}</span><span>${t('settings.tutorial')}<small>${t('settings.tutorialSub')}</small></span></span><span class="rv">${t('tut.show')}${ic('right')}</span></button>
    <div class="sect" style="margin:22px 0 10px">${t('settings.theme')}</div>
    <div class="tgrid">${Object.keys(THEMES).map(k=>{const v=themeVars(k);return`<button class="tcard" data-act="theme" data-t="${k}" style="background:${v.panel};color:${v.text};border-color:${s.theme===k?v.accent:v.line}">${THEMES[k][0]}<pre><span style="color:${v.kw}">const</span> <span style="color:${v.fn}">run</span> = <span style="color:${v.num}">42</span>\n<span style="color:${v.com}">// ${k}</span> <span style="color:${v.str}">"ok"</span></pre></button>`}).join('')}</div>
    <div class="sect" style="margin:22px 0 2px">${t('settings.editor')}</div>
@@ -1266,6 +1268,12 @@ function applySettings(){
 /* ============ действия ============ */
 const ACT={
   back:()=>goBack(),
+  'crash-send':()=>{const u=issueUrl(crashCur||{});crashClear();closeSheet();NATIVE?NV.openUrl(u):window.open(u,'_blank','noopener');toast(t('crash.opened'))},
+  'crash-skip':()=>{crashClear();closeSheet()},
+  tut:()=>{closeSheet();show('home');setTimeout(tutStart,280)},
+  'tut-next':()=>tutGo(tutI+1),
+  'tut-skip':()=>tutEnd(false),
+  'exp-proj':d=>exportProject(d.id),
   go:d=>{closeSheet();show(d.v)},
   'go-store':()=>{closeSheet();show('store')},
   'close-sheet':closeSheet,
@@ -1424,6 +1432,7 @@ function finishOnb(){
   S.settings.nick=onb.nick;S.settings.os=onb.os;S.onboarded=true;save();
   $('#onb').hidden=true;$('#onb').innerHTML='';
   term.innerHTML='';openLine=null;termBanner();show('home');
+  if(!S.settings.tut)setTimeout(tutStart,800);
   const q=[...onb.langs].filter(id=>!S.installed.includes(id));
   toast(q.length?t('onb.doneInstalling',{nick:NICK()}):t('onb.welcome',{nick:NICK()}));
   if(q.length)(async()=>{for(const id of q)await installLang(id)})();
@@ -1495,6 +1504,7 @@ window.__native={
   },
   onPty(data){xt&&xt.write(data)},
   onPtyExit(code){pty.alive=false;xt&&xt.write('\r\n\x1b[2m'+t('term.exited',{code})+'\x1b[0m\r\n')},
+  onSave(ok,name){toast(!ok?t('export.failed'):name?t('export.saved',{name}):t('export.savedShort'))},
   onFolder(name,json){try{importFolder(name,JSON.parse(json))}catch{toast(t('imp.folderError'))}},
   onUpdate(stage,pct,msg){
     if(stage==='progress'){updPct=pct;renderUpd();return}
@@ -1540,6 +1550,181 @@ Object.assign(ACT,{
     try{const has=await checkUpdate(true);toast(has?t('upd.available',{tag:UPD.tag}):t('upd.latest'));if(has){closeSheet();show('home')}}catch(e){toast(t('common.error',{msg:e.message}))}}
 });
 
+/* ============ заставка ============ */
+function splashStep(p){const f=$('#spFill');if(f)f.style.width=p+'%'}
+function splashDone(){
+  const s=$('#splash');if(!s)return;
+  splashStep(100);
+  setTimeout(()=>{s.classList.add('off');setTimeout(()=>s.remove(),520)},260);
+}
+
+/* ============ отчёт об ошибке ============ */
+/* Падение приложения (Android) или ошибка в интерфейсе: предлагаем открыть issue
+   с уже вставленным текстом ошибки. Само ничего никуда не отправляется. */
+let crashShown=false,crashCur=null;
+function deviceInfo(){
+  if(NATIVE){try{return JSON.parse(NV.deviceInfo())}catch{}}
+  return{model:navigator.userAgent.slice(0,80),android:'web',sdk:'',abi:''};
+}
+function issueUrl(c){
+  const d=deviceInfo();
+  const title=`[${c.where==='android'?'crash':'error'}] ${String(c.msg||'error').slice(0,90)}`;
+  const body=[
+    '### '+t('crash.issueWhat'),'',t('crash.issueHint'),'',
+    '### '+t('crash.issueError'),'','```',String(c.stack||c.msg||'').slice(0,3000),'```','',
+    '### '+t('crash.issueApp'),'',
+    `- Codeum: ${curVersion()} (${c.where})`,
+    `- ${t('settings.language')}: ${LG} · ${t('settings.terminal')}: ${OS()}`,
+    `- ${t('crash.issueScreen')}: ${c.view||view}`,
+    `- ${t('crash.issueDevice')}: ${d.model}, Android ${d.android}${d.abi?' · '+d.abi:''}`
+  ].join('\n');
+  return `https://github.com/${UPDATE_REPO}/issues/new?labels=bug&title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
+}
+function crashSheet(c){
+  crashCur=c;crashShown=true;
+  openSheet(`<div style="display:flex;gap:12px;align-items:center">
+    <div class="tile" style="--c:#e5484d;--fg:#fff">${ic('info')}</div>
+    <h3 style="margin:0">${c.where==='android'?t('crash.title'):t('crash.titleUi')}</h3></div>
+   <p class="muted" style="margin-top:10px">${t('crash.text')}</p>
+   <pre class="crash-pre">${esc(String(c.msg||'').slice(0,200))}</pre>
+   <button class="bigbtn" data-act="crash-send">${ic('github')}${t('crash.send')}</button>
+   <button class="bigbtn sec" data-act="crash-skip">${t('crash.later')}</button>`);
+}
+function crashClear(){if(NATIVE)try{NV.clearCrash()}catch{}}
+function reportJsError(msg,stack){
+  if(crashShown||!$('#onb').hidden||tutOn)return;
+  crashSheet({where:'js',msg,stack,view});
+}
+window.addEventListener('error',e=>reportJsError(e.message||'error',(e.error&&e.error.stack)||`${e.filename}:${e.lineno}:${e.colno}`));
+window.addEventListener('unhandledrejection',e=>{const r=e.reason;reportJsError((r&&r.message)||String(r),(r&&r.stack)||'')});
+function checkCrash(){
+  if(!NATIVE)return;
+  let c=null;try{const s=NV.lastCrash();if(s)c=JSON.parse(s)}catch{}
+  if(c&&c.msg)setTimeout(()=>{if($('#onb').hidden&&!tutOn)crashSheet(c)},900);
+}
+
+/* ============ сохранение проекта в файл (zip) ============ */
+const CRC=(()=>{const a=new Uint32Array(256);
+  for(let i=0;i<256;i++){let c=i;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;a[i]=c>>>0}return a})();
+function crc32(b){let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=CRC[(c^b[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
+/* простой zip без сжатия: текстовым файлам хватает, и не нужна библиотека */
+function makeZip(files){
+  const enc=new TextEncoder(),parts=[],dir=[];let off=0,n=0;
+  for(const name of Object.keys(files)){
+    const nb=enc.encode(name),db=enc.encode(files[name]),crc=crc32(db);
+    const lf=new Uint8Array(30+nb.length),lv=new DataView(lf.buffer);
+    lv.setUint32(0,0x04034b50,true);lv.setUint16(4,20,true);lv.setUint16(6,0x0800,true);
+    lv.setUint32(14,crc,true);lv.setUint32(18,db.length,true);lv.setUint32(22,db.length,true);
+    lv.setUint16(26,nb.length,true);lf.set(nb,30);
+    const cf=new Uint8Array(46+nb.length),cv=new DataView(cf.buffer);
+    cv.setUint32(0,0x02014b50,true);cv.setUint16(4,20,true);cv.setUint16(6,20,true);cv.setUint16(8,0x0800,true);
+    cv.setUint32(16,crc,true);cv.setUint32(20,db.length,true);cv.setUint32(24,db.length,true);
+    cv.setUint16(28,nb.length,true);cv.setUint32(42,off,true);cf.set(nb,46);
+    parts.push(lf,db);dir.push(cf);off+=lf.length+db.length;n++;
+  }
+  const cdSize=dir.reduce((s,d)=>s+d.length,0);
+  const end=new Uint8Array(22),ev=new DataView(end.buffer);
+  ev.setUint32(0,0x06054b50,true);ev.setUint16(8,n,true);ev.setUint16(10,n,true);
+  ev.setUint32(12,cdSize,true);ev.setUint32(16,off,true);
+  const all=[...parts,...dir,end],total=all.reduce((s,a)=>s+a.length,0);
+  const out=new Uint8Array(total);let p=0;for(const a of all){out.set(a,p);p+=a.length}
+  return out;
+}
+const toB64=b=>{let s='';for(let i=0;i<b.length;i+=0x8000)s+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(s)};
+function exportProject(id){
+  const p=S.projects.find(x=>x.id===id)||P();if(!p)return;
+  const zip=makeZip(p.files),name=(p.name||'project').replace(/[^\w.\-]+/g,'-')+'.zip';
+  if(NATIVE){try{NV.saveFile(name,toB64(zip))}catch{toast(t('export.failed'))}return}
+  const a=document.createElement('a'),url=URL.createObjectURL(new Blob([zip],{type:'application/zip'}));
+  a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),4000);
+  toast(t('export.saved',{name}));
+}
+
+/* ============ обучение: затемняем всё, кроме одного места ============ */
+const TUT=[
+  {k:'welcome',v:'home'},
+  {k:'hero',v:'home',sel:'.hero'},
+  {k:'quick',v:'home',sel:'.quick'},
+  {k:'ssh',v:'home',sel:'.quick .qa:nth-child(4)'},
+  {k:'nav',v:'home',sel:'nav'},
+  {k:'store',v:'home',sel:'nav button[data-v="store"]',tap:true},
+  {k:'storeList',v:'store',sel:()=>[...document.querySelectorAll('#storeList .item')].find(e=>e.querySelector('.btn.pri'))||$('#storeList .item')},
+  {k:'toCode',v:'store',sel:'nav button[data-v="editor"]',tap:true},
+  {k:'tabs',v:'editor',sel:'.ed-bar'},
+  {k:'keys',v:'editor',sel:'#keys'},
+  {k:'run',v:'editor',sel:'#runBtn'},
+  {k:'toTerm',v:'editor',sel:'nav button[data-v="term"]',tap:true},
+  {k:'term',v:'term',sel:'.term-wrap'},
+  {k:'settings',v:'term',sel:'header .icon-btn[data-act="settings"]'},
+  {k:'end',v:'home'}
+];
+let tutI=-1,tutOn=false,tutRect=null;
+/* шаг показывает элемент по селектору или по функции */
+const tutEl=s=>!s||!s.sel?null:(typeof s.sel==='function'?s.sel():$(s.sel));
+function tutStart(){
+  closeSheet();$('#app').classList.remove('drawer-on');
+  tutOn=true;tutI=-1;$('#coach').hidden=false;
+  document.addEventListener('click',tutClick,true);
+  tutGo(0);
+}
+function tutEnd(done){
+  tutOn=false;tutRect=null;
+  document.removeEventListener('click',tutClick,true);
+  const c=$('#coach');c.hidden=true;c.innerHTML='';
+  S.settings.tut=true;save();
+  if(done)toast(t('tut.finished'));
+}
+function tutGo(i){
+  tutI=i;
+  while(tutI<TUT.length){
+    const s=TUT[tutI];
+    if(s.v&&view!==s.v)show(s.v);
+    if(!s.sel||tutEl(s))break;
+    tutI++;
+  }
+  if(tutI>=TUT.length)return tutEnd(true);
+  const el=tutEl(TUT[tutI]);
+  if(el&&el.scrollIntoView)el.scrollIntoView({block:'nearest',inline:'nearest'});
+  setTimeout(tutPaint,70);setTimeout(tutPaint,280); // второй раз — когда экран дорисовался
+}
+function tutPaint(){
+  if(!tutOn)return;
+  const s=TUT[tutI],el=tutEl(s),W=innerWidth,H=vv?vv.height:innerHeight,pad=6;
+  const r=el?el.getBoundingClientRect():null;
+  const box=r?{l:Math.max(0,r.left-pad),tp:Math.max(0,r.top-pad),w:Math.min(W,r.width+pad*2),h:r.height+pad*2}:null;
+  tutRect=r?{left:r.left,right:r.right,top:r.top,bottom:r.bottom}:null;
+  const dims=box?[
+    `left:0;top:0;width:100%;height:${box.tp}px`,
+    `left:0;top:${box.tp+box.h}px;width:100%;bottom:0`,
+    `left:0;top:${box.tp}px;width:${box.l}px;height:${box.h}px`,
+    `left:${box.l+box.w}px;top:${box.tp}px;right:0;height:${box.h}px`
+  ]:['left:0;top:0;right:0;bottom:0'];
+  const below=!box||box.tp+box.h<H*0.5;
+  const cardPos=box?(below?`top:${box.tp+box.h+26}px`:`bottom:${Math.max(16,H-box.tp+26)}px`):'top:50%;transform:translateY(-50%)';
+  const tapY=box?(below?box.tp+box.h+10:box.tp-10):0;
+  const tapX=Math.min(Math.max(70,box?box.l+box.w/2:0),W-70);
+  const tap=s.tap&&box?`<div class="tap" style="left:${tapX}px;top:${tapY}px"><b></b>${t('tut.tapWord')}</div>`:'';
+  const prog=`<div class="prog"><i style="width:${Math.round((tutI+1)/TUT.length*100)}%"></i></div>`;
+  $('#coach').innerHTML=
+    dims.map(d=>`<div class="dim" style="${d}"></div>`).join('')+
+    (box?`<div class="ring" style="left:${box.l}px;top:${box.tp}px;width:${box.w}px;height:${box.h}px"></div>`:'')+tap+
+    `<div class="card" style="${cardPos}">
+      <h4>${t('tut.'+s.k+'.t')}</h4>
+      <p>${t('tut.'+s.k+'.x')}</p>
+      ${s.tap?`<div class="hint">${t('tut.tapHere')}</div>`:''}
+      <div class="foot">${prog}
+       <button class="skip" data-act="tut-skip">${t('tut.skip')}</button>
+       ${s.tap?'':`<button class="next" data-act="tut-next">${tutI===TUT.length-1?t('tut.done'):t('tut.next')}</button>`}</div>
+     </div>`;
+}
+/* шаг с «тык»: ждём настоящее нажатие по подсвеченному месту */
+function tutClick(e){
+  if(!tutOn||!tutRect||!TUT[tutI].tap)return;
+  const x=e.clientX,y=e.clientY;
+  if(x>=tutRect.left&&x<=tutRect.right&&y>=tutRect.top&&y<=tutRect.bottom)setTimeout(()=>{if(tutOn)tutGo(tutI+1)},340);
+}
+window.addEventListener('resize',()=>{if(tutOn)tutPaint()});
+
 /* ============ старт ============ */
 applyI18n();
 if(NATIVE){
@@ -1547,6 +1732,10 @@ if(NATIVE){
   try{NV.setWidgetInterval(S.settings.wInt||'day');NV.setLanguage(LG)}catch{}
 }
 termBanner();
+splashStep(60);
 applySettings();show('home');
 if(!S.onboarded){onb.nick=S.settings.nick||'';onb.os=OS();onb.step=0;renderOnb()}
+else if(!S.settings.tut&&FIRST_LAUNCH)setTimeout(tutStart,700);
+setTimeout(splashDone,420);
+checkCrash();
 setTimeout(()=>checkUpdate(false),1200);
