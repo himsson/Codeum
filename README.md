@@ -20,9 +20,9 @@
 
 ---
 
-No computer, but you want to learn programming? Codeum turns your phone into a proper
-workstation: a comfortable editor, a real terminal and seventeen programming languages
-that install with one tap. No workarounds, no keyboard hacks — everything is already inside.
+Codeum is a development environment for Android: a comfortable editor, a real Linux terminal and
+seventeen programming languages that install with one tap. Everything you need to write, run and
+debug code from a phone — no workarounds, no keyboard hacks, all of it already inside.
 
 ## 🚀 Why Codeum
 
@@ -38,12 +38,13 @@ seventeen languages in one app, made for a phone screen rather than squeezed ont
 - **Seventeen languages, installed with one tap.** No manual `pkg install`, no build flags to guess.
 - **It works offline.** Once a language is installed, code runs with the internet off. Nothing is
   sent anywhere, and your projects stay on the phone.
-- **No account, no ads, no tracking.** The app does not ask you to register and has nothing to sell you.
+- **The same tools as on a computer.** Real CPython, gcc, Node.js and the rest, installed from Alpine
+  Linux packages — not a cut-down interpreter that supports half of the language.
 - **Your keys stay yours.** The GitHub token and the AI key live in the phone’s memory and go
   only to GitHub and the AI service you picked.
 - **It speaks your language.** The whole interface, the terminal help and even the widget are
   translated into 10 languages — not just the menu.
-- **For beginners without a computer.** A tutorial on first launch, a “code of the day” widget and
+- **It does not get in your way.** A short tour on first launch so you know where things are, and
   file history that forgives a broken file.
 
 ## ⬇️ Download
@@ -84,13 +85,13 @@ Codeum needs Android 8.0 or newer.
   open files and whole folders from your phone.
 - **Save a project to a file.** One button puts the whole project into a ZIP on your phone:
   send it to yourself, drop it in the cloud or open it on a computer.
-- **A tutorial on first launch.** The screen dims, one button lights up, and next to it you read
-  what it is for. You can replay it from settings.
+- **A short tour on first launch.** The screen dims, one button lights up, and next to it you read
+  what it is for — so you find your way around in a minute. You can replay it from settings.
 - **GitHub.** Connect your account to clone your repositories, edit them and push changes.
 - **AI helper.** Plug in your own Claude, OpenAI or Gemini key: it explains code, finds bugs
   and adds comments.
-- **“Code of the day” widget** for your home screen. Once a day (or every five hours) you get
-  a new piece of code with a simple explanation. You learn without even opening the app.
+- **“Code of the day” widget** for your home screen. Once a day (or every five hours) it shows
+  a new piece of code with a short explanation of what it does — right on the home screen.
 - **10 interface languages**: English, Русский, Українська, Deutsch, Français, Italiano,
   Español, Português, Polski, Türkçe.
 - **Eight themes**: Midnight, Tokyo Night, Dracula, Catppuccin, Nord, Monokai, Solarized and the light Paper.
