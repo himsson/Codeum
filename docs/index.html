@@ -3,74 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Codeum — write and run code on your phone</title>
-<meta name="description" content="An Android app with a real editor, a Linux terminal and 17 programming languages. Free, offline, no account.">
-<meta property="og:title" content="Codeum — write and run code on your phone">
-<meta property="og:description" content="A real editor, a Linux terminal and 17 programming languages in one Android app. Free, works offline, no account.">
+<title>Codeum — a development environment for Android</title>
+<meta name="description" content="Editor, Linux terminal and 17 programming languages in one Android app.">
+<meta property="og:title" content="Codeum — a development environment for Android">
+<meta property="og:description" content="Editor, Linux terminal and 17 programming languages in one Android app.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://himsson.github.io/Codeum/">
 <meta property="og:image" content="https://himsson.github.io/Codeum/social-preview.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <style>
-:root{
-  --bg:#0e1117;--panel:#161b25;--card:#1d2330;--line:#283044;
-  --text:#e7eaf3;--muted:#8b93a8;--accent:#5b8cff;--accent2:#3ddbc4;
-}
+:root{--bg:#0e1117;--panel:#161b25;--card:#1d2330;--line:#283044;
+  --text:#e7eaf3;--muted:#98a0b5;--accent:#5b8cff;--accent2:#3ddbc4}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+body{background:var(--bg);color:var(--text);font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
   -webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:var(--accent)}
-.wrap{max-width:960px;margin:0 auto;padding:0 20px}
+.wrap{max-width:900px;margin:0 auto;padding:0 22px}
 
-/* шапка */
-.hero{position:relative;text-align:center;padding:72px 0 56px;overflow:hidden}
-.hero:before{content:"";position:absolute;inset:-40% 0 auto;height:560px;pointer-events:none;
-  background:radial-gradient(60% 50% at 50% 40%,rgba(91,140,255,.22),transparent 70%)}
-.logo{position:relative;width:96px;height:96px;margin:0 auto 22px;border-radius:30px;display:grid;place-items:center;
-  background:linear-gradient(140deg,var(--accent),var(--accent2));box-shadow:0 20px 50px -18px rgba(91,140,255,.8)}
-.logo svg{width:52px;height:52px}
-h1{position:relative;font-size:clamp(34px,7vw,56px);font-weight:800;letter-spacing:-.03em}
-.tag{position:relative;margin-top:12px;font-size:clamp(17px,3.4vw,21px);color:var(--muted)}
-.lead{position:relative;max-width:620px;margin:20px auto 0;color:var(--muted);font-size:16.5px}
-.btns{position:relative;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:32px}
-.btn{display:inline-flex;align-items:center;gap:9px;height:52px;padding:0 26px;border-radius:15px;
-  font-weight:700;font-size:16px;text-decoration:none;transition:transform .15s}
+.hero{position:relative;text-align:center;padding:84px 0 64px;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:-40% 0 auto;height:600px;pointer-events:none;
+  background:radial-gradient(60% 50% at 50% 40%,rgba(91,140,255,.24),transparent 70%)}
+.logo{position:relative;width:104px;height:104px;margin:0 auto 26px;border-radius:32px;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--accent),var(--accent2));box-shadow:0 22px 55px -18px rgba(91,140,255,.85)}
+.logo svg{width:56px;height:56px}
+h1{position:relative;font-size:clamp(40px,8vw,64px);font-weight:800;letter-spacing:-.035em}
+.tag{position:relative;max-width:620px;margin:16px auto 0;font-size:clamp(18px,3.6vw,23px);color:var(--muted)}
+.btns{position:relative;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:36px}
+.btn{display:inline-flex;align-items:center;gap:9px;height:56px;padding:0 30px;border-radius:16px;
+  font-weight:700;font-size:17px;text-decoration:none;transition:transform .15s}
 .btn:active{transform:scale(.97)}
-.btn.pri{color:#fff;background:linear-gradient(140deg,var(--accent),#4d7ef0);box-shadow:0 14px 34px -14px var(--accent)}
+.btn.pri{color:#fff;background:linear-gradient(140deg,var(--accent),#4d7ef0);box-shadow:0 16px 36px -14px var(--accent)}
 .btn.sec{color:var(--text);background:var(--card);border:1px solid var(--line)}
-.meta{position:relative;margin-top:16px;font-size:13.5px;color:var(--muted)}
 
-/* секции */
-section{padding:52px 0}
-h2{font-size:clamp(24px,4.6vw,32px);font-weight:700;letter-spacing:-.02em;margin-bottom:10px}
-.sub{color:var(--muted);margin-bottom:26px}
-.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px}
-.card b{display:block;font-size:16.5px;margin-bottom:6px}
-.card span{color:var(--muted);font-size:14.5px}
-.card .ico{font-size:22px;display:block;margin-bottom:10px}
-
-/* языки */
-.langs{display:flex;flex-wrap:wrap;gap:9px}
-.lang{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:14px}
-.lang i{font-style:normal;color:var(--muted);font-size:12.5px;margin-left:6px}
-
-/* вопросы */
-details{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:10px}
-details+details{margin-top:0}
-summary{cursor:pointer;font-weight:600;list-style:none}
-summary::-webkit-details-marker{display:none}
-summary:after{content:"+";float:right;color:var(--muted)}
-details[open] summary:after{content:"−"}
-details p{margin-top:10px;color:var(--muted);font-size:15px}
-
-footer{border-top:1px solid var(--line);padding:30px 0 50px;color:var(--muted);font-size:14px;text-align:center}
+section{padding:46px 0}
+h2{font-size:clamp(25px,4.6vw,32px);font-weight:700;letter-spacing:-.02em;margin-bottom:22px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px}
+.card b{display:block;font-size:18px;margin-bottom:7px}
+.card span{color:var(--muted);font-size:16px}
+.langs{display:flex;flex-wrap:wrap;gap:10px}
+.lang{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:9px 17px;font-size:15.5px}
+.note{margin-top:22px;color:var(--muted);font-size:16px}
+footer{border-top:1px solid var(--line);padding:26px 0 44px;color:var(--muted);font-size:15px;text-align:center}
 footer a{color:var(--muted)}
-.hidden{display:none}
-.switch{position:absolute;top:20px;right:20px;display:flex;gap:6px;z-index:2}
+.switch{position:absolute;top:22px;right:22px;display:flex;gap:6px;z-index:2}
 .switch button{background:var(--card);border:1px solid var(--line);color:var(--muted);border-radius:10px;
-  padding:7px 12px;font:600 13px inherit;cursor:pointer}
+  padding:8px 13px;font:600 14px inherit;cursor:pointer}
 .switch button.on{color:var(--text);border-color:var(--accent)}
 </style>
 </head>
@@ -85,55 +64,43 @@ footer a{color:var(--muted)}
   <div class="wrap">
     <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7l5 5-5 5"/><path d="M13 17h6"/></svg></div>
     <h1>Codeum</h1>
-    <p class="tag" data-en="Write and run code right on your phone." data-ru="Пиши и запускай код прямо на телефоне."></p>
-    <p class="lead" data-en="No computer, but you want to learn programming? Codeum turns your phone into a proper workstation: a comfortable editor, a real Linux terminal and seventeen programming languages that install with one tap."
-       data-ru="Нет компьютера, а учиться программировать хочется? Codeum превращает телефон в нормальное рабочее место: удобный редактор, настоящий терминал Linux и семнадцать языков программирования, которые ставятся одной кнопкой."></p>
+    <p class="tag" data-en="A development environment for Android: editor, Linux terminal and 17 programming languages."
+       data-ru="Среда разработки для Android: редактор, терминал Linux и 17 языков программирования."></p>
     <div class="btns">
       <a class="btn pri" href="https://github.com/himsson/Codeum/releases/latest"><span>⬇️</span><span data-en="Download APK" data-ru="Скачать APK"></span></a>
-      <a class="btn sec" href="https://github.com/himsson/Codeum"><span>💻</span><span data-en="Source on GitHub" data-ru="Исходники на GitHub"></span></a>
+      <a class="btn sec" href="https://github.com/himsson/Codeum"><span data-en="Source on GitHub" data-ru="Исходники на GitHub"></span></a>
     </div>
-    <p class="meta" data-en="Free · Android 8.0+ · about 2 MB · no account, no ads"
-       data-ru="Бесплатно · Android 8.0+ · около 2 МБ · без аккаунта и рекламы"></p>
   </div>
 </div>
 
 <section>
   <div class="wrap">
-    <h2 data-en="What it can do" data-ru="Что умеет"></h2>
-    <p class="sub" data-en="Everything is inside the app — no add-ons to hunt down." data-ru="Всё внутри приложения — ничего докачивать и настраивать не надо."></p>
+    <h2 data-en="What's inside" data-ru="Что внутри"></h2>
     <div class="grid">
-      <div class="card"><span class="ico">📝</span>
-        <b data-en="Editor made for touch" data-ru="Редактор под пальцы"></b>
-        <span data-en="Highlighting, line numbers, tabs and a symbol bar with the brackets your language needs. Brackets and quotes close themselves."
-              data-ru="Подсветка, номера строк, вкладки и панель символов с теми скобками, что нужны твоему языку. Скобки и кавычки закрываются сами."></span></div>
-      <div class="card"><span class="ico">▶️</span>
-        <b data-en="Run button" data-ru="Кнопка Run"></b>
-        <span data-en="Write code, tap Run, see the result. If the program asks something, you answer in the terminal."
-              data-ru="Написал код — нажал — увидел результат. Если программа что-то спрашивает, отвечаешь в терминале."></span></div>
-      <div class="card"><span class="ico">🌐</span>
-        <b data-en="Live web preview" data-ru="Живое превью сайта"></b>
-        <span data-en="HTML, CSS and JavaScript render right in the app, with console output and errors below the page."
-              data-ru="HTML, CSS и JavaScript показываются прямо в приложении, а под страницей — вывод консоли и ошибки."></span></div>
-      <div class="card"><span class="ico">⌨️</span>
-        <b data-en="A real Linux terminal" data-ru="Настоящий терминал Linux"></b>
-        <span data-en="vim, nano, htop, git, pip — ordinary commands, with the look of Windows, Linux or macOS, whichever you pick."
-              data-ru="vim, nano, htop, git, pip — обычные команды, а вид терминала выбираешь сам: Windows, Linux или macOS."></span></div>
-      <div class="card"><span class="ico">🔐</span>
-        <b data-en="SSH to your server" data-ru="SSH к своему серверу"></b>
-        <span data-en="Connect to a VPS by password or by key — the key is generated inside the app."
-              data-ru="Подключайся к VPS по паролю или по ключу — ключ создаётся прямо в приложении."></span></div>
-      <div class="card"><span class="ico">🕘</span>
+      <div class="card">
+        <b data-en="Editor" data-ru="Редактор"></b>
+        <span data-en="Highlighting, tabs, autocomplete, auto-closing brackets and a symbol bar for your language."
+              data-ru="Подсветка, вкладки, автодополнение, парные скобки и панель символов под твой язык."></span></div>
+      <div class="card">
+        <b data-en="Linux terminal" data-ru="Терминал Linux"></b>
+        <span data-en="vim, nano, git, pip and the rest — a real shell, not an imitation."
+              data-ru="vim, nano, git, pip и всё остальное — настоящая оболочка, а не имитация."></span></div>
+      <div class="card">
+        <b data-en="Run" data-ru="Запуск"></b>
+        <span data-en="One button runs the file; input and output go through the terminal."
+              data-ru="Одна кнопка запускает файл, ввод и вывод идут через терминал."></span></div>
+      <div class="card">
+        <b data-en="Web preview" data-ru="Превью сайта"></b>
+        <span data-en="HTML, CSS and JavaScript render in the app, with the console below the page."
+              data-ru="HTML, CSS и JavaScript отрисовываются в приложении, под страницей — консоль."></span></div>
+      <div class="card">
+        <b data-en="SSH" data-ru="SSH"></b>
+        <span data-en="Connect to a VPS by password or by a key generated in the app."
+              data-ru="Подключение к VPS по паролю или по ключу, созданному в приложении."></span></div>
+      <div class="card">
         <b data-en="File history" data-ru="История файла"></b>
-        <span data-en="Versions are kept while you work, so a broken file is one tap away from being whole again."
-              data-ru="Версии сохраняются по ходу работы: сломанный файл возвращается к целому одним нажатием."></span></div>
-      <div class="card"><span class="ico">🌍</span>
-        <b data-en="10 interface languages" data-ru="10 языков интерфейса"></b>
-        <span data-en="English, Русский, Українська, Deutsch, Français, Italiano, Español, Português, Polski, Türkçe — the whole app, not just the menu."
-              data-ru="English, Русский, Українська, Deutsch, Français, Italiano, Español, Português, Polski, Türkçe — переведено всё, а не одно меню."></span></div>
-      <div class="card"><span class="ico">📴</span>
-        <b data-en="Works offline" data-ru="Работает без интернета"></b>
-        <span data-en="Once a language is installed, code runs with the internet off. Projects stay on your phone."
-              data-ru="Язык скачан — и код запускается без сети. Проекты лежат в телефоне."></span></div>
+        <span data-en="Versions are kept while you work — any of them comes back in one tap."
+              data-ru="Версии сохраняются по ходу работы — любая возвращается одним нажатием."></span></div>
     </div>
   </div>
 </section>
@@ -141,57 +108,28 @@ footer a{color:var(--muted)}
 <section>
   <div class="wrap">
     <h2 data-en="Languages" data-ru="Языки"></h2>
-    <p class="sub" data-en="Installed from the Languages tab — download only what you need." data-ru="Ставятся во вкладке «Языки» — качаешь только то, что нужно."></p>
     <div class="langs">
-      <span class="lang">JavaScript <i data-en="built in" data-ru="встроен"></i></span>
-      <span class="lang">HTML &amp; CSS <i data-en="built in" data-ru="встроен"></i></span>
-      <span class="lang">Python <i data-en="~45 MB" data-ru="~45 МБ"></i></span>
-      <span class="lang">TypeScript <i data-en="~60 MB" data-ru="~60 МБ"></i></span>
-      <span class="lang">C <i data-en="~150 MB" data-ru="~150 МБ"></i></span>
-      <span class="lang">C++ <i data-en="~150 MB" data-ru="~150 МБ"></i></span>
-      <span class="lang">C# <i data-en="~420 MB" data-ru="~420 МБ"></i></span>
-      <span class="lang">Java <i data-en="~190 MB" data-ru="~190 МБ"></i></span>
-      <span class="lang">Kotlin <i data-en="~260 MB" data-ru="~260 МБ"></i></span>
-      <span class="lang">Go <i data-en="~230 MB" data-ru="~230 МБ"></i></span>
-      <span class="lang">Rust <i data-en="~380 MB" data-ru="~380 МБ"></i></span>
-      <span class="lang">PHP <i data-en="~15 MB" data-ru="~15 МБ"></i></span>
-      <span class="lang">Ruby <i data-en="~25 MB" data-ru="~25 МБ"></i></span>
-      <span class="lang">Lua <i data-en="~1 MB" data-ru="~1 МБ"></i></span>
-      <span class="lang">Bash <i data-en="~2 MB" data-ru="~2 МБ"></i></span>
-      <span class="lang">Swift <i data-en="soon" data-ru="скоро"></i></span>
-      <span class="lang">Dart <i data-en="soon" data-ru="скоро"></i></span>
+      <span class="lang">JavaScript</span><span class="lang">HTML &amp; CSS</span><span class="lang">Python</span>
+      <span class="lang">TypeScript</span><span class="lang">C</span><span class="lang">C++</span>
+      <span class="lang">C#</span><span class="lang">Java</span><span class="lang">Kotlin</span>
+      <span class="lang">Go</span><span class="lang">Rust</span><span class="lang">PHP</span>
+      <span class="lang">Ruby</span><span class="lang">Lua</span><span class="lang">Bash</span>
+      <span class="lang">Swift</span><span class="lang">Dart</span>
     </div>
+    <p class="note" data-en="Installed inside the app in one tap. Swift and Dart are coming."
+       data-ru="Ставятся в приложении одной кнопкой. Swift и Dart — скоро."></p>
   </div>
 </section>
 
 <section>
   <div class="wrap">
-    <h2 data-en="Questions" data-ru="Вопросы"></h2>
-    <details>
-      <summary data-en="How do I install it?" data-ru="Как установить?"></summary>
-      <p data-en="Download the APK from the button above, tap the file and allow installing from this source. If the phone says the app was built for an older Android, tap “Install anyway”."
-         data-ru="Скачай APK по кнопке выше, нажми на файл и разреши установку из этого источника. Если телефон пишет, что приложение для старой версии Android — нажми «Всё равно установить»."></p>
-    </details>
-    <details>
-      <summary data-en="Why isn’t it on Google Play?" data-ru="Почему его нет в Google Play?"></summary>
-      <p data-en="Google Play does not allow apps that download and run compilers, and Codeum cannot work without that — otherwise there would be nothing to run your code with. Termux is distributed the same way for the same reason."
-         data-ru="Google Play не пропускает приложения, которые скачивают и запускают компиляторы, а без этого Codeum не может — иначе код нечем запускать. По той же причине так распространяется Termux."></p>
-    </details>
-    <details>
-      <summary data-en="Is it free? Are there ads?" data-ru="Это бесплатно? Есть реклама?"></summary>
-      <p data-en="Free, no ads, no account and no tracking. Your projects and keys stay on the phone."
-         data-ru="Бесплатно, без рекламы, без аккаунта и без слежки. Проекты и ключи остаются в телефоне."></p>
-    </details>
-    <details>
-      <summary data-en="How much space does it need?" data-ru="Сколько места нужно?"></summary>
-      <p data-en="The app itself is about 2 MB. Languages are downloaded separately: Python is about 45 MB, Rust or C# take a few hundred."
-         data-ru="Само приложение — около 2 МБ. Языки качаются отдельно: Python — около 45 МБ, Rust или C# — несколько сотен."></p>
-    </details>
-    <details>
-      <summary data-en="I found a bug." data-ru="Нашёл ошибку."></summary>
-      <p data-en="Open an issue on GitHub. If the app closed by itself, the next launch offers to report it with the error text already filled in."
-         data-ru="Напиши в Issues на GitHub. Если приложение закрылось само, при следующем запуске оно предложит отправить отчёт с уже вставленным текстом ошибки."></p>
-    </details>
+    <h2 data-en="Install" data-ru="Установка"></h2>
+    <p class="note" style="margin-top:0"
+       data-en="Download the APK, open the file and allow installation from this source. Android 8.0 or newer."
+       data-ru="Скачай APK, открой файл и разреши установку из этого источника. Android 8.0 или новее."></p>
+    <p class="note"
+       data-en="The app is not on Google Play: Play does not allow apps that download and run compilers, and Codeum needs exactly that. Termux is distributed the same way."
+       data-ru="Приложения нет в Google Play: там запрещены приложения, которые скачивают и запускают компиляторы, а Codeum именно это и делает. Termux распространяется так же."></p>
   </div>
 </section>
 
