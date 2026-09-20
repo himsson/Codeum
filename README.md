@@ -21,6 +21,28 @@ No computer, but you want to learn programming? Codeum turns your phone into a p
 workstation: a comfortable editor, a real terminal and seventeen programming languages
 that install with one tap. No workarounds, no keyboard hacks — everything is already inside.
 
+## 🚀 Why Codeum
+
+Programming from a phone usually means one of three compromises: a bare console where you
+assemble everything yourself, an app that runs a single language, or an editor that cannot run
+code at all. Codeum was built to skip that choice — a normal editor, a real Linux terminal and
+seventeen languages in one app, made for a phone screen rather than squeezed onto it.
+
+- **The editor and the terminal are one app.** You write code, tap Run and see the result in the
+  same place — no switching between an editor, a file manager and a console.
+- **Made for touch.** A symbol bar above the keyboard with the brackets your language needs,
+  auto-closing brackets, tabs, a file tree, swipe-to-close sheets. Nothing assumes a hardware keyboard.
+- **Seventeen languages, installed with one tap.** No manual `pkg install`, no build flags to guess.
+- **It works offline.** Once a language is installed, code runs with the internet off. Nothing is
+  sent anywhere, and your projects stay on the phone.
+- **No account, no ads, no tracking.** The app does not ask you to register and has nothing to sell you.
+- **Your keys stay yours.** The GitHub token and the AI key live in the phone’s memory and go
+  only to GitHub and the AI service you picked.
+- **It speaks your language.** The whole interface, the terminal help and even the widget are
+  translated into 10 languages — not just the menu.
+- **For beginners without a computer.** A tutorial on first launch, a “code of the day” widget and
+  file history that forgives a broken file.
+
 ## ⬇️ Download
 
 The latest version is always here: **[Releases → codeum-vX.X.X.apk](https://github.com/himsson/Codeum/releases/latest)**
