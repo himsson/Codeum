@@ -12,6 +12,9 @@
 [![Version](https://img.shields.io/github/v/release/himsson/Codeum?label=version&color=5b8cff)](https://github.com/himsson/Codeum/releases/latest)
 ![Android](https://img.shields.io/badge/Android-8.0%2B-3ddbc4)
 [![Download](https://img.shields.io/badge/download-APK-5b8cff)](https://github.com/himsson/Codeum/releases/latest)
+[![Build](https://img.shields.io/github/actions/workflow/status/himsson/Codeum/build.yml?branch=main&label=build)](https://github.com/himsson/Codeum/actions/workflows/build.yml)
+[![Downloads](https://img.shields.io/github/downloads/himsson/Codeum/total?label=downloads&color=3ddbc4)](https://github.com/himsson/Codeum/releases)
+[![Stars](https://img.shields.io/github/stars/himsson/Codeum?style=flat&color=f5a524)](https://github.com/himsson/Codeum/stargazers)
 
 </div>
 
@@ -144,6 +147,9 @@ If you find a bug or have a feature request, feel free to open an
 [Issue](https://github.com/himsson/Codeum/issues).
 
 Before submitting an issue, please check whether it has already been reported.
+
+More details are in [CONTRIBUTING.md](CONTRIBUTING.md). What changed in each version is in
+[CHANGELOG.md](CHANGELOG.md); for a security problem, see [SECURITY.md](SECURITY.md).
 
 ## ⭐ Support the Project
 

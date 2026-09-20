@@ -12,6 +12,9 @@
 [![Версия](https://img.shields.io/github/v/release/himsson/Codeum?label=версия&color=5b8cff)](https://github.com/himsson/Codeum/releases/latest)
 ![Android](https://img.shields.io/badge/Android-8.0%2B-3ddbc4)
 [![Скачать](https://img.shields.io/badge/скачать-APK-5b8cff)](https://github.com/himsson/Codeum/releases/latest)
+[![Сборка](https://img.shields.io/github/actions/workflow/status/himsson/Codeum/build.yml?branch=main&label=сборка)](https://github.com/himsson/Codeum/actions/workflows/build.yml)
+[![Загрузки](https://img.shields.io/github/downloads/himsson/Codeum/total?label=загрузки&color=3ddbc4)](https://github.com/himsson/Codeum/releases)
+[![Звёзды](https://img.shields.io/github/stars/himsson/Codeum?style=flat&color=f5a524)](https://github.com/himsson/Codeum/stargazers)
 
 </div>
 
@@ -146,6 +149,9 @@ Codeum развивается как личный проект одного че
 [Issue](https://github.com/himsson/Codeum/issues).
 
 Перед тем как создавать issue, посмотри, не сообщили ли о том же раньше.
+
+Подробнее — в [CONTRIBUTING.md](CONTRIBUTING.md). Что менялось в каждой версии — в
+[CHANGELOG.md](CHANGELOG.md), а про дыры в безопасности — в [SECURITY.md](SECURITY.md).
 
 ## ⭐ Поддержать проект
 
