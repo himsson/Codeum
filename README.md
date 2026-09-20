@@ -136,6 +136,21 @@ Open an [issue](https://github.com/himsson/Codeum/issues) — what you did, what
 and what happened. A screenshot helps a lot. If the app closed by itself, the next launch offers
 to report it: a page opens with the error text already filled in, you just press «Create».
 
+## 🤝 Contributing
+
+Codeum is currently developed as a personal project.
+
+If you find a bug or have a feature request, feel free to open an
+[Issue](https://github.com/himsson/Codeum/issues).
+
+Before submitting an issue, please check whether it has already been reported.
+
+## ⭐ Support the Project
+
+If you find Codeum useful, consider giving the repository a ⭐ on GitHub.
+
+It helps the project get noticed and motivates further development.
+
 ## 📄 License
 
 © 2026 himsson. All rights reserved.
