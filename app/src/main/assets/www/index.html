@@ -34,7 +34,10 @@
         <button class="icon-btn" data-act="undo" data-ta="ed.undo" data-i="undo"></button>
         <button class="icon-btn" data-act="find" data-ta="ed.find" data-i="search"></button>
       </div>
-      <div class="findbar" id="findbar" hidden><input id="fq" data-tp="ed.findPh" autocapitalize="off"><button class="icon-btn" data-act="find-next" data-i="down"></button><button class="icon-btn" data-act="find" data-i="x"></button></div>
+      <div class="findbar" id="findbar" hidden>
+        <div class="fline"><input id="fq" data-tp="ed.findPh" autocapitalize="off"><button class="icon-btn" data-act="find-next" data-i="down"></button><button class="icon-btn" data-act="find" data-i="x"></button></div>
+        <div class="fline"><input id="frp" data-tp="ed.replacePh" autocapitalize="off"><button class="btn sec" data-act="rep-one" data-t="ed.replace"></button><button class="btn sec" data-act="rep-all" data-t="ed.replaceAll"></button></div>
+      </div>
       <div class="editor" id="editor"><div class="gutter"><div id="gl">1</div></div>
         <div class="code"><pre id="hl"></pre><textarea id="ta" wrap="off" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></textarea></div>
         <div class="ed-empty" id="edEmpty" hidden></div>
@@ -57,6 +60,13 @@
     <section class="view" id="v-store"></section>
   </main>
   <nav id="nav"></nav>
+</div>
+<div class="webv" id="webv" hidden>
+  <div class="webv-bar"><span class="dot"></span><b id="webvT"></b>
+    <button class="icon-btn" data-act="web-reload" data-ta="web.reload" data-i="refresh"></button>
+    <button class="icon-btn" data-act="web-close" data-ta="common.close" data-i="x"></button></div>
+  <iframe id="webvF" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
+  <div class="webv-log" id="webvLog" hidden></div>
 </div>
 <div class="splash" id="splash">
   <div class="logo sp-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7l5 5-5 5"/><path d="M13 17h6"/></svg></div>

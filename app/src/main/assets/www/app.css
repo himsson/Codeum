@@ -154,7 +154,9 @@ main{flex:1;position:relative;overflow:hidden}
 .ed-bar .icon-btn{width:34px;height:34px;border-radius:10px}
 .ed-bar .icon-btn .i{width:17px;height:17px}
 .ed-bar .ai{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,var(--line));background:color-mix(in srgb,var(--accent) 12%,var(--card))}
-.findbar{display:flex;gap:6px;padding:0 12px 8px}
+.findbar{display:flex;flex-direction:column;gap:6px;padding:0 12px 8px}
+.findbar .fline{display:flex;gap:6px;align-items:center}
+.findbar .btn{height:36px;padding:0 12px;font-size:13px}
 .findbar input{flex:1;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--panel);padding:0 12px;outline:0;font-family:'JetBrains Mono';font-size:13px}
 .editor{flex:1;min-height:120px;display:flex;margin:0 12px;border-radius:16px;background:var(--panel);border:1px solid var(--line);overflow:hidden;position:relative}
 .gutter{overflow:hidden;background:color-mix(in srgb,var(--card) 60%,var(--panel));border-right:1px solid var(--line);flex:0 0 auto}
@@ -433,3 +435,28 @@ input[type=range]{width:130px;accent-color:var(--accent)}
 /* текст ошибки в окне отчёта */
 .crash-pre{margin:12px 0 4px;padding:10px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);
   font:500 12px "JetBrains Mono";color:#ff8b8b;white-space:pre-wrap;word-break:break-word;max-height:120px;overflow:auto}
+
+/* ============ превью веб-страницы ============ */
+.webv{position:fixed;inset:0;z-index:80;display:flex;flex-direction:column;background:var(--bg)}
+.webv-bar{display:flex;align-items:center;gap:10px;padding:10px 12px;padding-top:max(10px,env(safe-area-inset-top));
+  background:var(--panel);border-bottom:1px solid var(--line)}
+.webv-bar .dot{width:9px;height:9px;border-radius:50%;background:var(--accent2);flex:0 0 auto}
+.webv-bar b{flex:1;min-width:0;font:600 13.5px 'JetBrains Mono';white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.webv iframe{flex:1;width:100%;border:0;background:#fff}
+.webv-log{max-height:34%;overflow-y:auto;background:var(--term);border-top:1px solid var(--line);padding:8px 12px;
+  font:500 12px 'JetBrains Mono';color:#cfd6e6}
+.webv-log .l{padding:2px 0;white-space:pre-wrap;word-break:break-word;border-bottom:1px solid rgba(255,255,255,.05)}
+.webv-log .l.e{color:#ff8b8b}
+.webv-log .l.w{color:#ffcb6b}
+
+/* ============ история файла ============ */
+.hitem{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:10px}
+.hitem .hhead{display:flex;align-items:center;gap:10px}
+.hitem .hhead b{font-size:13.5px}
+.hitem .hhead .muted{font-size:12px;flex:1}
+.hitem .tag{font:600 11px 'JetBrains Mono';color:var(--accent2);background:color-mix(in srgb,var(--accent2) 15%,transparent);padding:3px 8px;border-radius:7px}
+.hitem pre{margin-top:8px;font:500 11.5px 'JetBrains Mono';color:var(--muted);white-space:pre-wrap;word-break:break-word;max-height:70px;overflow:hidden}
+
+/* публичный ключ SSH */
+.keybox{margin:14px 0 4px;padding:12px;border-radius:12px;background:var(--card);border:1px solid var(--line);
+  font:500 11.5px 'JetBrains Mono';color:var(--accent2);white-space:pre-wrap;word-break:break-all;max-height:130px;overflow:auto}

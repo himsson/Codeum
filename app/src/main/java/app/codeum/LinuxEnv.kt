@@ -244,6 +244,28 @@ object LinuxEnv {
         return p.waitFor()
     }
 
+    // ---------------- ключ SSH ----------------
+
+    private val sshKeyFile get() = File(rootfs, "root/.ssh/id_ed25519.pub")
+
+    /** Публичный ключ пользователя или пустая строка, если ключа ещё нет. */
+    fun sshPubKey(): String = try {
+        if (sshKeyFile.exists()) sshKeyFile.readText().trim() else ""
+    } catch (_: Exception) { "" }
+
+    /** Создаёт ed25519-ключ (ssh-keygen ставится при необходимости) и возвращает публичную часть. */
+    fun makeSshKey(nick: String, onLine: (String) -> Unit): String {
+        val who = nick.replace(Regex("""[^\w.\-]"""), "").ifEmpty { "coder" } + "@codeum"
+        run(
+            "/root",
+            "command -v ssh-keygen >/dev/null 2>&1 || apk add -q openssh-keygen; " +
+                "mkdir -p /root/.ssh && chmod 700 /root/.ssh; " +
+                "[ -f /root/.ssh/id_ed25519 ] || ssh-keygen -q -t ed25519 -N '' -C '$who' -f /root/.ssh/id_ed25519",
+            onLine
+        )
+        return sshPubKey()
+    }
+
     // ---------------- языки ----------------
 
     private class Pkg(val apk: String, val post: String = "")

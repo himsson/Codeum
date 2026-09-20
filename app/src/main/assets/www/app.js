@@ -38,6 +38,8 @@ const ICONS={
  lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
  push:'<path d="M12 19V5M5 12l7-7 7 7"/>',
  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>',
+ history:'<path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1L3 8"/><path d="M3 4v4.5h4.5"/><path d="M12 8v4.4l3.2 1.9"/>',
+ refresh:'<path d="M20.5 12a8.5 8.5 0 1 1-2.5-6L21 9"/><path d="M21 4v5h-5"/>',
  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/>'
 };
 const ic=n=>`<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[n]}</svg>`;
@@ -79,7 +81,7 @@ function applyI18n(){
 const ago=ts=>{const s=(Date.now()-ts)/1000;return s<60?t('time.now'):s<3600?t('time.min',{n:Math.floor(s/60)}):s<86400?t('time.h',{n:Math.floor(s/3600)}):t('time.d',{n:Math.floor(s/86400)})};
 
 /* ============ версия и обновления ============ */
-const APP_VERSION='1.0.2';                // версия веб-превью; в приложении версия берётся из APK
+const APP_VERSION='1.0.3';                // версия веб-превью; в приложении версия берётся из APK
 const UPDATE_REPO='himsson/codeum';       // репозиторий с релизами
 
 /* ============ языки программирования ============ */
@@ -89,6 +91,26 @@ const LANGS=[
   kw:'const let var function return if else for while do of in new class extends import from export default async await try catch finally throw typeof instanceof true false null undefined this switch case break continue yield',
   bi:'console log error document window function return async await Promise fetch JSON parse stringify Math floor random round length push pop map filter reduce forEach includes indexOf slice splice join split setTimeout setInterval addEventListener querySelector Object keys values entries Array String Number',
   tpl:'// JavaScript · Run ▶\nconst fib = n => n < 2 ? n : fib(n - 1) + fib(n - 2);\n\nfor (let i = 0; i < 10; i++) {\n  console.log("fib(" + i + ") =", fib(i));\n}\n'},
+ {id:'html',name:'HTML & CSS',c:'#e44d26',m:'HT',ver:'HTML5',size:0,ext:'html',file:'index.html',cat:'web',run:'web',com:'<!--',
+  kw:'html head body title meta link script style div span p a img ul ol li table tr td form input button section header footer nav h1 h2 h3',
+  bi:'div span class id href src alt style script link button input form section header footer nav img ul li table tr td h1 h2 h3 p a meta title charset viewport document querySelector addEventListener textContent innerHTML',
+  tpl:R`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My page</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Hello!</h1>
+  <p>This is my first page.</p>
+  <button id="btn">Click me</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
+`},
  {id:'py',name:'Python',c:'#3776ab',m:'PY',ver:'3.12',size:12,ext:'py',file:'main.py',cat:'general',run:'py',com:'#',
   kw:'def return if elif else for while in not and or import from as class try except finally raise with lambda yield pass break continue True False None global nonlocal is async await',
   bi:'print input len range int str float bool list dict set tuple enumerate zip open sorted reversed sum min max abs round isinstance type self __init__ __name__ __main__ append extend insert pop remove items keys values get split join format lower upper strip replace startswith endswith random math json time os sys',
@@ -235,8 +257,17 @@ const mb=n=>t('unit.mb',{n});
 const LN=id=>LANG[id]||{id:'',name:t('proj.generic'),c:'#6b7389',m:'··',ext:'txt',file:'README.md'};
 const tile=(L,cls='')=>L&&L.id?`<div class="tile ltile ${cls}"><img src="icons/${L.id}.svg" alt="${esc(L.name)}"></div>`:`<div class="tile ${cls}" style="--c:#6b7389;--fg:#fff">${ic('file')}</div>`;
 const EXT={h:'c',hpp:'cpp',cc:'cpp',mjs:'js',cjs:'js',jsx:'js',tsx:'ts',kts:'kt',bash:'sh'};
-const langOf=f=>{const e=base(f).split('.').pop().toLowerCase();return LANG[EXT[e]]||LANGS.find(l=>l.ext===e)||null};
+const langOf=f=>{const e=base(f).split('.').pop().toLowerCase();
+  if(e==='css')return CSS_L;
+  return LANG[EXT[e]]||LANGS.find(l=>l.ext===e)||null};
+/* CSS — не отдельный язык в магазине, но подсветка и иконка у него свои */
+const CSS_L={id:'css',name:'CSS',c:'#2965f1',m:'CS',ext:'css',com:'/*',
+  kw:'auto none inherit initial unset important flex grid block inline inline-block absolute relative fixed sticky hidden visible bold italic center left right solid dashed dotted pointer transparent',
+  bi:'color background background-color font-family font-size font-weight margin margin-top margin-bottom padding border border-radius width height max-width min-height display flex-direction justify-content align-items gap position top left right bottom text-align line-height opacity overflow box-shadow transition transform cursor z-index',
+  re:/(\/\*[\s\S]*?\*\/)|("[^"\n]*"|'[^'\n]*')|(@[a-z-]+|!important)|\b(-?\d+(?:\.\d+)?(?:px|em|rem|%|vh|vw|s|ms|deg|fr)?)\b|([a-z-]+)(?=\s*:)|([.#][A-Za-z][\w-]*)/g};
+const HTML_RE=/(<!--[\s\S]*?-->)|("[^"\n]*"|'[^'\n]*')|(<\/?[A-Za-z][\w-]*|\/?>)|\b(\d+(?:\.\d+)?)\b|([a-zA-Z-]+)(?=\s*=)/g;
 LANGS.forEach(L=>{
+  if(L.id==='html'){L.re=HTML_RE;return}
   const com=L.com==='#'?'#.*':L.com==='--'?'--.*':R`\/\/.*|\/\*[\s\S]*?\*\/`;
   const str=R`"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'`+(L.id==='js'||L.id==='ts'?"|`(?:\\\\.|[^`\\\\])*`":'');
   L.re=new RegExp(`(${com})|(${str})|\\b(${L.kw.split(' ').join('|')})\\b|\\b(\\d+(?:\\.\\d+)?)\\b|\\b([A-Za-z_]\\w*)(?=\\s*[(!])|\\b([A-Z][A-Za-z0-9_]*)\\b`,'g');
@@ -350,13 +381,47 @@ const themeVars=id=>{const v=THEMES[id][1].split(' ');return Object.fromEntries(
 
 /* ============ состояние ============ */
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-function mkProject(name,lang){const L=LANG[lang];return{id:uid(),name,lang,files:{[L.file]:L.tpl,'README.md':`# ${name}\n\n${t('tpl.readme',{lang:L.name})}\n`},dirs:[],open:[L.file],updated:Date.now()}}
+const WEB_CSS=`body {
+  font-family: system-ui, sans-serif;
+  margin: 24px;
+  color: #22252c;
+  background: #f5f7fb;
+}
+
+h1 { color: #3a6ff7; }
+
+button {
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 10px;
+  background: #3a6ff7;
+  color: #fff;
+  font-size: 15px;
+}
+`;
+const WEB_JS=`const btn = document.getElementById("btn");
+let clicks = 0;
+
+btn.addEventListener("click", () => {
+  clicks++;
+  btn.textContent = "Clicks: " + clicks;
+  console.log("click", clicks);
+});
+`;
+function mkProject(name,lang){const L=LANG[lang];
+  const files=L.id==='html'
+    ?{'index.html':L.tpl,'style.css':WEB_CSS,'script.js':WEB_JS}
+    :{[L.file]:L.tpl};
+  files['README.md']=`# ${name}\n\n${t('tpl.readme',{lang:L.name})}\n`;
+  return{id:uid(),name,lang,files,dirs:[],open:L.id==='html'?['index.html','style.css']:[L.file],updated:Date.now()}}
 let S=store.get('state',null);
 LG=(S&&S.settings&&S.settings.lang)||detectLang();
 if(!S){const a=mkProject('hello-world','js'),b=mkProject('py-playground','py');b.updated-=36e5;
   S={projects:[a,b],cur:{p:a.id,f:'main.js'},installed:[],hosts:[],gh:null,
      ai:{prov:'claude',keys:{},model:{}},
      settings:{theme:'midnight',fs:13,tab:2,lines:true,keys:true,greet:true,wInt:'day'}}}
+/* JavaScript и HTML встроены в приложение — они есть всегда */
+for(const id of ['js','html'])if(!S.installed.includes(id))S.installed.push(id);
 S.settings.os=S.settings.os||'linux';   // терминал: linux | windows | mac
 S.settings.nick=S.settings.nick||'';
 S.settings.lang=S.settings.lang||LG;
@@ -381,7 +446,8 @@ function show(v,back){
     term:[t('nav.term'),{windows:'PowerShell',mac:'zsh',linux:'bash'}[OS()]+' · '+(p?p.name:'~')],
     store:[t('nav.langs'),'']}[v];
   $('#hTitle').textContent=T[0];$('#hSub').textContent=T[1];
-  const rb=$('#runBtn');rb.hidden=!(v==='editor'&&p);if(p)rb.innerHTML=ic('play')+t('ed.run');
+  const rb=$('#runBtn'),web=p&&(p.lang==='html'||/\.(html?|css)$/i.test(S.cur.f||''));
+  rb.hidden=!(v==='editor'&&p);if(p)rb.innerHTML=web?ic('globe')+t('ed.preview'):ic('play')+t('ed.run');
   if(v==='home')renderHome();if(v==='projects')renderProjects();if(v==='store')renderStore();
   if(v==='editor')renderEditor();if(v==='term')termShow();
   $('#app').classList.remove('drawer-on');
@@ -465,6 +531,8 @@ function renderEditor(){
     $('#tabs').innerHTML='';ta.value='';hl.innerHTML='';renderDrawer();renderKeys();acClear();return}
   $('#tabs').innerHTML=p.open.map(f=>{const L=langOf(f);return`<button class="tab ${f===S.cur.f?'on':''}" data-act="tab" data-f="${esc(f)}" style="--c:${L?L.c:'#6b7389'}"><i></i>${esc(base(f))}<span class="tx" data-act="tab-close" data-f="${esc(f)}">${ic('x')}</span></button>`}).join('');
   if(ta.value!==p.files[S.cur.f])ta.value=p.files[S.cur.f];
+  // точка «как было при открытии» — чтобы после правок было куда вернуться
+  if(!histList(p.id,S.cur.f).length)histPush(p.id,S.cur.f,p.files[S.cur.f],true);
   paint();pos();setSaved(true);
   const L=langOf(S.cur.f);$('#stLang').textContent=L?L.name:'Text';$('#stTab').textContent=t('ed.spaces',{n:S.settings.tab});
   renderDrawer();renderKeys();acClear();
@@ -481,7 +549,7 @@ function pos(){const b=ta.value.slice(0,ta.selectionStart).split('\n');$('#stPos
 let saveT;
 function onEdit(){
   const p=P();if(!p||!S.cur.f)return;p.files[S.cur.f]=ta.value;p.updated=Date.now();paint();pos();setSaved(false);
-  clearTimeout(saveT);saveT=setTimeout(()=>{save();setSaved(true)},400);
+  clearTimeout(saveT);saveT=setTimeout(()=>{save();histPush(p.id,S.cur.f,ta.value);setSaved(true)},400);
   acUpdate();
 }
 ta.addEventListener('input',onEdit);ta.addEventListener('scroll',sync);
@@ -512,9 +580,11 @@ const ED_SYMS={
   php:'$ ; () {} = "" \'\' . -> [] , ! < > :',
   rb:'() "" \'\' . = | {} [] # @ : , !',
   lua:'() = "" . , [] {} - # : ~ \'\'',
-  sh:'$ "" \'\' | > < - / {} [] ; & ~ * . ='
+  sh:'$ "" \'\' | > < - / {} [] ; & ~ * . =',
+  html:'< > / = "" - : # . ; ( ) & !',
+  css:'{} : ; - . # % ( ) , "" > & *'
 };
-const ED_FAMILY={py:'py',js:'js',ts:'js',c:'cfam',cpp:'cfam',cs:'cfam',java:'cfam',kt:'cfam',go:'cfam',rs:'cfam',swift:'cfam',dart:'cfam',php:'php',rb:'rb',lua:'lua',sh:'sh'};
+const ED_FAMILY={html:'html',css:'css',py:'py',js:'js',ts:'js',c:'cfam',cpp:'cfam',cs:'cfam',java:'cfam',kt:'cfam',go:'cfam',rs:'cfam',swift:'cfam',dart:'cfam',php:'php',rb:'rb',lua:'lua',sh:'sh'};
 let KEYS=[];
 function renderKeys(){
   const L=S.cur.f&&langOf(S.cur.f),syms=ED_SYMS[L?ED_FAMILY[L.id]:'def']||ED_SYMS.def;
@@ -550,7 +620,7 @@ function acUpdate(){
   if(!m||m[0].length<2||ta.selectionStart!==ta.selectionEnd){acClear();return}
   const pre=m[0],low=pre.toLowerCase(),seen=new Set([pre]),out=[];
   const add=(w,src)=>{if(!seen.has(w)&&w.toLowerCase().startsWith(low)){seen.add(w);out.push([w,src])}};
-  L.kw.split(' ').forEach(w=>add(w,'kw'));(L.bi||'').split(' ').forEach(w=>add(w,'fn'));
+  (L.kw||'').split(' ').forEach(w=>add(w,'kw'));(L.bi||'').split(' ').forEach(w=>add(w,'fn'));
   const words=ta.value.match(/[A-Za-z_]\w{2,}/g)||[];words.forEach(w=>add(w,''));
   out.sort((a,b)=>(a[0].startsWith(pre)?0:1)-(b[0].startsWith(pre)?0:1)||a[0].length-b[0].length);
   $('#acBar').innerHTML=out.slice(0,10).map(([w,src])=>`<button data-w="${esc(w)}"><b>${esc(w.slice(0,pre.length))}</b>${esc(w.slice(pre.length))}${src?`<small>${src==='kw'?'kw':'ƒ'}</small>`:''}</button>`).join('');
@@ -575,7 +645,8 @@ function renderDrawer(){
    <div class="dtools"><button data-act="new-file" data-dir="">${ic('filePlus')}${t('drawer.file')}</button><button data-act="new-dir">${ic('folderPlus')}${t('drawer.folder')}</button><button data-act="import-here">${ic('upload')}${t('drawer.import')}</button></div>
    <div class="ftree">${treeHTML(p,'',0)||`<div class="empty">${t('drawer.empty')}</div>`}</div>
    ${p.gh?`<button class="bigbtn" data-act="gh-push" style="margin-top:10px">${ic('push')}${t('gh.commitPush')}</button>`:''}
-   <button class="frow" data-act="exp-proj" data-id="${p.id}" style="color:var(--muted);margin-top:10px">${ic('download')}${t('proj.export')}</button>
+   <button class="frow" data-act="history" style="color:var(--muted);margin-top:10px">${ic('history')}${t('hist.title')}</button>
+   <button class="frow" data-act="exp-proj" data-id="${p.id}" style="color:var(--muted)">${ic('download')}${t('proj.export')}</button>
    <button class="frow" data-act="go" data-v="projects" style="color:var(--muted)">${ic('folder')}${t('drawer.allProjects')}</button>`;
 }
 function find(next){
@@ -690,6 +761,7 @@ async function runFile(f){
   const r=pickRunFile(f);
   if(!r){termMsg(t('run.nothing'),'e');return}
   const{L}=r;f=r.f;
+  if(L.run==='web'||L.id==='css'||/\.html?$/i.test(f)){openWeb(/\.html?$/i.test(f)?f:null);return}
   if(NATIVE){
     // JavaScript без установленного Node.js выполняется встроенным движком
     if(L.id==='js'&&!S.installed.includes('ts')){
@@ -1013,7 +1085,7 @@ async function installLang(id){
 /* установленные языки проверяются по факту — есть ли в Linux нужная программа */
 function syncInstalled(){
   if(!NATIVE)return;
-  try{const nat=JSON.parse(NV.installed());const next=[...new Set(['js',...nat])]; // JavaScript встроен в приложение и есть всегда
+  try{const nat=JSON.parse(NV.installed());const next=[...new Set(['js','html',...nat])]; // JavaScript и HTML встроены и есть всегда
     if(next.join()!==S.installed.join()){S.installed=next;save()}}catch{}
 }
 const STORE_CATS=[['all','store.cat.all'],['inst','store.cat.inst'],['web','store.cat.web'],['system','store.cat.system'],['mobile','store.cat.mobile'],['general','store.cat.general']];
@@ -1047,7 +1119,7 @@ function langInfo(id){
   openSheet(`<div style="display:flex;gap:14px;align-items:center;margin-bottom:10px">${tile(L,'lg')}<div><h3>${L.name}</h3><div class="muted" style="font-size:13px">${L.ver} · ${sizeOf(L)?'~'+mb(sizeOf(L)):t('store.builtin')}</div></div></div>
    <p class="muted">${esc(langDesc(L))}</p>
    ${note?`<div class="note">${ic('info')}<div>${note}</div></div>`:''}
-   ${inst?`<button class="bigbtn" data-act="lang-new" data-id="${id}">${t('store.newProjectIn',{lang:L.name})}</button>${id==='js'?'':`<button class="bigbtn sec" data-act="uninstall" data-id="${id}">${t('common.delete')}</button>`}`:''}`);
+   ${inst?`<button class="bigbtn" data-act="lang-new" data-id="${id}">${t('store.newProjectIn',{lang:L.name})}</button>${['js','html'].includes(id)?'':`<button class="bigbtn sec" data-act="uninstall" data-id="${id}">${t('common.delete')}</button>`}`:''}`);
 }
 
 /* ============ GitHub ============ */
@@ -1206,6 +1278,7 @@ function settingsSheet(){
    <div class="row"><span class="rl"><span class="ri" style="color:var(--accent2)">${ic('term')}</span>${t('settings.terminal')}</span><div class="seg">${OS_LIST.map(([k,n])=>`<button class="${OS()===k?'on':''}" data-act="set-os" data-k="${k}">${n}</button>`).join('')}</div></div>
    <div class="sect" style="margin:22px 0 2px">${t('settings.accounts')}</div>
    <button class="row" data-act="${S.gh?'gh-off':'gh-connect'}"><span class="rl">${S.gh&&S.gh.avatar?`<img class="avatar" src="${esc(S.gh.avatar)}" alt="">`:`<span class="ri">${ic('github')}</span>`}<span>GitHub<small>${S.gh?t('gh.connectedAs',{login:esc(S.gh.login)}):t('gh.sub')}</small></span></span><span class="rv">${S.gh?t('gh.disconnect'):t('gh.connect')}${ic('right')}</span></button>
+   <button class="row" data-act="ssh-key"><span class="rl"><span class="ri" style="color:#c084fc">${ic('key')}</span><span>${t('ssh.title')}<small>${NATIVE&&sshKey()?t('ssh.have'):t('ssh.none')}</small></span></span><span class="rv">${NATIVE&&sshKey()?t('ssh.show'):t('ssh.create')}${ic('right')}</span></button>
    <button class="row" data-act="ai-setup"><span class="rl"><span class="ri" style="color:var(--accent)">${ic('spark')}</span><span>${t('ai.title')}<small>${S.ai.keys[S.ai.prov]?AI_PROV[S.ai.prov].name+' · '+esc(aiModel()):t('ai.connectHint')}</small></span></span><span class="rv">${S.ai.keys[S.ai.prov]?t('ai.keyAdded'):t('ai.setup')}${ic('right')}</span></button>
    <div class="sect" style="margin:22px 0 2px">${t('settings.home')}</div>
    <div class="row">${t('settings.greeting')}<button class="sw ${s.greet?'on':''}" data-act="toggle" data-k="greet"></button></div>
@@ -1218,6 +1291,7 @@ function settingsSheet(){
    <div class="row">${t('settings.indent')}<div class="seg">${[2,4].map(n=>`<button class="${s.tab===n?'on':''}" data-act="tabsize" data-n="${n}">${n}</button>`).join('')}</div></div>
    <div class="row">${t('settings.lineNumbers')}<button class="sw ${s.lines?'on':''}" data-act="toggle" data-k="lines"></button></div>
    <div class="row">${t('settings.symbolBar')}<button class="sw ${s.keys?'on':''}" data-act="toggle" data-k="keys"></button></div>
+   <div class="row">${t('settings.pairs')}<button class="sw ${s.pairs!==false?'on':''}" data-act="toggle" data-k="pairs"></button></div>
    <div class="sect" style="margin:22px 0 2px">${t('settings.about')}</div>
    <button class="row" data-act="upd-check"><span class="rl"><span class="ri" style="color:var(--accent)">${ic('download')}</span><span>Codeum v${esc(curVersion())}<small>${NATIVE?'Android · '+esc(NV.abi()):t('settings.webPreview')}</small></span></span><span class="rv">${t('upd.check')}${ic('right')}</span></button>
    <button class="bigbtn sec" data-act="reset" style="color:#e5484d">${t('settings.reset')}</button>`);
@@ -1274,6 +1348,16 @@ const ACT={
   'tut-next':()=>tutGo(tutI+1),
   'tut-skip':()=>tutEnd(false),
   'exp-proj':d=>exportProject(d.id),
+  'web-reload':webRender,
+  'web-close':webClose,
+  history:histSheet,
+  'hist-restore':d=>histRestore(d.i),
+  'rep-one':replaceOne,
+  'rep-all':replaceAll,
+  'ssh-key':sshSheet,
+  'ssh-make':()=>{if(!NATIVE)return;const b=$('#sshMake');if(b){b.disabled=true;b.innerHTML=`<span class="spin"></span>${t('ssh.creating')}`}
+    try{NV.makeSshKey(NICK())}catch{toast(t('ssh.failed'))}},
+  'ssh-copy':sshCopy,
   go:d=>{closeSheet();show(d.v)},
   'go-store':()=>{closeSheet();show('store')},
   'close-sheet':closeSheet,
@@ -1310,7 +1394,11 @@ const ACT={
   undo:()=>{ta.focus();document.execCommand('undo')},
   find:()=>{const f=$('#findbar');f.hidden=!f.hidden;if(!f.hidden)$('#fq').focus()},
   'find-next':()=>find(true),
-  run:async()=>{clearTimeout(saveT);save();if(!NATIVE)show('term');await runFile(S.cur.f)},
+  run:async()=>{clearTimeout(saveT);save();
+    const p=P(),f=S.cur.f||'';
+    // веб-проект и любые html/css открываются в превью, а не в терминале
+    if(p&&(p.lang==='html'||/\.(html?|css)$/i.test(f))){openWeb(/\.html?$/i.test(f)?f:null);return}
+    if(!NATIVE)show('term');await runFile(S.cur.f)},
   'term-clear':()=>{if(NATIVE&&xt){xt.clear();pty.alive&&NV.ptyWrite('\x0c')}else term.innerHTML=''},
   sf:d=>{sf=d.k;$$('#storeCats .fchip').forEach(b=>b.classList.toggle('on',b.dataset.k===d.k));renderStoreList()},
   install:d=>installLang(d.id),
@@ -1511,7 +1599,10 @@ window.__native={
     if(stage==='install'){updating=false;renderUpd();toast(t('upd.confirm'));return}
     updating=false;renderUpd();toast(t('upd.failed',{msg}));
   },
+  onSshKey(k){SSH_KEY=k||'';toast(k?t('ssh.created'):t('ssh.failed'));if($('#sheet').classList.contains('on'))sshSheet()},
   onBack(){
+    if(!$('#webv').hidden){webClose();return true}
+    if(tutOn){tutEnd(false);return true}
     if(!$('#onb').hidden){if(onb.step>0){onb.step--;renderOnb();return true}return false}
     if(!$('#updPanel').hidden){$('#updPanel').hidden=true;$('#updMore').classList.remove('open');return true}
     if($('#sheet').classList.contains('on')){closeSheet();return true}
@@ -1724,6 +1815,191 @@ function tutClick(e){
   if(x>=tutRect.left&&x<=tutRect.right&&y>=tutRect.top&&y<=tutRect.bottom)setTimeout(()=>{if(tutOn)tutGo(tutI+1)},340);
 }
 window.addEventListener('resize',()=>{if(tutOn)tutPaint()});
+
+/* ============ живое превью веб-страницы ============ */
+const WEBV={entry:''};
+function webResolve(from,rel){
+  if(/^(https?:|data:|mailto:|\/\/)/i.test(rel))return null;
+  const dir=dirOf(from),parts=(dir?dir.split('/'):[]).concat(rel.replace(/^\.\//,'').split('/')),out=[];
+  for(const seg of parts){if(!seg||seg==='.')continue;if(seg==='..')out.pop();else out.push(seg)}
+  return out.join('/');
+}
+function webEntry(p,f){
+  if(f&&/\.html?$/i.test(f)&&p.files[f]!=null)return f;
+  const files=Object.keys(p.files);
+  return files.find(x=>x==='index.html')||files.find(x=>/\.html?$/i.test(x))||'';
+}
+/* свои css и js подставляем прямо в страницу: так работают относительные пути */
+function webDoc(p,entry){
+  let html=p.files[entry]||'';
+  html=html.replace(/<link\b[^>]*>/gi,m=>{
+    const h=(m.match(/href\s*=\s*["']([^"']+)["']/i)||[])[1],f=h&&webResolve(entry,h);
+    return f&&p.files[f]!=null&&/\.css$/i.test(f)?`<style>\n${p.files[f]}\n</style>`:m;
+  });
+  html=html.replace(/<script\b[^>]*\bsrc\s*=\s*["']([^"']+)["'][^>]*>\s*<\/script>/gi,(m,src)=>{
+    const f=webResolve(entry,src);
+    return f&&p.files[f]!=null?`<script>\n${p.files[f].replace(/<\/script/gi,'<\\/script')}\n</script>`:m;
+  });
+  return webHook()+html;
+}
+/* перехват console и ошибок страницы: всё уходит в полоску внизу превью */
+function webHook(){
+  const line=t('web.line');
+  return `<script>(function(){
+  function send(k,m){try{parent.postMessage({__codeum:1,k:k,m:String(m)},'*')}catch(e){}}
+  ['log','info','warn','error'].forEach(function(k){var o=console[k];console[k]=function(){
+    try{send(k,[].map.call(arguments,function(x){return typeof x==='string'?x:JSON.stringify(x)}).join(' '))}catch(e){}
+    if(o)o.apply(console,arguments)}});
+  window.addEventListener('error',function(e){send('error',e.message+' (${line} '+e.lineno+')')});
+  window.addEventListener('unhandledrejection',function(e){send('error',String(e.reason))});
+})()</script>
+`;
+}
+function openWeb(f){
+  const p=P();if(!p)return;
+  const entry=webEntry(p,f);
+  if(!entry){toast(t('web.noHtml'));return}
+  clearTimeout(saveT);save();
+  WEBV.entry=entry;$('#webvT').textContent=entry;
+  $('#webvLog').innerHTML='';$('#webvLog').hidden=true;
+  $('#webv').hidden=false;
+  webRender();
+}
+function webRender(){
+  const p=P();if(!p)return;
+  $('#webvLog').innerHTML='';$('#webvLog').hidden=true;
+  $('#webvF').srcdoc=webDoc(p,WEBV.entry);
+}
+function webClose(){$('#webv').hidden=true;$('#webvF').srcdoc='';}
+window.addEventListener('message',e=>{
+  const d=e.data;if(!d||d.__codeum!==1)return;
+  const box=$('#webvLog');box.hidden=false;
+  const row=document.createElement('div');
+  row.className='l '+(d.k==='error'?'e':d.k==='warn'?'w':'');
+  row.textContent=d.m;box.appendChild(row);
+  while(box.children.length>60)box.removeChild(box.firstChild);
+  box.scrollTop=box.scrollHeight;
+});
+
+/* ============ история файла ============ */
+const HIST=store.get('hist',{});
+const histSave=()=>store.set('hist',HIST);
+const histList=(pid,f)=>(HIST[pid]&&HIST[pid][f])||[];
+function histTrim(){
+  let guard=0;
+  while(JSON.stringify(HIST).length>600000&&guard++<400){
+    let old=null;
+    for(const pid in HIST)for(const f in HIST[pid]){const a=HIST[pid][f];if(a.length&&(!old||a[0].t<old.a[0].t))old={pid,f,a}}
+    if(!old)break;
+    old.a.shift();if(!old.a.length)delete HIST[old.pid][old.f];
+  }
+}
+/* точка истории примерно раз в две минуты правок, максимум 20 на файл */
+function histPush(pid,f,text,force){
+  if(pid==null||!f||text==null||text.length>120000)return;
+  const arr=histList(pid,f),last=arr[arr.length-1],now=Date.now();
+  if(last&&last.s===text)return;
+  // p:1 — закреплённая точка (как было при открытии или до отката), её не затираем
+  if(!force&&last&&!last.p&&now-last.t<120e3){last.s=text;last.t=now}
+  else{arr.push(force?{t:now,s:text,p:1}:{t:now,s:text});(HIST[pid]=HIST[pid]||{})[f]=arr.slice(-20)}
+  histTrim();histSave();
+}
+function histSheet(){
+  const p=P(),f=S.cur.f;
+  if(!p||!f){toast(t('hist.empty'));return}
+  const cur=p.files[f]||'';
+  // верхнюю точку не дублируем: она совпадает с текущим содержимым
+  const arr=[...histList(p.id,f)].reverse().filter((h,i)=>!(i===0&&h.s===cur));
+  const card=(s,when,i)=>`<div class="hitem">
+    <div class="hhead"><b>${when}</b><span class="muted">${tn('hist.lines',s.replace(/\n+$/,'').split('\n').length)}</span>
+      ${i<0?`<span class="tag">${t('hist.now')}</span>`:`<button class="btn sec" data-act="hist-restore" data-i="${i}">${t('hist.restore')}</button>`}</div>
+    <pre>${esc(s.split('\n').slice(0,4).join('\n'))||'—'}</pre></div>`;
+  openSheet(`<h3>${t('hist.title')}</h3><p class="muted">${t('hist.sub',{file:esc(base(f))})}</p>
+   ${card(cur,t('hist.now'),-1)}
+   ${arr.length?arr.map((h,i)=>card(h.s,ago(h.t),arr.length-1-i)).join(''):`<div class="empty">${t('hist.none')}</div>`}`);
+}
+function histRestore(i){
+  const p=P(),f=S.cur.f;if(!p||!f)return;
+  const arr=histList(p.id,f),v=arr[+i];if(!v)return;
+  histPush(p.id,f,p.files[f],true);      // текущее состояние тоже сохраняем, откат можно отменить
+  p.files[f]=v.s;p.updated=Date.now();save();
+  lineCount=0;renderEditor();closeSheet();
+  toast(t('hist.restored',{when:ago(v.t)}));
+}
+
+/* ============ парные скобки и кавычки ============ */
+const PAIRS={'(':')','[':']','{':'}','"':'"',"'":"'",'`':'`'};
+/* вставка без execCommand: внутри обработчика ввода она не путается с клавиатурой */
+function insRaw(s,back=0){const a=ta.selectionStart,b=ta.selectionEnd;ta.setRangeText(s,a,b,'end');
+  if(back){const q=ta.selectionStart-back;ta.setSelectionRange(q,q)}onEdit();pos()}
+const CLOSERS=new Set([')',']','}','"',"'",'`']);
+ta.addEventListener('beforeinput',e=>{
+  if(S.settings.pairs===false)return;
+  const s=ta.selectionStart,en=ta.selectionEnd,v=ta.value;
+  if(e.inputType==='insertText'&&e.data&&e.data.length===1){
+    const ch=e.data,next=v[en];
+    if(PAIRS[ch]&&s!==en){                       // выделенное берётся в скобки
+      e.preventDefault();const sel=v.slice(s,en);insRaw(ch+sel+PAIRS[ch]);
+      ta.setSelectionRange(s+1,s+1+sel.length);pos();return;
+    }
+    if(s===en&&CLOSERS.has(ch)&&next===ch){      // закрывающая уже стоит — просто перешагиваем
+      e.preventDefault();ta.setSelectionRange(s+1,s+1);pos();return;
+    }
+    if(s===en&&PAIRS[ch]&&(!next||/[\s)\]},;.]/.test(next))){
+      const quote=ch==='"'||ch==="'"||ch==='`',prev=v[s-1];
+      if(quote&&prev&&/[\w"'`]/.test(prev))return;  // апостроф внутри слова не трогаем
+      e.preventDefault();insRaw(ch+PAIRS[ch],1);return;
+    }
+  }
+  if(e.inputType==='deleteContentBackward'&&s===en&&s>0&&PAIRS[v[s-1]]===v[s]){
+    e.preventDefault();ta.setRangeText('',s-1,s+1,'end');onEdit();pos();
+  }
+});
+
+/* ============ замена текста ============ */
+const reEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\/* ============ старт ============ */');
+function replaceOne(){
+  const q=$('#fq').value;if(!q)return;const r=$('#frp').value;
+  const sel=ta.value.slice(ta.selectionStart,ta.selectionEnd);
+  if(sel.toLowerCase()!==q.toLowerCase()){find(false);return}
+  ins(r);find(true);
+}
+function replaceAll(){
+  const q=$('#fq').value;if(!q)return;const r=$('#frp').value;
+  const re=new RegExp(reEsc(q),'gi'),n=(ta.value.match(re)||[]).length;
+  if(!n){toast(t('ed.notFound'));return}
+  const pos0=ta.selectionStart;
+  ta.setSelectionRange(0,ta.value.length);
+  ins(ta.value.replace(re,r));
+  ta.setSelectionRange(Math.min(pos0,ta.value.length),Math.min(pos0,ta.value.length));
+  paint();pos();toast(t('ed.replaced',{n}));
+}
+
+/* ============ ключ SSH ============ */
+let SSH_KEY=null;
+function sshKey(){
+  if(!NATIVE)return'';
+  if(SSH_KEY===null){try{SSH_KEY=NV.sshKey()||''}catch{SSH_KEY=''}}
+  return SSH_KEY;
+}
+function sshSheet(){
+  const k=sshKey();
+  openSheet(`<h3>${t('ssh.title')}</h3><p class="muted">${t('ssh.sub')}</p>
+   ${!NATIVE?`<div class="note">${ic('info')}<div>${t('ssh.webOnly')}</div></div>`
+   :!NV.ready()?`<div class="note">${ic('info')}<div>${t('ssh.noLinux')}</div></div>
+      <button class="bigbtn" data-act="go-store">${ic('box')}${t('nav.langs')}</button>`
+   :k?`<pre class="keybox">${esc(k)}</pre>
+       <button class="bigbtn" data-act="ssh-copy">${ic('key')}${t('ssh.copy')}</button>
+       <div class="note">${ic('info')}<div>${t('ssh.howto')}</div></div>`
+    :`<button class="bigbtn" data-act="ssh-make" id="sshMake">${ic('key')}${t('ssh.create')}</button>
+      <div class="note">${ic('info')}<div>${t('ssh.why')}</div></div>`}`);
+}
+async function sshCopy(){
+  const k=sshKey();if(!k)return;
+  try{await navigator.clipboard.writeText(k)}
+  catch{const e=document.createElement('textarea');e.value=k;document.body.appendChild(e);e.select();try{document.execCommand('copy')}catch{}e.remove()}
+  toast(t('ssh.copied'));
+}
 
 /* ============ старт ============ */
 applyI18n();

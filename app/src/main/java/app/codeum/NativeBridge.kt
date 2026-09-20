@@ -157,6 +157,18 @@ class NativeBridge(private val act: MainActivity) {
 
     @JavascriptInterface fun openUrl(url: String) { ui.post { act.openExternal(url) } }
 
+    // ------------ ключ SSH ------------
+
+    @JavascriptInterface fun sshKey(): String = LinuxEnv.sshPubKey()
+
+    @JavascriptInterface
+    fun makeSshKey(nick: String) {
+        thread(name = "ssh-keygen") {
+            val key = try { LinuxEnv.makeSshKey(nick) { } } catch (_: Throwable) { "" }
+            emit("onSshKey", key)
+        }
+    }
+
     // ------------ отчёт об ошибке ------------
 
     @JavascriptInterface fun lastCrash(): String = Crash.last(act)

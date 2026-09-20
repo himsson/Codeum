@@ -18,7 +18,7 @@
 ---
 
 No computer, but you want to learn programming? Codeum turns your phone into a proper
-workstation: a comfortable editor, a real terminal and sixteen programming languages
+workstation: a comfortable editor, a real terminal and seventeen programming languages
 that install with one tap. No workarounds, no keyboard hacks — everything is already inside.
 
 ## Download
@@ -39,14 +39,20 @@ Codeum needs Android 8.0 or newer.
 
 - **Code editor** with syntax highlighting, line numbers and tabs. Above the keyboard there’s a bar
   with arrows and the symbols your language uses most — no more hunting for `{ }` across three layouts.
-- **Autocomplete.** Start typing and Codeum suggests keywords, standard functions and names from your file.
+- **Autocomplete and auto-closing brackets.** Start typing and Codeum suggests keywords, standard
+  functions and names from your file, while brackets and quotes close themselves.
+- **Live preview for web pages.** Write HTML, CSS and JavaScript, tap “Preview” and see the page
+  exactly like in a browser. Errors and `console.log` appear in a strip at the bottom.
+- **File history.** Codeum keeps versions of your file as you work. Broke the code and forgot how it
+  was? Open the history and go back to any point.
 - **The Run button.** Write code, tap Run, see the result. If the program asks something
   (`input()`, `scanf`), you answer right in the terminal.
 - **A real terminal.** There’s real Linux inside, so everything works: `vim`, `nano`, `htop`, `git`,
   Tab completion. On first launch you pick the terminal you’re used to — **Windows**, **Linux**
   or **macOS** — and Codeum matches its look and commands (`dir` and `cls` for Windows,
   `ls` and `clear` for the others).
-- **SSH to your server.** Add a VPS and connect in one tap — with a password prompt, just like on a computer.
+- **SSH to your server.** Add a VPS and connect in one tap — by password or by key. The key is
+  created right in the app: one button, then you paste it on the server.
 - **Projects and folders.** Create files with any extension, organize them into folders,
   open files and whole folders from your phone.
 - **Save a project to a file.** One button puts the whole project into a ZIP on your phone:
@@ -71,13 +77,14 @@ Installed from the Languages tab. Download only what you need.
 | Language | Size | | Language | Size |
 |---|---|---|---|---|
 | JavaScript | built in | | Go | ~230 MB |
-| Python | ~45 MB | | Rust | ~380 MB |
-| TypeScript | ~60 MB | | PHP | ~15 MB |
-| C | ~150 MB | | Ruby | ~25 MB |
-| C++ | ~150 MB | | Lua | ~1 MB |
-| C# | ~420 MB | | Bash | ~2 MB |
-| Java | ~190 MB | | Swift | soon |
-| Kotlin | ~260 MB | | Dart | soon |
+| HTML & CSS | built in | | Rust | ~380 MB |
+| Python | ~45 MB | | PHP | ~15 MB |
+| TypeScript | ~60 MB | | Ruby | ~25 MB |
+| C | ~150 MB | | Lua | ~1 MB |
+| C++ | ~150 MB | | Bash | ~2 MB |
+| C# | ~420 MB | | Swift | soon |
+| Java | ~190 MB | | Dart | soon |
+| Kotlin | ~260 MB | | | |
 
 C and C++ share one compiler, so together they take the same space as one.
 
